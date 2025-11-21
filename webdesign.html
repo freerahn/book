@@ -784,12 +784,133 @@
                         <li>실수하기 쉬운 부분(파일 경로, 선택자 오류 등)을 정리하고 암기합니다</li>
                     </ol>
                     
+                    <h3>📈 2024년 최신 출제 경향 분석</h3>
+                    <p>2024년 웹디자인개발기능사 시험은 다음과 같은 변화가 있습니다:</p>
+                    
+                    <div style="background: #fff3cd; padding: 20px; border-radius: 8px; margin: 15px 0; border-left: 4px solid #ffc107;">
+                        <p style="margin: 0 0 10px 0; font-weight: bold; color: #856404;">2024년 주요 변화</p>
+                        <ul style="margin-left: 20px; margin-top: 10px;">
+                            <li><strong>반응형 웹디자인:</strong> 30% → 45% (15%↑)
+                                <ul style="margin-left: 15px; margin-top: 5px;">
+                                    <li>모바일 우선 설계 필수</li>
+                                    <li>미디어 쿼리 3단계 이상 (모바일 768px, 태블릿 1024px, 데스크톱)</li>
+                                    <li>터치 인터페이스 고려</li>
+                                </ul>
+                            </li>
+                            <li><strong>웹 접근성:</strong> 10% → 20% (10%↑)
+                                <ul style="margin-left: 15px; margin-top: 5px;">
+                                    <li>ARIA 레이블 적용 필수</li>
+                                    <li>키보드 네비게이션 구현</li>
+                                    <li>스크린 리더 지원 (alt 속성, 시맨틱 태그)</li>
+                                </ul>
+                            </li>
+                            <li><strong>CSS Grid/Flexbox:</strong> 필수 출제
+                                <ul style="margin-left: 15px; margin-top: 5px;">
+                                    <li>복잡한 레이아웃 구현 필수</li>
+                                    <li>Grid + Flexbox 조합 사용</li>
+                                    <li>2차원 레이아웃 구성 능력 평가</li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </div>
+                    
+                    <h3>⚠️ 합격자들의 공통 실수</h3>
+                    <div style="background: #f8d7da; padding: 20px; border-radius: 8px; margin: 15px 0; border-left: 4px solid #dc3545;">
+                        <h4 style="margin-top: 0; color: #721c24;">1. 시간 관리 실패</h4>
+                        <p style="margin: 5px 0;"><strong>문제:</strong> 레이아웃에 80분 이상 소요 → 인터랙션 미완성</p>
+                        <p style="margin: 5px 0;"><strong>해결책:</strong> 레이아웃 60분, 인터랙션 40분 목표</p>
+                        
+                        <h4 style="margin-top: 15px; color: #721c24;">2. 웹 표준 위반</h4>
+                        <p style="margin: 5px 0;"><strong>문제:</strong> 인라인 스타일 남발, 시맨틱 태그 미사용</p>
+                        <p style="margin: 5px 0;"><strong>해결책:</strong> W3C Validator로 검증 습관화</p>
+                        
+                        <h4 style="margin-top: 15px; color: #721c24;">3. 반응형 미구현</h4>
+                        <p style="margin: 5px 0;"><strong>문제:</strong> 미디어 쿼리 누락 → 즉시 탈락</p>
+                        <p style="margin: 5px 0;"><strong>해결책:</strong> 768px, 1024px 브레이크포인트 필수</p>
+                        
+                        <h4 style="margin-top: 15px; color: #721c24;">4. 파일 경로 오류</h4>
+                        <p style="margin: 5px 0;"><strong>문제:</strong> 대소문자 구분, 상대 경로 오류</p>
+                        <p style="margin: 5px 0;"><strong>해결책:</strong> 파일명 정확히 확인, 상대 경로 사용</p>
+                    </div>
+                    
+                    <h3>✅ 시험 당일 체크리스트</h3>
+                    <div style="overflow-x: auto; margin: 20px 0;">
+                        <table style="width: 100%; border-collapse: collapse; border: 1px solid #ddd; background: white;">
+                            <thead>
+                                <tr style="background: #667eea; color: white;">
+                                    <th style="padding: 12px; border: 1px solid #ddd; text-align: left;">단계</th>
+                                    <th style="padding: 12px; border: 1px solid #ddd; text-align: left;">시간</th>
+                                    <th style="padding: 12px; border: 1px solid #ddd; text-align: left;">체크 항목</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td style="padding: 10px; border: 1px solid #ddd; font-weight: bold;">입장 전</td>
+                                    <td style="padding: 10px; border: 1px solid #ddd;">10분</td>
+                                    <td style="padding: 10px; border: 1px solid #ddd;">
+                                        ☐ 요구사항 핵심 키워드 표시<br>
+                                        ☐ 파일 구조 확인<br>
+                                        ☐ 시간 배분 계획
+                                    </td>
+                                </tr>
+                                <tr style="background: #f9f9f9;">
+                                    <td style="padding: 10px; border: 1px solid #ddd; font-weight: bold;">HTML 구조</td>
+                                    <td style="padding: 10px; border: 1px solid #ddd;">30분</td>
+                                    <td style="padding: 10px; border: 1px solid #ddd;">
+                                        ☐ 시맨틱 태그 사용<br>
+                                        ☐ 메타 태그 작성<br>
+                                        ☐ 주석 처리
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td style="padding: 10px; border: 1px solid #ddd; font-weight: bold;">CSS 레이아웃</td>
+                                    <td style="padding: 10px; border: 1px solid #ddd;">40분</td>
+                                    <td style="padding: 10px; border: 1px solid #ddd;">
+                                        ☐ Grid/Flexbox 구현<br>
+                                        ☐ 모든 요소 배치<br>
+                                        ☐ 폰트, 색상 적용
+                                    </td>
+                                </tr>
+                                <tr style="background: #f9f9f9;">
+                                    <td style="padding: 10px; border: 1px solid #ddd; font-weight: bold;">반응형</td>
+                                    <td style="padding: 10px; border: 1px solid #ddd;">30분</td>
+                                    <td style="padding: 10px; border: 1px solid #ddd;">
+                                        ☐ 모바일 (768px 이하)<br>
+                                        ☐ 태블릿 (768-1024px)<br>
+                                        ☐ 데스크톱 (1024px 이상)
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td style="padding: 10px; border: 1px solid #ddd; font-weight: bold;">인터랙션</td>
+                                    <td style="padding: 10px; border: 1px solid #ddd;">40분</td>
+                                    <td style="padding: 10px; border: 1px solid #ddd;">
+                                        ☐ 슬라이더 구현<br>
+                                        ☐ 탭/아코디언 메뉴<br>
+                                        ☐ 버튼 이벤트
+                                    </td>
+                                </tr>
+                                <tr style="background: #f9f9f9;">
+                                    <td style="padding: 10px; border: 1px solid #ddd; font-weight: bold;">최종 검사</td>
+                                    <td style="padding: 10px; border: 1px solid #ddd;">10분</td>
+                                    <td style="padding: 10px; border: 1px solid #ddd;">
+                                        ☐ 모든 링크 작동<br>
+                                        ☐ 이미지 로드<br>
+                                        ☐ 콘솔 에러 없음<br>
+                                        ☐ W3C 검증
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    
                     <h3>시험 당일 주의사항</h3>
                     <ul style="margin-left: 20px; margin-top: 10px;">
                         <li>시간 관리: 구조 작성(30분), CSS 스타일링(90분), JavaScript 구현(60분) 정도로 시간을 배분합니다</li>
                         <li>파일 관리: 올바른 폴더 구조와 파일명을 확인합니다 (대소문자 구분 중요)</li>
                         <li>브라우저 테스트: 각 기능 구현 후 브라우저에서 정상 작동 여부를 확인합니다</li>
                         <li>최종 점검: 제출 전 모든 파일이 정상적으로 작동하는지 확인합니다</li>
+                        <li>반응형 필수: 미디어 쿼리로 3단계 이상 반응형 구현 필수</li>
+                        <li>웹 접근성: ARIA 레이블, alt 속성, 키보드 네비게이션 구현</li>
                     </ul>
                 `,
                 problem: "웹디자인개발기능사 시험의 합격 기준 점수를 작성하세요. (예: 60점 이상)",
@@ -1010,11 +1131,203 @@
                         <li><code>flex-wrap</code>: 줄바꿈 여부를 설정합니다. nowrap이 기본값입니다.</li>
                     </ul>
                     
+                    <h3>CSS Grid 완벽 마스터</h3>
+                    <p>CSS Grid는 <strong>2차원 레이아웃 시스템</strong>으로, 행과 열을 동시에 제어할 수 있습니다. 
+                    웹디자인개발기능사 시험에서 복잡한 레이아웃을 구현할 때 필수적으로 사용하는 중요한 기술입니다.</p>
+                    
+                    <h4>Grid vs Flexbox 언제 무엇을 사용할까?</h4>
+                    <div style="overflow-x: auto; margin: 20px 0;">
+                        <table style="width: 100%; border-collapse: collapse; border: 1px solid #ddd; background: white;">
+                            <thead>
+                                <tr style="background: #667eea; color: white;">
+                                    <th style="padding: 12px; border: 1px solid #ddd; text-align: left;"></th>
+                                    <th style="padding: 12px; border: 1px solid #ddd; text-align: left;">CSS Grid</th>
+                                    <th style="padding: 12px; border: 1px solid #ddd; text-align: left;">Flexbox</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td style="padding: 10px; border: 1px solid #ddd; font-weight: bold;">차원</td>
+                                    <td style="padding: 10px; border: 1px solid #ddd;">2차원 (행 + 열)</td>
+                                    <td style="padding: 10px; border: 1px solid #ddd;">1차원 (행 또는 열)</td>
+                                </tr>
+                                <tr style="background: #f9f9f9;">
+                                    <td style="padding: 10px; border: 1px solid #ddd; font-weight: bold;">용도</td>
+                                    <td style="padding: 10px; border: 1px solid #ddd;">페이지 전체 레이아웃</td>
+                                    <td style="padding: 10px; border: 1px solid #ddd;">컴포넌트 내부 정렬</td>
+                                </tr>
+                                <tr>
+                                    <td style="padding: 10px; border: 1px solid #ddd; font-weight: bold;">예시</td>
+                                    <td style="padding: 10px; border: 1px solid #ddd;">헤더, 사이드바, 메인, 푸터 배치</td>
+                                    <td style="padding: 10px; border: 1px solid #ddd;">버튼 그룹, 카드 내부 요소 정렬</td>
+                                </tr>
+                                <tr style="background: #f9f9f9;">
+                                    <td style="padding: 10px; border: 1px solid #ddd; font-weight: bold;">적용 시점</td>
+                                    <td style="padding: 10px; border: 1px solid #ddd;">큰 구조 설계 시</td>
+                                    <td style="padding: 10px; border: 1px solid #ddd;">작은 요소 정렬 시</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    
+                    <h4>Grid 기본 문법</h4>
+                    <div class="code-example">
+                        <pre>.container {
+    display: grid;  /* Grid 레이아웃 활성화 */
+    grid-template-columns: 200px 1fr 200px;  /* 3열: 200px, 남은 공간, 200px */
+    grid-template-rows: 80px 1fr 60px;  /* 3행: 80px, 남은 공간, 60px */
+    gap: 20px;  /* 그리드 아이템 간격 */
+}</pre>
+                    </div>
+                    
+                    <h4>실전 패턴 1: 홀리 그레일 레이아웃 (Holy Grail Layout)</h4>
+                    <p>헤더, 사이드바, 메인 콘텐츠, 푸터를 포함한 전형적인 레이아웃 패턴입니다.</p>
+                    <div class="code-example">
+                        <pre>&lt;style&gt;
+.container {
+    display: grid;
+    grid-template-areas:
+        "header header header"
+        "nav main aside"
+        "footer footer footer";
+    grid-template-columns: 200px 1fr 200px;
+    grid-template-rows: auto 1fr auto;
+    min-height: 100vh;
+    gap: 20px;
+}
+
+header { grid-area: header; }
+nav    { grid-area: nav; }
+main   { grid-area: main; }
+aside  { grid-area: aside; }
+footer { grid-area: footer; }
+
+/* 반응형: 모바일 */
+@media (max-width: 768px) {
+    .container {
+        grid-template-areas:
+            "header"
+            "nav"
+            "main"
+            "aside"
+            "footer";
+        grid-template-columns: 1fr;
+    }
+}
+&lt;/style&gt;</pre>
+                    </div>
+                    
+                    <h4>실전 패턴 2: 카드 그리드 (자동 조절)</h4>
+                    <p>카드들이 자동으로 줄바꿈되며 반응형으로 배치되는 패턴입니다.</p>
+                    <div class="code-example">
+                        <pre>&lt;style&gt;
+.card-grid {
+    display: grid;
+    /* 최소 300px, 자동으로 열 개수 조절 */
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 30px;
+}
+
+/* auto-fit vs auto-fill */
+/* auto-fit: 빈 공간을 기존 카드로 확장 */
+/* auto-fill: 빈 공간에 빈 트랙 생성 */
+
+.card-grid-fill {
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+}
+&lt;/style&gt;</pre>
+                    </div>
+                    
+                    <h4>실전 패턴 3: 매거진 레이아웃</h4>
+                    <p>크기가 다른 아이템들을 그리드로 배치하는 레이아웃입니다.</p>
+                    <div class="code-example">
+                        <pre>&lt;style&gt;
+.magazine {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    grid-auto-rows: 200px;
+    gap: 10px;
+}
+
+/* 특정 아이템 크기 조절 */
+.featured {
+    grid-column: span 2;  /* 2열 차지 */
+    grid-row: span 2;     /* 2행 차지 */
+}
+
+.wide {
+    grid-column: span 2;  /* 2열 차지 */
+}
+
+.tall {
+    grid-row: span 2;     /* 2행 차지 */
+}
+&lt;/style&gt;
+
+&lt;div class="magazine"&gt;
+    &lt;article class="featured"&gt;주요 기사&lt;/article&gt;
+    &lt;article class="wide"&gt;가로 기사&lt;/article&gt;
+    &lt;article&gt;일반 기사 1&lt;/article&gt;
+    &lt;article class="tall"&gt;세로 기사&lt;/article&gt;
+    &lt;article&gt;일반 기사 2&lt;/article&gt;
+&lt;/div&gt;</pre>
+                    </div>
+                    
+                    <h4>고급 기법: 명명된 라인 (Named Lines)</h4>
+                    <p>라인에 이름을 부여하여 더 직관적으로 그리드를 구성할 수 있습니다.</p>
+                    <div class="code-example">
+                        <pre>&lt;style&gt;
+.grid {
+    display: grid;
+    grid-template-columns:
+        [sidebar-start] 200px
+        [sidebar-end main-start] 1fr
+        [main-end];
+    grid-template-rows:
+        [header-start] 80px
+        [header-end content-start] 1fr
+        [content-end footer-start] 60px
+        [footer-end];
+}
+
+.sidebar {
+    grid-column: sidebar-start / sidebar-end;
+    grid-row: content-start / content-end;
+}
+
+.main {
+    grid-column: main-start / main-end;
+    grid-row: content-start / content-end;
+}
+&lt;/style&gt;</pre>
+                    </div>
+                    
+                    <h4>Grid 주요 속성 정리</h4>
+                    <ul style="margin-left: 20px; margin-top: 10px;">
+                        <li><code>grid-template-columns</code>: 열(column)의 크기와 개수를 정의</li>
+                        <li><code>grid-template-rows</code>: 행(row)의 크기와 개수를 정의</li>
+                        <li><code>grid-template-areas</code>: 영역 이름으로 레이아웃 구성</li>
+                        <li><code>gap</code>: 그리드 아이템 간격 (grid-row-gap, grid-column-gap의 단축형)</li>
+                        <li><code>grid-column</code>: 아이템이 차지할 열 범위 지정</li>
+                        <li><code>grid-row</code>: 아이템이 차지할 행 범위 지정</li>
+                        <li><code>grid-area</code>: 아이템이 차지할 영역 지정</li>
+                    </ul>
+                    
+                    <h4>웹디자인개발기능사 시험에서 Grid 활용 팁</h4>
+                    <ul style="margin-left: 20px; margin-top: 10px;">
+                        <li><strong>복잡한 레이아웃:</strong> 헤더, 사이드바, 메인, 푸터가 모두 있는 경우 Grid 사용</li>
+                        <li><strong>반응형 레이아웃:</strong> 미디어 쿼리로 grid-template-areas 변경하여 모바일 대응</li>
+                        <li><strong>카드 그리드:</strong> auto-fit, auto-fill로 자동 반응형 카드 배치</li>
+                        <li><strong>불규칙한 레이아웃:</strong> grid-column: span, grid-row: span으로 크기 조절</li>
+                        <li><strong>명명된 라인:</strong> 복잡한 그리드를 더 읽기 쉽게 만들기</li>
+                    </ul>
+                    
                     <h3>웹디자인개발기능사 시험에서의 CSS 작성 팁</h3>
                     <ul style="margin-left: 20px; margin-top: 10px;">
                         <li>선택자를 정확히 작성하여 원하는 요소만 선택합니다 (특히 자손/자식 선택자 구분)</li>
                         <li>박스 모델을 이해하고 margin과 padding을 적절히 사용합니다</li>
-                        <li>Flexbox를 활용하여 레이아웃을 쉽고 정확하게 구성합니다</li>
+                        <li>Flexbox를 활용하여 컴포넌트 내부 정렬을 쉽고 정확하게 구성합니다</li>
+                        <li><strong>Grid를 활용하여 페이지 전체 레이아웃을 2차원으로 구성합니다</strong></li>
                         <li>색상 코드를 정확히 입력합니다 (대소문자, # 기호 등)</li>
                         <li>속성 값 뒤에 세미콜론(;)을 빼먹지 않습니다</li>
                         <li>중괄호의 열고 닫기가 정확한지 확인합니다</li>
@@ -4810,7 +5123,17 @@ passwordInput.addEventListener('input', function() {
                 content: `
                     <h3>웹 접근성이란?</h3>
                     <p>웹 접근성(Web Accessibility)은 <strong>장애인을 포함한 모든 사용자가 웹사이트를 이용할 수 있도록 보장</strong>하는 것입니다. 
-                    WCAG(Web Content Accessibility Guidelines) 가이드라인을 따라야 합니다.</p>
+                    WCAG 2.1(Web Content Accessibility Guidelines 2.1) 가이드라인을 따라야 합니다.</p>
+                    
+                    <div style="background: #d1ecf1; padding: 20px; border-radius: 8px; margin: 15px 0; border-left: 4px solid #0c5460;">
+                        <p style="margin: 0; font-weight: bold; color: #0c5460;">2024년 웹디자인개발기능사 시험 변경사항</p>
+                        <p style="margin: 10px 0 0 0;"><strong>웹 접근성 비중:</strong> 10% → 20% (10%↑)</p>
+                        <ul style="margin: 10px 0 0 20px;">
+                            <li>ARIA 레이블 적용 필수</li>
+                            <li>키보드 네비게이션 구현</li>
+                            <li>스크린 리더 지원 (alt 속성, 시맨틱 태그)</li>
+                        </ul>
+                    </div>
                     
                     <h3>웹 접근성의 중요성</h3>
                     <ul style="margin-left: 20px; margin-top: 10px;">
@@ -4819,6 +5142,207 @@ passwordInput.addEventListener('input', function() {
                         <li><strong>SEO 향상:</strong> 검색 엔진이 콘텐츠를 더 잘 이해</li>
                         <li><strong>사용성 향상:</strong> 일반 사용자에게도 더 나은 경험 제공</li>
                     </ul>
+                    
+                    <h3>🌐 WCAG 2.1 4대 원칙</h3>
+                    <p>WCAG 2.1은 다음 4가지 원칙을 기반으로 합니다:</p>
+                    
+                    <div style="background: #f0f8ff; padding: 20px; border-radius: 8px; margin: 15px 0;">
+                        <h4 style="margin-top: 0; color: #0066cc;">1. 인식의 용이성 (Perceivable)</h4>
+                        <p>모든 사용자가 콘텐츠를 인식할 수 있어야 합니다.</p>
+                        
+                        <h5>대체 텍스트 (Alt Text)</h5>
+                        <div class="code-example">
+                            <pre>&lt;!-- ❌ 잘못된 예 --&gt;
+&lt;img src="logo.png"&gt;
+&lt;img src="logo.png" alt="이미지"&gt;
+
+&lt;!-- ✅ 올바른 예 --&gt;
+&lt;img src="logo.png" alt="IT Webbook 로고"&gt;
+&lt;img src="ceo-photo.jpg" alt="김대표 CEO 프로필 사진"&gt;
+
+&lt;!-- 장식용 이미지는 빈 alt --&gt;
+&lt;img src="decorative-line.png" alt=""&gt;</pre>
+                        </div>
+                        
+                        <h5>색상 대비</h5>
+                        <div class="code-example">
+                            <pre>&lt;style&gt;
+/* ❌ 낮은 대비 (명도 대비 2.5:1) */
+.low-contrast {
+    color: #777777;
+    background: #999999;
+}
+
+/* ✅ 높은 대비 (명도 대비 7:1) */
+.high-contrast {
+    color: #000000;
+    background: #FFFFFF;
+}
+
+/* ✅ 텍스트는 최소 4.5:1 이상 (WCAG AA) */
+.body-text {
+    color: #333333;
+    background: #FFFFFF;
+    /* 명도 대비: 12.63:1 */
+}
+
+/* ✅ 큰 텍스트(18px 이상)는 3:1 이상 */
+h1 {
+    font-size: 24px;
+    color: #666666;
+    background: #FFFFFF;
+    /* 명도 대비: 5.7:1 */
+}
+&lt;/style&gt;</pre>
+                        </div>
+                    </div>
+                    
+                    <div style="background: #f0f8ff; padding: 20px; border-radius: 8px; margin: 15px 0;">
+                        <h4 style="margin-top: 0; color: #0066cc;">2. 운용의 용이성 (Operable)</h4>
+                        <p>모든 사용자가 인터페이스를 조작할 수 있어야 합니다.</p>
+                        
+                        <h5>키보드 접근성</h5>
+                        <div class="code-example">
+                            <pre>&lt;!-- ❌ 마우스만 가능 --&gt;
+&lt;div onclick="openMenu()"&gt;메뉴&lt;/div&gt;
+
+&lt;!-- ✅ 키보드도 가능 --&gt;
+&lt;button type="button" 
+        onclick="openMenu()"
+        onkeypress="if(event.key==='Enter') openMenu()"&gt;
+    메뉴
+&lt;/button&gt;
+
+&lt;!-- ✅ 포커스 시각화 --&gt;
+&lt;style&gt;
+button:focus, a:focus {
+    outline: 3px solid #0066FF;
+    outline-offset: 2px;
+}
+
+/* ⚠️ outline: none; 사용 금지! */
+&lt;/style&gt;</pre>
+                        </div>
+                        
+                        <h5>본문 바로가기 (스킵 내비게이션)</h5>
+                        <div class="code-example">
+                            <pre>&lt;body&gt;
+    &lt;!-- 스킵 내비게이션 --&gt;
+    &lt;a href="#content" class="skip-nav"&gt;본문 바로가기&lt;/a&gt;
+    
+    &lt;nav&gt;...&lt;/nav&gt;
+    
+    &lt;main id="content"&gt;
+        &lt;h1&gt;메인 콘텐츠&lt;/h1&gt;
+    &lt;/main&gt;
+&lt;/body&gt;
+
+&lt;style&gt;
+.skip-nav {
+    position: absolute;
+    top: -40px;
+    left: 0;
+    background: #000;
+    color: #FFF;
+    padding: 10px 20px;
+    z-index: 100;
+}
+
+.skip-nav:focus {
+    top: 0;
+}
+&lt;/style&gt;</pre>
+                        </div>
+                    </div>
+                    
+                    <div style="background: #f0f8ff; padding: 20px; border-radius: 8px; margin: 15px 0;">
+                        <h4 style="margin-top: 0; color: #0066cc;">3. 이해의 용이성 (Understandable)</h4>
+                        <p>콘텐츠와 인터페이스를 이해할 수 있어야 합니다.</p>
+                        
+                        <h5>명확한 레이블</h5>
+                        <div class="code-example">
+                            <pre>&lt;!-- ❌ 불명확 --&gt;
+&lt;input type="text" placeholder="입력"&gt;
+
+&lt;!-- ✅ 명확한 레이블 --&gt;
+&lt;label for="username"&gt;아이디 (필수)&lt;/label&gt;
+&lt;input type="text" id="username" 
+       aria-required="true"
+       aria-describedby="username-help"&gt;
+&lt;span id="username-help"&gt;4-12자의 영문, 숫자&lt;/span&gt;
+
+&lt;!-- 오류 메시지 --&gt;
+&lt;div role="alert" aria-live="assertive"&gt;
+    아이디는 4자 이상이어야 합니다.
+&lt;/div&gt;</pre>
+                        </div>
+                    </div>
+                    
+                    <div style="background: #f0f8ff; padding: 20px; border-radius: 8px; margin: 15px 0;">
+                        <h4 style="margin-top: 0; color: #0066cc;">4. 견고성 (Robust)</h4>
+                        <p>다양한 기술로 콘텐츠를 해석할 수 있어야 합니다.</p>
+                        
+                        <h5>ARIA 역할 명시</h5>
+                        <div class="code-example">
+                            <pre>&lt;!-- 네비게이션 --&gt;
+&lt;nav role="navigation" aria-label="주 메뉴"&gt;
+    &lt;ul&gt;
+        &lt;li&gt;&lt;a href="/"&gt;홈&lt;/a&gt;&lt;/li&gt;
+        &lt;li&gt;&lt;a href="/about" aria-current="page"&gt;소개&lt;/a&gt;&lt;/li&gt;
+    &lt;/ul&gt;
+&lt;/nav&gt;
+
+&lt;!-- 모달 대화상자 --&gt;
+&lt;div role="dialog" 
+     aria-labelledby="modal-title"
+     aria-describedby="modal-desc"
+     aria-modal="true"&gt;
+    &lt;h2 id="modal-title"&gt;알림&lt;/h2&gt;
+    &lt;p id="modal-desc"&gt;저장되었습니다.&lt;/p&gt;
+    &lt;button&gt;확인&lt;/button&gt;
+&lt;/div&gt;
+
+&lt;!-- 동적 콘텐츠 알림 --&gt;
+&lt;div role="status" aria-live="polite"&gt;
+    3개의 새로운 메시지
+&lt;/div&gt;</pre>
+                        </div>
+                    </div>
+                    
+                    <h3>🔍 자동 검사 도구</h3>
+                    <div style="overflow-x: auto; margin: 20px 0;">
+                        <table style="width: 100%; border-collapse: collapse; border: 1px solid #ddd; background: white;">
+                            <thead>
+                                <tr style="background: #667eea; color: white;">
+                                    <th style="padding: 12px; border: 1px solid #ddd; text-align: left;">도구</th>
+                                    <th style="padding: 12px; border: 1px solid #ddd; text-align: left;">설명</th>
+                                    <th style="padding: 12px; border: 1px solid #ddd; text-align: left;">사용법</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td style="padding: 10px; border: 1px solid #ddd; font-weight: bold;">axe DevTools</td>
+                                    <td style="padding: 10px; border: 1px solid #ddd;">Chrome 확장 프로그램</td>
+                                    <td style="padding: 10px; border: 1px solid #ddd;">개발자 도구 → axe 탭</td>
+                                </tr>
+                                <tr style="background: #f9f9f9;">
+                                    <td style="padding: 10px; border: 1px solid #ddd; font-weight: bold;">WAVE</td>
+                                    <td style="padding: 10px; border: 1px solid #ddd;">웹 접근성 평가</td>
+                                    <td style="padding: 10px; border: 1px solid #ddd;">https://wave.webaim.org</td>
+                                </tr>
+                                <tr>
+                                    <td style="padding: 10px; border: 1px solid #ddd; font-weight: bold;">Lighthouse</td>
+                                    <td style="padding: 10px; border: 1px solid #ddd;">Chrome 내장</td>
+                                    <td style="padding: 10px; border: 1px solid #ddd;">개발자 도구 → Lighthouse</td>
+                                </tr>
+                                <tr style="background: #f9f9f9;">
+                                    <td style="padding: 10px; border: 1px solid #ddd; font-weight: bold;">W3C Validator</td>
+                                    <td style="padding: 10px; border: 1px solid #ddd;">HTML/CSS 검증</td>
+                                    <td style="padding: 10px; border: 1px solid #ddd;">https://validator.w3.org</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
                     
                     <h3>시맨틱 HTML 사용</h3>
                     <div class="code-example">

@@ -675,6 +675,13 @@
                     <h2>제너레이터와 이터레이터</h2>
                     <p>반복 가능한 객체와 제너레이터 함수</p>
                 </div>
+                
+                <div class="chapter-box" onclick="showLesson(21)">
+                    <div class="chapter-icon">🚀</div>
+                    <div class="chapter-number">21</div>
+                    <h2>ES2020+ 최신 문법</h2>
+                    <p>Optional Chaining, Nullish Coalescing 등 최신 기능</p>
+                </div>
             </div>
         </div>
 
@@ -2004,6 +2011,208 @@ getData();</pre>
     console.log(data1, data2);
 }</pre>
                     </div>
+                    
+                    <h3>Promise 에러 처리 완벽 가이드</h3>
+                    
+                    <h4>1. 에러 재시도 로직</h4>
+                    <div class="code-example">
+                        <pre>async function fetchWithRetry(url, maxRetries = 3) {
+    for (let i = 0; i < maxRetries; i++) {
+        try {
+            const response = await fetch(url);
+            if (!response.ok) throw new Error(\`HTTP \${response.status}\`);
+            return await response.json();
+        } catch (error) {
+            console.log(\`시도 \${i + 1}/\${maxRetries} 실패: \${error.message}\`);
+            
+            if (i === maxRetries - 1) {
+                throw error;  // 마지막 시도면 에러 던지기
+            }
+            
+            // 지수 백오프 (exponential backoff)
+            const delay = 1000 * Math.pow(2, i);  // 1초, 2초, 4초...
+            await new Promise(resolve => setTimeout(resolve, delay));
+        }
+    }
+}
+
+// 사용
+try {
+    const data = await fetchWithRetry('/api/data');
+    console.log('성공:', data);
+} catch (error) {
+    console.error('모든 시도 실패:', error);
+}</pre>
+                    </div>
+                    
+                    <h4>2. Promise 동시성 제어</h4>
+                    <div class="code-example">
+                        <pre>// Promise.all (모두 성공해야 함)
+Promise.all([
+    fetch('/api/users'),
+    fetch('/api/posts')
+]).then(([users, posts]) => {
+    console.log('모두 성공');
+}).catch(error => {
+    console.log('하나라도 실패하면 여기로');
+});
+
+// Promise.race (가장 먼저 완료된 것 사용)
+Promise.race([
+    fetch('/api/server1'),
+    fetch('/api/server2'),
+    fetch('/api/server3')
+]).then(response => {
+    console.log('가장 빠른 서버 응답 사용');
+});
+
+// Promise.any (하나라도 성공하면 OK)
+Promise.any([
+    fetch('/api/cdn1'),
+    fetch('/api/cdn2'),
+    fetch('/api/cdn3')
+]).then(response => {
+    console.log('하나라도 성공하면 사용');
+}).catch(error => {
+    console.log('모두 실패했을 때만 에러');
+});</pre>
+                    </div>
+                    
+                    <h4>3. 병렬 처리 최적화</h4>
+                    <div class="code-example">
+                        <pre>// ❌ 잘못된 예: 순차 처리 (느림)
+async function fetchAllUsers(userIds) {
+    const users = [];
+    for (const id of userIds) {
+        const user = await fetch(\`/api/users/\${id}\`);
+        users.push(await user.json());
+    }
+    return users;  // 10명이면 10초 걸림 (각 1초 가정)
+}
+
+// ✅ 올바른 예: 병렬 처리 (빠름)
+async function fetchAllUsers(userIds) {
+    const promises = userIds.map(id => 
+        fetch(\`/api/users/\${id}\`).then(r => r.json())
+    );
+    return await Promise.all(promises);  // 10명이어도 1초만 걸림!
+}
+
+// ✅ 더 나은 예: 동시 요청 수 제한 (서버 부하 방지)
+async function fetchWithLimit(urls, limit = 5) {
+    const results = [];
+    for (let i = 0; i < urls.length; i += limit) {
+        const chunk = urls.slice(i, i + limit);
+        const chunkResults = await Promise.all(
+            chunk.map(url => fetch(url).then(r => r.json()))
+        );
+        results.push(...chunkResults);
+    }
+    return results;
+}
+
+// 100개 URL을 5개씩 나눠서 요청 (총 20번)</pre>
+                    </div>
+                    
+                    <h4>4. 타임아웃 설정</h4>
+                    <div class="code-example">
+                        <pre>function fetchWithTimeout(url, timeout = 5000) {
+    return Promise.race([
+        fetch(url),
+        new Promise((_, reject) => 
+            setTimeout(() => reject(new Error('Timeout')), timeout)
+        )
+    ]);
+}
+
+// 사용
+try {
+    const response = await fetchWithTimeout('/api/data', 3000);
+    const data = await response.json();
+    console.log(data);
+} catch (error) {
+    if (error.message === 'Timeout') {
+        console.error('요청 시간 초과');
+    } else {
+        console.error('다른 에러:', error);
+    }
+}</pre>
+                    </div>
+                    
+                    <h4>5. 실전 종합 예제</h4>
+                    <div class="code-example">
+                        <pre>// 재시도 + 타임아웃 + 병렬 처리 조합
+async function robustFetch(url, options = {}) {
+    const {
+        maxRetries = 3,
+        timeout = 5000,
+        retryDelay = 1000
+    } = options;
+    
+    for (let i = 0; i < maxRetries; i++) {
+        try {
+            // 타임아웃 적용
+            const response = await Promise.race([
+                fetch(url),
+                new Promise((_, reject) => 
+                    setTimeout(() => reject(new Error('Timeout')), timeout)
+                )
+            ]);
+            
+            if (!response.ok) {
+                throw new Error(\`HTTP \${response.status}\`);
+            }
+            
+            return await response.json();
+            
+        } catch (error) {
+            console.log(\`시도 \${i + 1}/\${maxRetries} 실패\`);
+            
+            if (i === maxRetries - 1) {
+                throw error;
+            }
+            
+            // 지수 백오프로 재시도
+            await new Promise(resolve => 
+                setTimeout(resolve, retryDelay * Math.pow(2, i))
+            );
+        }
+    }
+}
+
+// 여러 URL 병렬 처리 (제한 있음)
+async function fetchMultiple(urls) {
+    const limit = 5;
+    const results = [];
+    
+    for (let i = 0; i < urls.length; i += limit) {
+        const chunk = urls.slice(i, i + limit);
+        
+        const chunkResults = await Promise.allSettled(
+            chunk.map(url => robustFetch(url))
+        );
+        
+        results.push(...chunkResults);
+    }
+    
+    return results;
+}
+
+// 사용
+const urls = [
+    '/api/users/1',
+    '/api/users/2',
+    '/api/users/3',
+    // ... 100개
+];
+
+const results = await fetchMultiple(urls);
+const successData = results
+    .filter(r => r.status === 'fulfilled')
+    .map(r => r.value);
+    
+console.log(\`성공: \${successData.length}/\${urls.length}\`);</pre>
+                    </div>
                 `,
                 problem: "async 함수 fetchData를 만들고, 내부에서 Promise를 생성하여 resolve('완료!')를 호출하세요. await를 사용하여 결과를 받아 콘솔에 출력하세요.",
                 solution: "async function fetchData() {\n    let promise = new Promise(function(resolve) {\n        resolve('완료!');\n    });\n    \n    let result = await promise;\n    console.log(result);\n}\n\nfetchData();",
@@ -3067,6 +3276,212 @@ for (let value of bigRangeGen) {
                                code.includes("yield") &&
                                code.includes("numberGen") ||
                                code.includes("numberGen");
+                    } catch (e) {
+                        return false;
+                    }
+                }
+            },
+            {
+                title: "ES2020+ 최신 문법",
+                content: `
+                    <h3>ES2020+란?</h3>
+                    <p>ES2020+는 <strong>ECMAScript 2020 이후 추가된 최신 JavaScript 문법</strong>입니다. 
+                    Optional Chaining, Nullish Coalescing, Promise.allSettled() 등 실무에서 유용한 기능들을 제공합니다.</p>
+                    
+                    <h3>1. Optional Chaining (?.)</h3>
+                    <p>Optional Chaining은 <strong>중첩된 객체의 속성에 안전하게 접근</strong>할 수 있는 연산자입니다. 
+                    null이나 undefined인 경우 에러를 발생시키지 않고 undefined를 반환합니다.</p>
+                    
+                    <div class="code-example">
+                        <pre>// 기존 방식 (번거로움)
+const city = user && user.address && user.address.city;
+
+// Optional Chaining (간결함)
+const city = user?.address?.city;
+
+// 배열에도 사용 가능
+const first = array?.[0];
+
+// 함수 호출에도 사용 가능
+const result = obj.method?.();
+
+// 실전 예시
+function getUserInfo(user) {
+    return {
+        name: user?.profile?.name ?? '이름 없음',
+        age: user?.profile?.age ?? 0,
+        email: user?.contact?.email ?? '이메일 없음'
+    };
+}
+
+console.log(getUserInfo({ profile: { name: 'Alice' } }));
+// { name: 'Alice', age: 0, email: '이메일 없음' }
+
+console.log(getUserInfo(null));
+// { name: '이름 없음', age: 0, email: '이메일 없음' }</pre>
+                    </div>
+                    
+                    <h3>2. Nullish Coalescing (??)</h3>
+                    <p>Nullish Coalescing은 <strong>null 또는 undefined일 때만 기본값을 사용</strong>하는 연산자입니다. 
+                    || 연산자와 달리 0, '', false 같은 falsy 값은 유효한 값으로 취급합니다.</p>
+                    
+                    <div class="code-example">
+                        <pre>// || 연산자 문제점
+const count = 0;
+const result = count || 10;  // 0은 falsy → 10 반환
+console.log(result);  // 10 (잘못됨!)
+
+// ?? 연산자 (정확함)
+const count = 0;
+const result = count ?? 10;  // 0은 null/undefined 아님 → 0 반환
+console.log(result);  // 0 (올바름!)
+
+// 실전 예시
+function getConfig(userConfig) {
+    return {
+        timeout: userConfig.timeout ?? 5000,
+        retries: userConfig.retries ?? 3,
+        debug: userConfig.debug ?? false  // false도 유효한 값!
+    };
+}
+
+// Optional Chaining과 함께 사용
+const value = obj?.prop ?? '기본값';</pre>
+                    </div>
+                    
+                    <h3>3. Promise.allSettled()</h3>
+                    <p>Promise.allSettled()는 <strong>모든 Promise가 완료될 때까지 기다립니다</strong> (성공/실패 무관). 
+                    Promise.all()과 달리 하나가 실패해도 다른 Promise의 결과를 받을 수 있습니다.</p>
+                    
+                    <div class="code-example">
+                        <pre>// Promise.all vs Promise.allSettled
+
+// Promise.all (하나라도 실패하면 즉시 reject)
+Promise.all([
+    fetch('/api/users'),
+    fetch('/api/posts'),
+    fetch('/api/invalid')  // 실패!
+]).catch(error => {
+    console.log('하나라도 실패하면 여기로');
+    // 성공한 것들도 결과를 못 받음
+});
+
+// Promise.allSettled (모두 완료까지 기다림)
+Promise.allSettled([
+    fetch('/api/users'),
+    fetch('/api/posts'),
+    fetch('/api/invalid')  // 실패해도 계속 진행
+]).then(results => {
+    results.forEach((result, index) => {
+        if (result.status === 'fulfilled') {
+            console.log(\`요청 \${index} 성공:\`, result.value);
+        } else {
+            console.log(\`요청 \${index} 실패:\`, result.reason);
+        }
+    });
+});
+
+// 실전 예시: 여러 API 동시 호출
+async function fetchDashboard() {
+    const results = await Promise.allSettled([
+        fetch('/api/user').then(r => r.json()),
+        fetch('/api/posts').then(r => r.json()),
+        fetch('/api/comments').then(r => r.json())
+    ]);
+    
+    const successData = results
+        .filter(r => r.status === 'fulfilled')
+        .map(r => r.value);
+    
+    const errors = results
+        .filter(r => r.status === 'rejected')
+        .map(r => r.reason);
+    
+    return { data: successData, errors };
+}</pre>
+                    </div>
+                    
+                    <h3>4. String.prototype.replaceAll()</h3>
+                    <p>replaceAll()은 <strong>문자열의 모든 일치 항목을 한 번에 교체</strong>하는 메서드입니다. 
+                    정규식 없이도 간단하게 모든 문자열을 교체할 수 있습니다.</p>
+                    
+                    <div class="code-example">
+                        <pre>// 기존 방식 (정규식 필요)
+const text = 'apple apple apple';
+const result1 = text.replace(/apple/g, 'orange');
+
+// replaceAll (더 간단)
+const result2 = text.replaceAll('apple', 'orange');
+
+console.log(result1);  // 'orange orange orange'
+console.log(result2);  // 'orange orange orange'
+
+// 실전 예시: HTML 이스케이프
+function escapeHtml(text) {
+    return text
+        .replaceAll('&', '&amp;')
+        .replaceAll('<', '&lt;')
+        .replaceAll('>', '&gt;')
+        .replaceAll('"', '&quot;')
+        .replaceAll("'", '&#039;');
+}
+
+console.log(escapeHtml('<script>alert("XSS")</script>'));
+// &lt;script&gt;alert(&quot;XSS&quot;)&lt;/script&gt;</pre>
+                    </div>
+                    
+                    <h3>5. 실전 활용 예제</h3>
+                    <p>Optional Chaining과 Nullish Coalescing을 함께 사용하는 예제입니다:</p>
+                    
+                    <div class="code-example">
+                        <pre>// 안전하게 중첩 객체 값 가져오기
+function safeGet(obj, path, defaultValue) {
+    // 방법 1: Optional Chaining 직접 사용
+    const value = obj?.level1?.level2?.level3 ?? defaultValue;
+    return value;
+    
+    // 방법 2: 동적 경로
+    const keys = path.split('.');
+    let result = obj;
+    for (const key of keys) {
+        result = result?.[key];
+    }
+    return result ?? defaultValue;
+}
+
+// 사용 예시
+const data = {
+    user: {
+        profile: {
+            name: 'Alice'
+        }
+    }
+};
+
+console.log(safeGet(data, 'user.profile.name', '이름 없음'));
+// 'Alice'
+
+console.log(safeGet(data, 'user.profile.age', 0));
+// 0
+
+console.log(safeGet(null, 'user.profile.name', '이름 없음'));
+// '이름 없음'</pre>
+                    </div>
+                    
+                    <h3>6. 브라우저 호환성</h3>
+                    <ul style="margin-left: 20px; margin-top: 10px;">
+                        <li><strong>Optional Chaining:</strong> Chrome 80+, Firefox 74+, Safari 13.1+</li>
+                        <li><strong>Nullish Coalescing:</strong> Chrome 80+, Firefox 72+, Safari 13.1+</li>
+                        <li><strong>Promise.allSettled:</strong> Chrome 76+, Firefox 71+, Safari 13+</li>
+                        <li><strong>replaceAll:</strong> Chrome 85+, Firefox 77+, Safari 13.1+</li>
+                        <li>구형 브라우저 지원이 필요한 경우 Babel을 사용하여 트랜스파일링 필요</li>
+                    </ul>
+                `,
+                problem: "Optional Chaining과 Nullish Coalescing을 사용하여 안전하게 중첩 객체의 값을 가져오는 함수를 작성하세요. obj?.level1?.level2 ?? '기본값' 형식으로 작성하세요.",
+                solution: "function safeGet(obj) {\n    return obj?.level1?.level2 ?? '기본값';\n}\n\n// 또는\nconst value = obj?.level1?.level2 ?? '기본값';",
+                test: (code) => {
+                    try {
+                        return code.includes('?.') && code.includes('??');
                     } catch (e) {
                         return false;
                     }
