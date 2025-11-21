@@ -110,6 +110,84 @@
             color: white;
         }
 
+        /* 햄버거 메뉴 버튼 */
+        .hamburger {
+            display: none;
+            flex-direction: column;
+            cursor: pointer;
+            padding: 8px;
+            background: none;
+            border: none;
+            gap: 5px;
+        }
+
+        .hamburger span {
+            display: block;
+            width: 25px;
+            height: 3px;
+            background: #333;
+            border-radius: 3px;
+            transition: all 0.3s ease;
+        }
+
+        .hamburger.active span:nth-child(1) {
+            transform: rotate(45deg) translate(8px, 8px);
+        }
+
+        .hamburger.active span:nth-child(2) {
+            opacity: 0;
+        }
+
+        .hamburger.active span:nth-child(3) {
+            transform: rotate(-45deg) translate(7px, -7px);
+        }
+
+        /* 모바일 반응형 */
+        @media (max-width: 768px) {
+            .navbar {
+                padding: 10px 0;
+            }
+
+            .navbar-content {
+                flex-wrap: wrap;
+                justify-content: space-between;
+                padding: 0 15px;
+            }
+
+            .hamburger {
+                display: flex;
+                order: 2;
+            }
+
+            .navbar-menu {
+                display: none;
+                width: 100%;
+                order: 3;
+                flex-direction: column;
+                gap: 0;
+                margin-top: 15px;
+            }
+
+            .navbar-menu.active {
+                display: flex;
+            }
+
+            .navbar-menu a {
+                width: 100%;
+                padding: 12px 15px;
+                border-bottom: 1px solid #eee;
+                text-align: left;
+            }
+
+            .navbar-menu a:last-child {
+                border-bottom: none;
+            }
+
+            body {
+                padding-top: 60px;
+            }
+        }
+
         /* 메인 화면 */
         .main-screen {
             text-align: center;
@@ -459,13 +537,20 @@
     <!-- 네비게이션 바 -->
     <nav class="navbar">
         <div class="navbar-content">
-            <a href="index.html">홈</a>
-            <a href="webdesign.html">웹디자인개발기능사</a>
-            <a href="cs.html" class="active">CS리더스관리사</a>
-            <a href="javascript.html">JavaScript</a>
-            <a href="node.html">Node.js</a>
-            <a href="python.html">Python</a>
-            <a href="kotlin.html">Kotlin</a>
+            <div class="navbar-menu" id="navbarMenu">
+                <a href="index.html">홈</a>
+                <a href="webdesign.html">웹디자인개발기능사</a>
+                <a href="cs.html" class="active">CS리더스관리사</a>
+                <a href="javascript.html">JavaScript</a>
+                <a href="node.html">Node.js</a>
+                <a href="python.html">Python</a>
+                <a href="kotlin.html">Kotlin</a>
+            </div>
+            <button class="hamburger" id="hamburger" onclick="toggleMenu()">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
         </div>
     </nav>
 
@@ -3093,7 +3178,7 @@
                 practiceSection.innerHTML = `
                     <h3>📝 학습 완료</h3>
                     <p>강의를 모두 학습하셨습니다. 다음 장으로 넘어가세요.</p>
-                    <button class="next-button" onclick="nextChapter(${chapterNum})">다음 강의로 →</button>
+                    <button class="next-button" onclick="nextChapter(${chapterNum})" style="margin-top: 20px;">다음 장으로 →</button>
                 `;
             } else if (!lesson.questions || lesson.questions.length === 0) {
                 // 문제가 없는 경우 (일부 강의에 문제가 추가되지 않은 경우)
@@ -3225,6 +3310,29 @@
                 showMainScreen();
             }
         }
+
+        // 햄버거 메뉴 토글
+        function toggleMenu() {
+            const menu = document.getElementById('navbarMenu');
+            const hamburger = document.getElementById('hamburger');
+            menu.classList.toggle('active');
+            hamburger.classList.toggle('active');
+        }
+
+        // 메뉴 링크 클릭 시 모바일에서 메뉴 닫기
+        document.addEventListener('DOMContentLoaded', function() {
+            const menuLinks = document.querySelectorAll('.navbar-menu a');
+            menuLinks.forEach(link => {
+                link.addEventListener('click', function() {
+                    if (window.innerWidth <= 768) {
+                        const menu = document.getElementById('navbarMenu');
+                        const hamburger = document.getElementById('hamburger');
+                        menu.classList.remove('active');
+                        hamburger.classList.remove('active');
+                    }
+                });
+            });
+        });
     </script>
 </body>
 </html>
