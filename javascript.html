@@ -647,6 +647,34 @@
                     <h2>모듈</h2>
                     <p>ES6 모듈 import/export</p>
                 </div>
+                
+                <div class="chapter-box" onclick="showLesson(17)">
+                    <div class="chapter-icon">🔗</div>
+                    <div class="chapter-number">17</div>
+                    <h2>프로토타입과 상속</h2>
+                    <p>JavaScript의 프로토타입 체인과 상속</p>
+                </div>
+                
+                <div class="chapter-box" onclick="showLesson(18)">
+                    <div class="chapter-icon">🎯</div>
+                    <div class="chapter-number">18</div>
+                    <h2>디스트럭처링과 스프레드</h2>
+                    <p>ES6의 구조 분해와 확장 연산자</p>
+                </div>
+                
+                <div class="chapter-box" onclick="showLesson(19)">
+                    <div class="chapter-icon">🔒</div>
+                    <div class="chapter-number">19</div>
+                    <h2>클로저와 스코프</h2>
+                    <p>변수 스코프와 클로저 활용</p>
+                </div>
+                
+                <div class="chapter-box" onclick="showLesson(20)">
+                    <div class="chapter-icon">🌀</div>
+                    <div class="chapter-number">20</div>
+                    <h2>제너레이터와 이터레이터</h2>
+                    <p>반복 가능한 객체와 제너레이터 함수</p>
+                </div>
             </div>
         </div>
 
@@ -2119,6 +2147,926 @@ console.log(math.add(2, 3));</pre>
                         return code.includes("export") &&
                                code.includes("function add") &&
                                code.includes("return");
+                    } catch (e) {
+                        return false;
+                    }
+                }
+            },
+            {
+                title: "프로토타입과 상속",
+                content: `
+                    <h3>프로토타입이란?</h3>
+                    <p>JavaScript는 <strong>프로토타입 기반 객체지향 언어</strong>입니다. 
+                    모든 객체는 프로토타입(Prototype)이라는 다른 객체를 참조하여 속성과 메서드를 상속받습니다. 
+                    이는 클래스 기반 언어와 다른 JavaScript만의 고유한 특징입니다.</p>
+                    
+                    <h3>프로토타입 체인</h3>
+                    <p>객체에서 속성이나 메서드를 찾을 때, 해당 객체에 없으면 프로토타입 체인을 따라 상위 프로토타입에서 찾습니다:</p>
+                    
+                    <div class="code-example">
+                        <pre>// 객체 생성
+let person = {
+    name: "홍길동",
+    age: 20
+};
+
+// person 객체의 프로토타입은 Object.prototype입니다
+console.log(person.toString()); // "[object Object]" (Object.prototype에서 상속)
+
+// 프로토타입 체인 확인
+console.log(person.__proto__ === Object.prototype); // true
+console.log(Object.prototype.__proto__); // null (최상위 프로토타입)</pre>
+                    </div>
+                    
+                    <h3>생성자 함수와 프로토타입</h3>
+                    <p><strong>생성자 함수</strong>를 사용하여 객체를 생성할 때, 프로토타입을 활용할 수 있습니다:</p>
+                    
+                    <div class="code-example">
+                        <pre>// 생성자 함수
+function Person(name, age) {
+    this.name = name;
+    this.age = age;
+}
+
+// 프로토타입에 메서드 추가
+Person.prototype.introduce = function() {
+    return "이름: " + this.name + ", 나이: " + this.age;
+};
+
+// 객체 생성
+let person1 = new Person("홍길동", 20);
+let person2 = new Person("김철수", 25);
+
+console.log(person1.introduce()); // "이름: 홍길동, 나이: 20"
+console.log(person2.introduce()); // "이름: 김철수, 나이: 25"
+
+// 같은 메서드를 공유 (프로토타입에 정의되어 있음)
+console.log(person1.introduce === person2.introduce); // true</pre>
+                    </div>
+                    
+                    <h3>프로토타입 상속</h3>
+                    <p>한 생성자 함수의 프로토타입이 다른 생성자 함수의 인스턴스를 참조하면 상속이 구현됩니다:</p>
+                    
+                    <div class="code-example">
+                        <pre>// 부모 생성자
+function Animal(name) {
+    this.name = name;
+}
+
+Animal.prototype.speak = function() {
+    return this.name + "가 소리를 냅니다";
+};
+
+// 자식 생성자
+function Dog(name, breed) {
+    Animal.call(this, name); // 부모 생성자 호출
+    this.breed = breed;
+}
+
+// 프로토타입 상속 설정
+Dog.prototype = Object.create(Animal.prototype);
+Dog.prototype.constructor = Dog;
+
+// 자식에 메서드 추가
+Dog.prototype.bark = function() {
+    return this.name + "가 멍멍 짖습니다";
+};
+
+// 객체 생성
+let dog = new Dog("뽀삐", "골든 리트리버");
+
+console.log(dog.speak()); // "뽀삐가 소리를 냅니다" (부모에서 상속)
+console.log(dog.bark());  // "뽀삐가 멍멍 짖습니다" (자식 메서드)</pre>
+                    </div>
+                    
+                    <h3>ES6 클래스와 상속</h3>
+                    <p>ES6의 클래스는 프로토타입 상속의 문법적 설탕(syntactic sugar)입니다:</p>
+                    
+                    <div class="code-example">
+                        <pre>// 부모 클래스
+class Animal {
+    constructor(name) {
+        this.name = name;
+    }
+    
+    speak() {
+        return this.name + "가 소리를 냅니다";
+    }
+}
+
+// 자식 클래스 (extends로 상속)
+class Dog extends Animal {
+    constructor(name, breed) {
+        super(name); // 부모 생성자 호출
+        this.breed = breed;
+    }
+    
+    bark() {
+        return this.name + "가 멍멍 짖습니다";
+    }
+}
+
+// 객체 생성
+let dog = new Dog("뽀삐", "골든 리트리버");
+
+console.log(dog.speak()); // "뽀삐가 소리를 냅니다" (부모에서 상속)
+console.log(dog.bark());  // "뽀삐가 멍멍 짖습니다" (자식 메서드)</pre>
+                    </div>
+                    
+                    <h3>프로토타입 메서드 vs 인스턴스 메서드</h3>
+                    <p><strong>프로토타입 메서드</strong>는 모든 인스턴스가 공유하는 메서드이고, 
+                    <strong>인스턴스 메서드</strong>는 각 객체마다 별도로 생성되는 메서드입니다:</p>
+                    
+                    <div class="code-example">
+                        <pre>function Person(name) {
+    this.name = name;
+    
+    // 인스턴스 메서드 (비효율적 - 각 객체마다 함수 생성)
+    this.greet = function() {
+        return "안녕하세요, " + this.name + "입니다";
+    };
+}
+
+// 프로토타입 메서드 (효율적 - 한 번만 생성되고 모든 인스턴스가 공유)
+Person.prototype.introduce = function() {
+    return "이름은 " + this.name + "입니다";
+};
+
+let p1 = new Person("홍길동");
+let p2 = new Person("김철수");
+
+// 인스턴스 메서드는 각각 다른 함수
+console.log(p1.greet === p2.greet); // false
+
+// 프로토타입 메서드는 같은 함수를 공유
+console.log(p1.introduce === p2.introduce); // true</pre>
+                    </div>
+                    
+                    <h3>Object.create()를 활용한 상속</h3>
+                    <p>Object.create()를 사용하여 명시적으로 프로토타입을 지정할 수 있습니다:</p>
+                    
+                    <div class="code-example">
+                        <pre>// 부모 객체
+let animal = {
+    speak: function() {
+        return this.name + "가 소리를 냅니다";
+    }
+};
+
+// 자식 객체 생성 (animal을 프로토타입으로)
+let dog = Object.create(animal);
+dog.name = "뽀삐";
+dog.bark = function() {
+    return this.name + "가 멍멍 짖습니다";
+};
+
+console.log(dog.speak()); // "뽀삐가 소리를 냅니다" (프로토타입에서 상속)
+console.log(dog.bark());  // "뽀삐가 멍멍 짖습니다" (자신의 메서드)</pre>
+                    </div>
+                    
+                    <h3>hasOwnProperty()와 in 연산자</h3>
+                    <p>객체의 속성이 자신의 속성인지, 상속받은 속성인지 확인할 수 있습니다:</p>
+                    
+                    <div class="code-example">
+                        <pre>function Person(name) {
+    this.name = name;
+}
+
+Person.prototype.species = "인간";
+
+let person = new Person("홍길동");
+
+// hasOwnProperty(): 자신의 속성만 확인
+console.log(person.hasOwnProperty("name"));    // true (자신의 속성)
+console.log(person.hasOwnProperty("species")); // false (상속받은 속성)
+
+// in 연산자: 프로토타입 체인까지 확인
+console.log("name" in person);    // true
+console.log("species" in person); // true
+
+// for...in 루프는 상속받은 속성도 순회 (hasOwnProperty로 필터링)
+for (let key in person) {
+    if (person.hasOwnProperty(key)) {
+        console.log(key + ": " + person[key]); // name: 홍길동
+    }
+}</pre>
+                    </div>
+                `,
+                problem: "생성자 함수 Person을 만들고, 프로토타입에 introduce 메서드를 추가한 다음, 객체를 생성하여 introduce 메서드를 호출하세요.",
+                solution: "function Person(name) {\n    this.name = name;\n}\n\nPerson.prototype.introduce = function() {\n    return '이름: ' + this.name;\n};\n\nlet person = new Person('김철수');\nconsole.log(person.introduce());",
+                test: (code) => {
+                    try {
+                        return code.includes("function Person") &&
+                               code.includes("Person.prototype.introduce") &&
+                               code.includes("new Person") &&
+                               code.includes("introduce()");
+                    } catch (e) {
+                        return false;
+                    }
+                }
+            },
+            {
+                title: "디스트럭처링과 스프레드",
+                content: `
+                    <h3>디스트럭처링(Destructuring)이란?</h3>
+                    <p>디스트럭처링은 배열이나 객체의 구조를 파괴하여 <strong>개별 변수로 추출</strong>하는 ES6 문법입니다. 
+                    코드를 간결하고 읽기 쉽게 만들어줍니다.</p>
+                    
+                    <h3>배열 디스트럭처링</h3>
+                    <p>배열의 값을 개별 변수로 추출합니다:</p>
+                    
+                    <div class="code-example">
+                        <pre>// 기본 사용법
+let numbers = [1, 2, 3];
+let [a, b, c] = numbers;
+
+console.log(a); // 1
+console.log(b); // 2
+console.log(c); // 3
+
+// 일부만 추출
+let [first, second] = numbers;
+console.log(first);  // 1
+console.log(second); // 2
+
+// 기본값 설정
+let [x, y, z = 0] = [1, 2];
+console.log(z); // 0 (기본값 사용)
+
+// 나머지 요소 추출
+let [first, ...rest] = [1, 2, 3, 4, 5];
+console.log(first); // 1
+console.log(rest);  // [2, 3, 4, 5]
+
+// 값 교환 (스왑)
+let a = 1, b = 2;
+[a, b] = [b, a];
+console.log(a); // 2
+console.log(b); // 1</pre>
+                    </div>
+                    
+                    <h3>객체 디스트럭처링</h3>
+                    <p>객체의 속성을 개별 변수로 추출합니다:</p>
+                    
+                    <div class="code-example">
+                        <pre>// 기본 사용법
+let person = {
+    name: "홍길동",
+    age: 20,
+    city: "서울"
+};
+
+let {name, age, city} = person;
+
+console.log(name); // "홍길동"
+console.log(age);  // 20
+console.log(city); // "서울"
+
+// 다른 변수명으로 추출
+let {name: personName, age: personAge} = person;
+console.log(personName); // "홍길동"
+console.log(personAge);  // 20
+
+// 기본값 설정
+let {name, age, country = "한국"} = person;
+console.log(country); // "한국" (기본값 사용)
+
+// 중첩 객체 디스트럭처링
+let user = {
+    name: "홍길동",
+    address: {
+        city: "서울",
+        zip: "12345"
+    }
+};
+
+let {name, address: {city, zip}} = user;
+console.log(city); // "서울"
+console.log(zip);  // "12345"</pre>
+                    </div>
+                    
+                    <h3>스프레드 연산자(Spread Operator)</h3>
+                    <p>스프레드 연산자(<code>...</code>)는 배열이나 객체를 <strong>펼쳐서 확장</strong>하는 연산자입니다.</p>
+                    
+                    <h3>배열에서의 스프레드</h3>
+                    <div class="code-example">
+                        <pre>// 배열 복사
+let arr1 = [1, 2, 3];
+let arr2 = [...arr1]; // 얕은 복사
+console.log(arr2); // [1, 2, 3]
+
+// 배열 합치기
+let arr1 = [1, 2, 3];
+let arr2 = [4, 5, 6];
+let combined = [...arr1, ...arr2];
+console.log(combined); // [1, 2, 3, 4, 5, 6]
+
+// 배열 중간에 삽입
+let arr1 = [1, 2, 3];
+let arr2 = [4, 5, 6];
+let newArr = [...arr1, 10, 20, ...arr2];
+console.log(newArr); // [1, 2, 3, 10, 20, 4, 5, 6]
+
+// 함수 인자로 전달
+let numbers = [1, 2, 3, 4, 5];
+console.log(Math.max(...numbers)); // 5
+console.log(Math.min(...numbers)); // 1
+
+// 문자열을 배열로 변환
+let str = "Hello";
+let chars = [...str];
+console.log(chars); // ["H", "e", "l", "l", "o"]</pre>
+                    </div>
+                    
+                    <h3>객체에서의 스프레드</h3>
+                    <div class="code-example">
+                        <pre>// 객체 복사
+let obj1 = {name: "홍길동", age: 20};
+let obj2 = {...obj1}; // 얕은 복사
+console.log(obj2); // {name: "홍길동", age: 20}
+
+// 객체 합치기
+let obj1 = {name: "홍길동", age: 20};
+let obj2 = {city: "서울", country: "한국"};
+let combined = {...obj1, ...obj2};
+console.log(combined); // {name: "홍길동", age: 20, city: "서울", country: "한국"}
+
+// 객체 속성 덮어쓰기
+let obj1 = {name: "홍길동", age: 20};
+let obj2 = {...obj1, age: 25}; // age 속성 덮어쓰기
+console.log(obj2); // {name: "홍길동", age: 25}
+
+// 새로운 속성 추가
+let obj = {name: "홍길동", age: 20};
+let newObj = {...obj, city: "서울"};
+console.log(newObj); // {name: "홍길동", age: 20, city: "서울"}</pre>
+                    </div>
+                    
+                    <h3>나머지 매개변수(Rest Parameters)</h3>
+                    <p>나머지 매개변수는 함수에 전달된 인자들을 배열로 받습니다:</p>
+                    
+                    <div class="code-example">
+                        <pre>// 나머지 매개변수 사용
+function sum(...numbers) {
+    return numbers.reduce((total, num) => total + num, 0);
+}
+
+console.log(sum(1, 2, 3));       // 6
+console.log(sum(1, 2, 3, 4, 5)); // 15
+
+// 일반 매개변수와 함께 사용
+function greet(greeting, ...names) {
+    return greeting + " " + names.join(", ");
+}
+
+console.log(greet("안녕하세요", "홍길동", "김철수", "이영희"));
+// "안녕하세요 홍길동, 김철수, 이영희"</pre>
+                    </div>
+                    
+                    <h3>디스트럭처링과 스프레드의 활용</h3>
+                    <div class="code-example">
+                        <pre>// 함수 매개변수 디스트럭처링
+function printPerson({name, age, city = "서울"}) {
+    console.log("이름: " + name);
+    console.log("나이: " + age);
+    console.log("도시: " + city);
+}
+
+let person = {name: "홍길동", age: 20};
+printPerson(person);
+// 이름: 홍길동
+// 나이: 20
+// 도시: 서울
+
+// 배열 요소 교환
+let arr = [1, 2, 3];
+[arr[0], arr[2]] = [arr[2], arr[0]];
+console.log(arr); // [3, 2, 1]
+
+// 복잡한 객체 디스트럭처링
+let data = {
+    user: {
+        name: "홍길동",
+        contacts: {
+            email: "hong@example.com",
+            phone: "010-1234-5678"
+        }
+    },
+    posts: [
+        {title: "제목1", content: "내용1"},
+        {title: "제목2", content: "내용2"}
+    ]
+};
+
+let {
+    user: {
+        name,
+        contacts: {email, phone}
+    },
+    posts: [firstPost, ...otherPosts]
+} = data;
+
+console.log(name);      // "홍길동"
+console.log(email);     // "hong@example.com"
+console.log(firstPost); // {title: "제목1", content: "내용1"}</pre>
+                    </div>
+                `,
+                problem: "배열 [1, 2, 3, 4, 5]에서 첫 번째와 세 번째 요소를 디스트럭처링으로 추출하고, 나머지 요소는 rest 변수에 저장하세요.",
+                solution: "let arr = [1, 2, 3, 4, 5];\nlet [first, , third, ...rest] = arr;\nconsole.log(first, third, rest);",
+                test: (code) => {
+                    try {
+                        return code.includes("[") &&
+                               code.includes("]") &&
+                               code.includes("rest") &&
+                               code.includes("...");
+                    } catch (e) {
+                        return false;
+                    }
+                }
+            },
+            {
+                title: "클로저와 스코프",
+                content: `
+                    <h3>스코프(Scope)란?</h3>
+                    <p>스코프는 <strong>변수나 함수가 유효한 범위</strong>를 의미합니다. 
+                    JavaScript에는 전역 스코프와 지역 스코프(함수 스코프, 블록 스코프)가 있습니다.</p>
+                    
+                    <h3>전역 스코프와 지역 스코프</h3>
+                    <div class="code-example">
+                        <pre>// 전역 변수
+let globalVar = "전역 변수";
+
+function outer() {
+    // 지역 변수 (함수 스코프)
+    let localVar = "지역 변수";
+    
+    console.log(globalVar); // "전역 변수" (접근 가능)
+    console.log(localVar);  // "지역 변수" (접근 가능)
+    
+    function inner() {
+        // 내부 함수의 지역 변수
+        let innerVar = "내부 변수";
+        
+        console.log(globalVar); // "전역 변수" (접근 가능)
+        console.log(localVar);  // "지역 변수" (접근 가능)
+        console.log(innerVar);  // "내부 변수" (접근 가능)
+    }
+    
+    inner();
+    // console.log(innerVar); // 오류: 접근 불가
+}
+
+outer();
+// console.log(localVar); // 오류: 접근 불가</pre>
+                    </div>
+                    
+                    <h3>블록 스코프 (let, const)</h3>
+                    <p>ES6의 <code>let</code>과 <code>const</code>는 블록 스코프를 가집니다:</p>
+                    
+                    <div class="code-example">
+                        <pre>// var는 함수 스코프
+function example1() {
+    if (true) {
+        var x = 10;
+    }
+    console.log(x); // 10 (접근 가능 - 함수 스코프)
+}
+
+// let, const는 블록 스코프
+function example2() {
+    if (true) {
+        let y = 20;
+        const z = 30;
+    }
+    // console.log(y); // 오류: 접근 불가 - 블록 스코프
+    // console.log(z); // 오류: 접근 불가 - 블록 스코프
+}
+
+// 반복문에서의 차이
+for (var i = 0; i < 3; i++) {
+    setTimeout(() => console.log(i), 100); // 3, 3, 3 (문제 발생)
+}
+
+for (let j = 0; j < 3; j++) {
+    setTimeout(() => console.log(j), 100); // 0, 1, 2 (정상 작동)
+}</pre>
+                    </div>
+                    
+                    <h3>클로저(Closure)란?</h3>
+                    <p>클로저는 <strong>함수가 자신이 선언된 스코프의 변수에 접근할 수 있는 기능</strong>입니다. 
+                    외부 함수가 종료되어도 내부 함수가 외부 함수의 변수에 접근할 수 있습니다.</p>
+                    
+                    <h3>클로저 기본 예제</h3>
+                    <div class="code-example">
+                        <pre>function outer() {
+    let outerVar = "외부 변수";
+    
+    function inner() {
+        console.log(outerVar); // 외부 함수의 변수에 접근 (클로저)
+    }
+    
+    return inner; // 내부 함수를 반환
+}
+
+let closureFunc = outer(); // outer 함수 종료
+closureFunc(); // "외부 변수" (여전히 접근 가능!)
+
+// 외부 함수의 변수는 메모리에 유지됨</pre>
+                    </div>
+                    
+                    <h3>클로저의 활용 - 데이터 은닉</h3>
+                    <p>클로저를 사용하여 <strong>private 변수</strong>를 만들 수 있습니다:</p>
+                    
+                    <div class="code-example">
+                        <pre>function createCounter() {
+    let count = 0; // private 변수
+    
+    return {
+        increment: function() {
+            count++;
+            return count;
+        },
+        decrement: function() {
+            count--;
+            return count;
+        },
+        getCount: function() {
+            return count;
+        }
+    };
+}
+
+let counter = createCounter();
+
+console.log(counter.getCount()); // 0
+console.log(counter.increment()); // 1
+console.log(counter.increment()); // 2
+console.log(counter.decrement()); // 1
+console.log(counter.count); // undefined (접근 불가 - private)</pre>
+                    </div>
+                    
+                    <h3>클로저의 활용 - 함수 팩토리</h3>
+                    <div class="code-example">
+                        <pre>function createMultiplier(multiplier) {
+    return function(number) {
+        return number * multiplier;
+    };
+}
+
+let double = createMultiplier(2);
+let triple = createMultiplier(3);
+
+console.log(double(5));  // 10
+console.log(triple(5));  // 15
+
+// 각 클로저는 자신만의 multiplier 값을 기억함</pre>
+                    </div>
+                    
+                    <h3>클로저의 활용 - 모듈 패턴</h3>
+                    <div class="code-example">
+                        <pre>let calculator = (function() {
+    // private 변수
+    let result = 0;
+    
+    // public 메서드
+    return {
+        add: function(num) {
+            result += num;
+            return this;
+        },
+        subtract: function(num) {
+            result -= num;
+            return this;
+        },
+        multiply: function(num) {
+            result *= num;
+            return this;
+        },
+        getResult: function() {
+            return result;
+        },
+        reset: function() {
+            result = 0;
+            return this;
+        }
+    };
+})();
+
+calculator.add(10).multiply(2).subtract(5);
+console.log(calculator.getResult()); // 15</pre>
+                    </div>
+                    
+                    <h3>클로저 주의사항</h3>
+                    <p>반복문에서 클로저를 사용할 때 주의해야 합니다:</p>
+                    
+                    <div class="code-example">
+                        <pre>// 문제가 되는 코드
+let funcs = [];
+for (var i = 0; i < 3; i++) {
+    funcs.push(function() {
+        return i; // 모두 같은 i를 참조
+    });
+}
+
+console.log(funcs[0]()); // 3 (원하는 결과 아님)
+console.log(funcs[1]()); // 3
+console.log(funcs[2]()); // 3
+
+// 해결 방법 1: IIFE 사용
+let funcs2 = [];
+for (var i = 0; i < 3; i++) {
+    funcs2.push((function(j) {
+        return function() {
+            return j; // 각각 다른 j를 참조
+        };
+    })(i));
+}
+
+console.log(funcs2[0]()); // 0
+console.log(funcs2[1]()); // 1
+console.log(funcs2[2]()); // 2
+
+// 해결 방법 2: let 사용 (블록 스코프)
+let funcs3 = [];
+for (let i = 0; i < 3; i++) {
+    funcs3.push(function() {
+        return i; // 각각 다른 i를 참조
+    });
+}
+
+console.log(funcs3[0]()); // 0
+console.log(funcs3[1]()); // 1
+console.log(funcs3[2]()); // 2</pre>
+                    </div>
+                    
+                    <h3>클로저와 메모리 관리</h3>
+                    <p>클로저는 외부 변수를 참조하므로 메모리에 유지됩니다. 필요 없을 때는 참조를 해제해야 합니다:</p>
+                    
+                    <div class="code-example">
+                        <pre>function createHandler() {
+    let largeData = new Array(1000000).fill(0);
+    
+    return function(element) {
+        // largeData를 사용하지 않으면 메모리 누수 가능
+        element.onclick = function() {
+            // largeData에 접근하지 않아도 클로저가 참조
+        };
+        
+        // 해결: 명시적으로 null로 설정
+        largeData = null;
+    };
+}</pre>
+                    </div>
+                `,
+                problem: "클로저를 사용하여 createCounter 함수를 만들고, increment와 getCount 메서드를 가진 객체를 반환하세요.",
+                solution: "function createCounter() {\n    let count = 0;\n    return {\n        increment: function() {\n            count++;\n        },\n        getCount: function() {\n            return count;\n        }\n    };\n}\n\nlet counter = createCounter();\ncounter.increment();\nconsole.log(counter.getCount());",
+                test: (code) => {
+                    try {
+                        return code.includes("function createCounter") &&
+                               code.includes("let count") &&
+                               code.includes("increment") &&
+                               code.includes("getCount");
+                    } catch (e) {
+                        return false;
+                    }
+                }
+            },
+            {
+                title: "제너레이터와 이터레이터",
+                content: `
+                    <h3>이터레이터(Iterator)란?</h3>
+                    <p>이터레이터는 <strong>반복 가능한 객체를 순회할 수 있는 프로토콜</strong>입니다. 
+                    <code>next()</code> 메서드를 호출하면 <code>{value, done}</code> 형태의 객체를 반환합니다.</p>
+                    
+                    <h3>이터레이터 직접 구현</h3>
+                    <div class="code-example">
+                        <pre>// 이터레이터 생성 함수
+function createIterator(array) {
+    let index = 0;
+    
+    return {
+        next: function() {
+            if (index < array.length) {
+                return {value: array[index++], done: false};
+            } else {
+                return {done: true};
+            }
+        }
+    };
+}
+
+let iterator = createIterator([1, 2, 3]);
+
+console.log(iterator.next()); // {value: 1, done: false}
+console.log(iterator.next()); // {value: 2, done: false}
+console.log(iterator.next()); // {value: 3, done: false}
+console.log(iterator.next()); // {done: true}</pre>
+                    </div>
+                    
+                    <h3>이터러블(Iterable)과 Symbol.iterator</h3>
+                    <p>이터러블은 <code>Symbol.iterator</code> 메서드를 가진 객체입니다. 
+                    <code>for...of</code> 루프나 스프레드 연산자와 함께 사용할 수 있습니다:</p>
+                    
+                    <div class="code-example">
+                        <pre>// 이터러블 객체 만들기
+let myIterable = {
+    [Symbol.iterator]: function() {
+        let count = 0;
+        return {
+            next: function() {
+                if (count < 3) {
+                    return {value: count++, done: false};
+                } else {
+                    return {done: true};
+                }
+            }
+        };
+    }
+};
+
+// for...of 루프 사용
+for (let value of myIterable) {
+    console.log(value); // 0, 1, 2
+}
+
+// 스프레드 연산자 사용
+let arr = [...myIterable];
+console.log(arr); // [0, 1, 2]</pre>
+                    </div>
+                    
+                    <h3>제너레이터(Generator)란?</h3>
+                    <p>제너레이터는 <strong>이터레이터를 쉽게 만들 수 있게 해주는 특별한 함수</strong>입니다. 
+                    <code>function*</code> 키워드로 선언하고, <code>yield</code> 키워드로 값을 반환합니다.</p>
+                    
+                    <h3>제너레이터 기본 사용법</h3>
+                    <div class="code-example">
+                        <pre>// 제너레이터 함수 정의
+function* numberGenerator() {
+    yield 1;
+    yield 2;
+    yield 3;
+}
+
+// 제너레이터 객체 생성
+let gen = numberGenerator();
+
+console.log(gen.next()); // {value: 1, done: false}
+console.log(gen.next()); // {value: 2, done: false}
+console.log(gen.next()); // {value: 3, done: false}
+console.log(gen.next()); // {value: undefined, done: true}
+
+// for...of 루프로 순회
+let gen2 = numberGenerator();
+for (let value of gen2) {
+    console.log(value); // 1, 2, 3
+}</pre>
+                    </div>
+                    
+                    <h3>제너레이터와 무한 시퀀스</h3>
+                    <div class="code-example">
+                        <pre>// 피보나치 수열 제너레이터
+function* fibonacci() {
+    let [prev, curr] = [0, 1];
+    
+    while (true) {
+        yield curr;
+        [prev, curr] = [curr, prev + curr];
+    }
+}
+
+let fib = fibonacci();
+
+console.log(fib.next().value); // 1
+console.log(fib.next().value); // 1
+console.log(fib.next().value); // 2
+console.log(fib.next().value); // 3
+console.log(fib.next().value); // 5
+console.log(fib.next().value); // 8
+
+// 무한 루프이지만 필요할 때만 값을 생성 (지연 평가)</pre>
+                    </div>
+                    
+                    <h3>제너레이터에 값 전달하기</h3>
+                    <p><code>next()</code> 메서드에 값을 전달하면 <code>yield</code> 표현식의 결과로 받을 수 있습니다:</p>
+                    
+                    <div class="code-example">
+                        <pre>function* messageGenerator() {
+    let name = yield "이름을 입력하세요";
+    let age = yield "나이를 입력하세요";
+    return "이름: " + name + ", 나이: " + age;
+}
+
+let gen = messageGenerator();
+
+console.log(gen.next());      // {value: "이름을 입력하세요", done: false}
+console.log(gen.next("홍길동")); // {value: "나이를 입력하세요", done: false}
+console.log(gen.next("20"));    // {value: "이름: 홍길동, 나이: 20", done: true}</pre>
+                    </div>
+                    
+                    <h3>제너레이터의 활용 - 비동기 처리</h3>
+                    <div class="code-example">
+                        <pre>// 제너레이터를 사용한 비동기 처리 (간단한 예제)
+function* asyncTask() {
+    console.log("작업 1 시작");
+    yield; // 비동기 작업 시뮬레이션
+    
+    console.log("작업 2 시작");
+    yield; // 비동기 작업 시뮬레이션
+    
+    console.log("작업 3 시작");
+    return "완료";
+}
+
+let task = asyncTask();
+task.next(); // "작업 1 시작"
+task.next(); // "작업 2 시작"
+task.next(); // "작업 3 시작"
+// {value: "완료", done: true}</pre>
+                    </div>
+                    
+                    <h3>제너레이터의 활용 - 데이터 변환 파이프라인</h3>
+                    <div class="code-example">
+                        <pre>// 데이터 변환 제너레이터
+function* mapGenerator(iterable, mapper) {
+    for (let item of iterable) {
+        yield mapper(item);
+    }
+}
+
+function* filterGenerator(iterable, predicate) {
+    for (let item of iterable) {
+        if (predicate(item)) {
+            yield item;
+        }
+    }
+}
+
+let numbers = [1, 2, 3, 4, 5];
+
+// 제곱한 후 짝수만 필터링
+let squared = mapGenerator(numbers, x => x * x);
+let evens = filterGenerator(squared, x => x % 2 === 0);
+
+for (let value of evens) {
+    console.log(value); // 4, 16
+}</pre>
+                    </div>
+                    
+                    <h3>제너레이터의 yield*</h3>
+                    <p><code>yield*</code>는 다른 이터러블이나 제너레이터를 위임(delegate)합니다:</p>
+                    
+                    <div class="code-example">
+                        <pre>function* generator1() {
+    yield 1;
+    yield 2;
+}
+
+function* generator2() {
+    yield 3;
+    yield* generator1(); // generator1 위임
+    yield 4;
+}
+
+let gen = generator2();
+
+console.log(gen.next().value); // 3
+console.log(gen.next().value); // 1 (generator1에서)
+console.log(gen.next().value); // 2 (generator1에서)
+console.log(gen.next().value); // 4</pre>
+                    </div>
+                    
+                    <h3>제너레이터와 메모리 효율성</h3>
+                    <p>제너레이터는 <strong>지연 평가(Lazy Evaluation)</strong>를 제공하여 메모리 효율적입니다:</p>
+                    
+                    <div class="code-example">
+                        <pre>// 배열은 모든 값을 메모리에 저장
+let bigArray = Array.from({length: 1000000}, (_, i) => i);
+
+// 제너레이터는 필요할 때만 값을 생성
+function* bigRange(start, end) {
+    for (let i = start; i < end; i++) {
+        yield i;
+    }
+}
+
+let bigRangeGen = bigRange(0, 1000000);
+
+// 필요한 만큼만 순회
+let count = 0;
+for (let value of bigRangeGen) {
+    if (count++ >= 10) break;
+    console.log(value); // 0 ~ 9만 출력 (나머지는 생성 안 됨)
+}</pre>
+                    </div>
+                `,
+                problem: "제너레이터 함수를 만들어서 1부터 5까지의 숫자를 yield로 반환하세요.",
+                solution: "function* numberGen() {\n    for (let i = 1; i <= 5; i++) {\n        yield i;\n    }\n}\n\nlet gen = numberGen();\nfor (let num of gen) {\n    console.log(num);\n}",
+                test: (code) => {
+                    try {
+                        return code.includes("function*") &&
+                               code.includes("yield") &&
+                               code.includes("numberGen") ||
+                               code.includes("numberGen");
                     } catch (e) {
                         return false;
                     }

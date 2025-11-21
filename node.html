@@ -669,6 +669,34 @@
                     <h2>실제 서비스 배포 및 모니터링</h2>
                     <p>AWS/GCP/Azure 배포와 모니터링 구축</p>
                 </div>
+                
+                <div class="chapter-box" onclick="showLesson(21)">
+                    <div class="chapter-icon">🔗</div>
+                    <div class="chapter-number">21</div>
+                    <h2>GraphQL API 구현</h2>
+                    <p>Apollo Server와 GraphQL 스키마 설계</p>
+                </div>
+                
+                <div class="chapter-box" onclick="showLesson(22)">
+                    <div class="chapter-icon">🏗️</div>
+                    <div class="chapter-number">22</div>
+                    <h2>마이크로서비스 아키텍처</h2>
+                    <p>서비스 분리와 통신 패턴</p>
+                </div>
+                
+                <div class="chapter-box" onclick="showLesson(23)">
+                    <div class="chapter-icon">⚡</div>
+                    <div class="chapter-number">23</div>
+                    <h2>서버리스와 Cloud Functions</h2>
+                    <p>AWS Lambda, GCP Functions, Azure Functions</p>
+                </div>
+                
+                <div class="chapter-box" onclick="showLesson(24)">
+                    <div class="chapter-icon">🚀</div>
+                    <div class="chapter-number">24</div>
+                    <h2>고급 성능 최적화</h2>
+                    <p>벤치마킹과 프로파일링</p>
+                </div>
             </div>
         </div>
 
@@ -1741,6 +1769,902 @@ const httpRequestDuration = new prometheus.Histogram({
                         const result = code.trim();
                         return result.includes("prometheus.Histogram") && 
                                result.includes("http_request_duration_seconds");
+                    } catch (e) {
+                        return false;
+                    }
+                }
+            },
+            {
+                title: "GraphQL API 구현",
+                content: `
+                    <h3>GraphQL이란?</h3>
+                    <p>GraphQL은 Facebook에서 개발한 <strong>쿼리 언어이자 런타임</strong>입니다. 
+                    REST API의 대안으로, 클라이언트가 필요한 데이터만 정확히 요청할 수 있습니다.</p>
+                    
+                    <h3>GraphQL vs REST API</h3>
+                    <ul style="margin-left: 20px; margin-top: 10px;">
+                        <li><strong>REST:</strong> 여러 엔드포인트, 오버페칭/언더페칭 문제</li>
+                        <li><strong>GraphQL:</strong> 단일 엔드포인트, 필요한 데이터만 요청</li>
+                    </ul>
+                    
+                    <h3>Apollo Server 기본 설정</h3>
+                    <div class="code-example">
+                        <pre>// package.json
+{
+  "dependencies": {
+    "apollo-server": "^3.0.0",
+    "graphql": "^16.0.0"
+  }
+}
+
+// server.js
+const { ApolloServer, gql } = require('apollo-server');
+
+// GraphQL 스키마 정의
+const typeDefs = gql\`
+  type Query {
+    hello: String
+    user(id: ID!): User
+  }
+  
+  type User {
+    id: ID!
+    name: String!
+    email: String!
+    posts: [Post!]!
+  }
+  
+  type Post {
+    id: ID!
+    title: String!
+    content: String!
+  }
+\`;
+
+// 리졸버 함수
+const resolvers = {
+  Query: {
+    hello: () => 'Hello GraphQL!',
+    user: (parent, args) => {
+      return {
+        id: args.id,
+        name: '홍길동',
+        email: 'hong@example.com',
+        posts: []
+      };
+    }
+  }
+};
+
+// Apollo Server 생성
+const server = new ApolloServer({
+  typeDefs,
+  resolvers
+});
+
+// 서버 시작
+server.listen().then(({ url }) => {
+  console.log(\`🚀 Server ready at \${url}\`);
+});</pre>
+                    </div>
+                    
+                    <h3>쿼리와 뮤테이션</h3>
+                    <div class="code-example">
+                        <pre>// 스키마 정의
+const typeDefs = gql\`
+  type Query {
+    posts: [Post!]!
+    post(id: ID!): Post
+  }
+  
+  type Mutation {
+    createPost(title: String!, content: String!): Post!
+    updatePost(id: ID!, title: String, content: String): Post!
+    deletePost(id: ID!): Boolean!
+  }
+  
+  type Post {
+    id: ID!
+    title: String!
+    content: String!
+    createdAt: String!
+  }
+\`;
+
+// 리졸버 구현
+const resolvers = {
+  Query: {
+    posts: () => posts,
+    post: (parent, args) => posts.find(p => p.id === args.id)
+  },
+  Mutation: {
+    createPost: (parent, args) => {
+      const post = {
+        id: String(posts.length + 1),
+        title: args.title,
+        content: args.content,
+        createdAt: new Date().toISOString()
+      };
+      posts.push(post);
+      return post;
+    },
+    updatePost: (parent, args) => {
+      const post = posts.find(p => p.id === args.id);
+      if (!post) throw new Error('Post not found');
+      if (args.title) post.title = args.title;
+      if (args.content) post.content = args.content;
+      return post;
+    },
+    deletePost: (parent, args) => {
+      const index = posts.findIndex(p => p.id === args.id);
+      if (index === -1) return false;
+      posts.splice(index, 1);
+      return true;
+    }
+  }
+};
+
+// 클라이언트 쿼리 예제
+// query {
+//   posts {
+//     id
+//     title
+//     content
+//   }
+// }
+
+// mutation {
+//   createPost(title: "새 글", content: "내용") {
+//     id
+//     title
+//   }
+// }</pre>
+                    </div>
+                    
+                    <h3>데이터 로더(DataLoader)</h3>
+                    <p>N+1 쿼리 문제를 해결하기 위한 도구:</p>
+                    
+                    <div class="code-example">
+                        <pre>const DataLoader = require('dataloader');
+
+// 사용자 로더 생성
+const userLoader = new DataLoader(async (userIds) => {
+  // 한 번의 쿼리로 모든 사용자 가져오기
+  const users = await User.find({ _id: { $in: userIds } });
+  // 순서 유지
+  return userIds.map(id => users.find(u => u._id.toString() === id));
+});
+
+// 리졸버에서 사용
+const resolvers = {
+  Post: {
+    author: async (post) => {
+      return userLoader.load(post.authorId);
+    }
+  }
+};</pre>
+                    </div>
+                `,
+                problem: "Apollo Server를 사용하여 'hello' 쿼리를 반환하는 GraphQL 서버를 만드세요.",
+                solution: `const { ApolloServer, gql } = require('apollo-server');
+
+const typeDefs = gql\`
+  type Query {
+    hello: String
+  }
+\`;
+
+const resolvers = {
+  Query: {
+    hello: () => 'Hello GraphQL!'
+  }
+};
+
+const server = new ApolloServer({ typeDefs, resolvers });
+
+server.listen().then(({ url }) => {
+  console.log(\`Server ready at \${url}\`);
+});`,
+                test: (code) => {
+                    try {
+                        return code.includes("ApolloServer") &&
+                               code.includes("typeDefs") &&
+                               code.includes("resolvers") &&
+                               code.includes("hello");
+                    } catch (e) {
+                        return false;
+                    }
+                }
+            },
+            {
+                title: "마이크로서비스 아키텍처",
+                content: `
+                    <h3>마이크로서비스란?</h3>
+                    <p>마이크로서비스는 <strong>애플리케이션을 작은 독립적인 서비스들로 분리</strong>하는 아키텍처 패턴입니다. 
+                    각 서비스는 독립적으로 배포하고 확장할 수 있습니다.</p>
+                    
+                    <h3>모놀리식 vs 마이크로서비스</h3>
+                    <ul style="margin-left: 20px; margin-top: 10px;">
+                        <li><strong>모놀리식:</strong> 하나의 큰 애플리케이션, 공유 데이터베이스</li>
+                        <li><strong>마이크로서비스:</strong> 여러 작은 서비스, 서비스별 데이터베이스</li>
+                    </ul>
+                    
+                    <h3>서비스 간 통신</h3>
+                    <div class="code-example">
+                        <pre>// HTTP 통신 (동기)
+// user-service.js
+const express = require('express');
+const axios = require('axios');
+
+const app = express();
+
+app.get('/users/:id', async (req, res) => {
+  const userId = req.params.id;
+  
+  // order-service에서 사용자의 주문 가져오기
+  try {
+    const orders = await axios.get(\`http://order-service:3002/users/\${userId}/orders\`);
+    res.json({
+      id: userId,
+      name: '홍길동',
+      orders: orders.data
+    });
+  } catch (error) {
+    res.status(500).json({ error: 'Order service unavailable' });
+  }
+});
+
+app.listen(3001, () => {
+  console.log('User service running on port 3001');
+});
+
+// 메시지 큐를 통한 비동기 통신 (RabbitMQ)
+// publisher.js
+const amqp = require('amqplib');
+
+async function publishOrderEvent(orderData) {
+  const connection = await amqp.connect('amqp://localhost');
+  const channel = await connection.createChannel();
+  
+  const queue = 'order.created';
+  await channel.assertQueue(queue);
+  
+  channel.sendToQueue(queue, Buffer.from(JSON.stringify(orderData)));
+  console.log('Order event published:', orderData);
+  
+  await channel.close();
+  await connection.close();
+}
+
+// consumer.js
+const amqp = require('amqplib');
+
+async function consumeOrderEvents() {
+  const connection = await amqp.connect('amqp://localhost');
+  const channel = await connection.createChannel();
+  
+  const queue = 'order.created';
+  await channel.assertQueue(queue);
+  
+  channel.consume(queue, (message) => {
+    const orderData = JSON.parse(message.content.toString());
+    console.log('Order event received:', orderData);
+    
+    // 이메일 서비스에 주문 알림 전송
+    sendOrderNotificationEmail(orderData);
+    
+    channel.ack(message);
+  });
+}
+
+consumeOrderEvents();</pre>
+                    </div>
+                    
+                    <h3>API Gateway 패턴</h3>
+                    <div class="code-example">
+                        <pre>// api-gateway.js
+const express = require('express');
+const { createProxyMiddleware } = require('http-proxy-middleware');
+
+const app = express();
+
+// 라우팅 설정
+app.use('/api/users', createProxyMiddleware({
+  target: 'http://user-service:3001',
+  changeOrigin: true,
+  pathRewrite: {
+    '^/api/users': ''
+  }
+}));
+
+app.use('/api/orders', createProxyMiddleware({
+  target: 'http://order-service:3002',
+  changeOrigin: true,
+  pathRewrite: {
+    '^/api/orders': ''
+  }
+}));
+
+app.use('/api/products', createProxyMiddleware({
+  target: 'http://product-service:3003',
+  changeOrigin: true,
+  pathRewrite: {
+    '^/api/products': ''
+  }
+}));
+
+app.listen(3000, () => {
+  console.log('API Gateway running on port 3000');
+});</pre>
+                    </div>
+                    
+                    <h3>서비스 디스커버리</h3>
+                    <div class="code-example">
+                        <pre>// consul을 사용한 서비스 디스커버리
+const consul = require('consul')();
+
+// 서비스 등록
+consul.agent.service.register({
+  name: 'user-service',
+  address: 'localhost',
+  port: 3001,
+  check: {
+    http: 'http://localhost:3001/health',
+    interval: '10s'
+  }
+}, (err) => {
+  if (err) throw err;
+  console.log('User service registered');
+});
+
+// 서비스 조회
+consul.health.service({
+  service: 'user-service',
+  passing: true
+}, (err, result) => {
+  if (err) throw err;
+  console.log('Available user services:', result);
+});</pre>
+                    </div>
+                    
+                    <h3>Docker Compose를 사용한 마이크로서비스 배포</h3>
+                    <div class="code-example">
+                        <pre># docker-compose.yml
+version: '3.8'
+
+services:
+  api-gateway:
+    build: ./api-gateway
+    ports:
+      - "3000:3000"
+    depends_on:
+      - user-service
+      - order-service
+  
+  user-service:
+    build: ./user-service
+    ports:
+      - "3001:3001"
+    environment:
+      - DB_HOST=user-db
+    depends_on:
+      - user-db
+  
+  order-service:
+    build: ./order-service
+    ports:
+      - "3002:3002"
+    environment:
+      - DB_HOST=order-db
+    depends_on:
+      - order-db
+  
+  user-db:
+    image: postgres:13
+    environment:
+      - POSTGRES_DB=users
+      - POSTGRES_USER=admin
+      - POSTGRES_PASSWORD=password
+  
+  order-db:
+    image: postgres:13
+    environment:
+      - POSTGRES_DB=orders
+      - POSTGRES_USER=admin
+      - POSTGRES_PASSWORD=password</pre>
+                    </div>
+                `,
+                problem: "Express를 사용하여 두 개의 마이크로서비스(user-service, order-service)를 만드세요. user-service는 포트 3001에서, order-service는 포트 3002에서 실행되도록 하세요.",
+                solution: `// user-service.js
+const express = require('express');
+const app = express();
+
+app.get('/users/:id', (req, res) => {
+  res.json({ id: req.params.id, name: '홍길동' });
+});
+
+app.listen(3001, () => {
+  console.log('User service on port 3001');
+});
+
+// order-service.js
+const express = require('express');
+const app = express();
+
+app.get('/orders/:id', (req, res) => {
+  res.json({ id: req.params.id, total: 10000 });
+});
+
+app.listen(3002, () => {
+  console.log('Order service on port 3002');
+});`,
+                test: (code) => {
+                    try {
+                        return code.includes("express") &&
+                               code.includes("listen") &&
+                               (code.includes("3001") || code.includes("3002"));
+                    } catch (e) {
+                        return false;
+                    }
+                }
+            },
+            {
+                title: "서버리스와 Cloud Functions",
+                content: `
+                    <h3>서버리스(Serverless)란?</h3>
+                    <p>서버리스는 <strong>서버를 직접 관리할 필요 없이 코드만 실행</strong>하는 컴퓨팅 모델입니다. 
+                    클라우드 제공자가 서버 관리를 담당하며, 사용량에 따라 비용을 지불합니다.</p>
+                    
+                    <h3>AWS Lambda</h3>
+                    <div class="code-example">
+                        <pre>// lambda/index.js
+exports.handler = async (event, context) => {
+    console.log('Event:', JSON.stringify(event, null, 2));
+    
+    // HTTP 요청 처리
+    if (event.httpMethod === 'GET') {
+        return {
+            statusCode: 200,
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                message: 'Hello from Lambda!',
+                timestamp: new Date().toISOString()
+            })
+        };
+    }
+    
+    return {
+        statusCode: 405,
+        body: JSON.stringify({ error: 'Method not allowed' })
+    };
+};
+
+// serverless.yml (Serverless Framework)
+service: my-service
+
+provider:
+  name: aws
+  runtime: nodejs14.x
+  region: ap-northeast-2
+
+functions:
+  hello:
+    handler: lambda/index.handler
+    events:
+      - http:
+          path: /
+          method: get
+      - http:
+          path: /{proxy+}
+          method: ANY</pre>
+                    </div>
+                    
+                    <h3>Google Cloud Functions</h3>
+                    <div class="code-example">
+                        <pre>// index.js
+const functions = require('@google-cloud/functions-framework');
+
+// HTTP 함수
+functions.http('helloHttp', (req, res) => {
+    res.status(200).json({
+        message: 'Hello from Cloud Functions!',
+        timestamp: new Date().toISOString()
+    });
+});
+
+// Cloud Storage 이벤트 함수
+functions.cloudEvent('helloGCS', (cloudEvent) => {
+    const file = cloudEvent.data;
+    console.log(\`File \${file.name} uploaded to bucket \${file.bucket}\`);
+    
+    // 파일 처리 로직
+    processFile(file);
+});
+
+// Pub/Sub 이벤트 함수
+functions.cloudEvent('helloPubSub', (cloudEvent) => {
+    const message = cloudEvent.data.message;
+    const data = JSON.parse(Buffer.from(message.data, 'base64').toString());
+    
+    console.log('Received message:', data);
+    
+    // 메시지 처리 로직
+    processMessage(data);
+});
+
+// package.json
+{
+  "main": "index.js",
+  "dependencies": {
+    "@google-cloud/functions-framework": "^3.0.0"
+  }
+}
+
+// 배포 명령어
+// gcloud functions deploy helloHttp --runtime nodejs14 --trigger-http --allow-unauthenticated</pre>
+                    </div>
+                    
+                    <h3>Azure Functions</h3>
+                    <div class="code-example">
+                        <pre>// function.json
+{
+  "bindings": [
+    {
+      "authLevel": "anonymous",
+      "type": "httpTrigger",
+      "direction": "in",
+      "name": "req",
+      "methods": ["get", "post"]
+    },
+    {
+      "type": "http",
+      "direction": "out",
+      "name": "res"
+    }
+  ]
+}
+
+// index.js
+module.exports = async function (context, req) {
+    context.log('HTTP trigger function processed a request.');
+    
+    const name = req.query.name || req.body.name;
+    
+    if (name) {
+        context.res = {
+            status: 200,
+            body: \`Hello, \${name}!\`
+        };
+    } else {
+        context.res = {
+            status: 400,
+            body: "Please pass a name on the query string or in the request body"
+        };
+    }
+};</pre>
+                    </div>
+                    
+                    <h3>Serverless Framework</h3>
+                    <p>여러 클라우드 제공자를 지원하는 프레임워크:</p>
+                    
+                    <div class="code-example">
+                        <pre>// serverless.yml
+service: my-api
+
+provider:
+  name: aws
+  runtime: nodejs14.x
+  region: ap-northeast-2
+  environment:
+    STAGE: ${self:provider.stage}
+
+functions:
+  hello:
+    handler: handlers/hello.handler
+    events:
+      - http:
+          path: /hello
+          method: get
+      - schedule: rate(1 hour)  # 스케줄 이벤트
+  
+  createUser:
+    handler: handlers/user.create
+    events:
+      - http:
+          path: /users
+          method: post
+          cors: true
+  
+  processQueue:
+    handler: handlers/queue.process
+    events:
+      - sqs:
+          arn: arn:aws:sqs:region:account:queue-name
+          batchSize: 10
+
+plugins:
+  - serverless-offline  # 로컬 개발
+  - serverless-plugin-warmup  # Cold start 방지
+
+# 배포
+# serverless deploy
+
+# 로컬 실행
+# serverless offline</pre>
+                    </div>
+                    
+                    <h3>Cold Start 최적화</h3>
+                    <div class="code-example">
+                        <pre>// 프로비저닝된 동시성 사용 (Lambda)
+// serverless.yml
+functions:
+  myFunction:
+    handler: index.handler
+    provisionedConcurrency: 10  # 항상 10개의 인스턴스 유지
+
+// 코드 최적화
+// 1. 외부 모듈 최소화
+// 2. 필요한 모듈만 import
+// 3. 전역 변수 활용 (재사용)
+const AWS = require('aws-sdk');
+const client = new AWS.DynamoDB.DocumentClient(); // 전역 변수로 재사용
+
+exports.handler = async (event) => {
+    // 핸들러 실행 시마다 재사용
+    const result = await client.get({
+        TableName: 'MyTable',
+        Key: { id: event.id }
+    }).promise();
+    
+    return result;
+};</pre>
+                    </div>
+                `,
+                problem: "AWS Lambda 함수를 만들어서 'Hello Serverless'를 반환하세요.",
+                solution: `exports.handler = async (event) => {
+    return {
+        statusCode: 200,
+        body: JSON.stringify({
+            message: 'Hello Serverless!'
+        })
+    };
+};`,
+                test: (code) => {
+                    try {
+                        return code.includes("exports.handler") &&
+                               code.includes("statusCode") &&
+                               code.includes("Hello Serverless");
+                    } catch (e) {
+                        return false;
+                    }
+                }
+            },
+            {
+                title: "고급 성능 최적화",
+                content: `
+                    <h3>성능 최적화 전략</h3>
+                    <p>Node.js 애플리케이션의 성능을 향상시키는 다양한 전략들을 알아봅니다.</p>
+                    
+                    <h3>벤치마킹 도구</h3>
+                    <div class="code-example">
+                        <pre>// autocannon - HTTP 벤치마킹 도구
+// npm install -g autocannon
+
+// 기본 사용
+// autocannon http://localhost:3000
+
+// 옵션 설정
+// autocannon -c 100 -d 30 -p 10 http://localhost:3000
+// -c: 동시 연결 수
+// -d: 지속 시간(초)
+// -p: 파이프라인 요청 수
+
+// ab (Apache Bench)
+// ab -n 10000 -c 100 http://localhost:3000/
+// -n: 총 요청 수
+// -c: 동시 요청 수
+
+// wrk
+// wrk -t12 -c400 -d30s http://localhost:3000/
+// -t: 스레드 수
+// -c: 연결 수
+// -d: 지속 시간</pre>
+                    </div>
+                    
+                    <h3>프로파일링 (Node.js 내장)</h3>
+                    <div class="code-example">
+                        <pre>// --prof 플래그로 프로파일링
+// node --prof app.js
+
+// --prof-process로 결과 분석
+// node --prof-process isolate-*.log > processed.txt
+
+// Chrome DevTools 프로파일링
+// node --inspect app.js
+// Chrome에서 chrome://inspect 접속
+
+// clinic.js - 통합 프로파일링 도구
+// npm install -g clinic
+// clinic doctor node app.js  # CPU 프로파일링
+// clinic flame node app.js   # 플레임 그래프
+// clinic bubbleprof node app.js  # 비동기 프로파일링
+
+// 0x - 플레임 그래프 생성
+// npm install -g 0x
+// 0x app.js</pre>
+                    </div>
+                    
+                    <h3>메모리 최적화</h3>
+                    <div class="code-example">
+                        <pre>// 메모리 누수 확인
+// node --expose-gc --max-old-space-size=512 app.js
+
+// 힙 스냅샷 생성
+const v8 = require('v8');
+const fs = require('fs');
+
+// 힙 스냅샷 저장
+const snapshot = v8.writeHeapSnapshot();
+console.log('Heap snapshot saved:', snapshot);
+
+// 힙 메모리 정보
+const heapStats = v8.getHeapStatistics();
+console.log('Heap statistics:', heapStats);
+
+// 가비지 컬렉션 강제 실행 (개발 환경만)
+if (global.gc) {
+    global.gc();
+}
+
+// 메모리 사용량 모니터링
+const memUsage = process.memoryUsage();
+console.log({
+    rss: Math.round(memUsage.rss / 1024 / 1024) + 'MB',
+    heapTotal: Math.round(memUsage.heapTotal / 1024 / 1024) + 'MB',
+    heapUsed: Math.round(memUsage.heapUsed / 1024 / 1024) + 'MB',
+    external: Math.round(memUsage.external / 1024 / 1024) + 'MB'
+});</pre>
+                    </div>
+                    
+                    <h3>클러스터 모드 최적화</h3>
+                    <div class="code-example">
+                        <pre>// CPU 코어 수만큼 워커 프로세스 생성
+const cluster = require('cluster');
+const os = require('os');
+
+if (cluster.isMaster) {
+    const numWorkers = os.cpus().length;
+    console.log(\`Master \${process.pid} is running\`);
+    console.log(\`Starting \${numWorkers} workers...\`);
+    
+    // 워커 프로세스 생성
+    for (let i = 0; i < numWorkers; i++) {
+        cluster.fork();
+    }
+    
+    // 워커 종료 시 재시작
+    cluster.on('exit', (worker, code, signal) => {
+        console.log(\`Worker \${worker.process.pid} died\`);
+        cluster.fork(); // 새로운 워커 생성
+    });
+    
+} else {
+    // 워커 프로세스
+    const express = require('express');
+    const app = express();
+    
+    app.get('/', (req, res) => {
+        res.json({
+            message: 'Hello from worker',
+            pid: process.pid,
+            worker: cluster.worker.id
+        });
+    });
+    
+    app.listen(3000, () => {
+        console.log(\`Worker \${process.pid} started\`);
+    });
+}</pre>
+                    </div>
+                    
+                    <h3>캐싱 전략</h3>
+                    <div class="code-example">
+                        <pre>// 메모리 캐싱 (node-cache)
+const NodeCache = require('node-cache');
+const cache = new NodeCache({ stdTTL: 600 }); // 10분 TTL
+
+function getCachedData(key, fetchFn) {
+    let value = cache.get(key);
+    if (value) {
+        return Promise.resolve(value); // 캐시 히트
+    }
+    
+    // 캐시 미스 - 데이터 가져오기
+    return fetchFn().then(data => {
+        cache.set(key, data);
+        return data;
+    });
+}
+
+// Redis 캐싱
+const redis = require('redis');
+const client = redis.createClient();
+
+async function getCachedUser(userId) {
+    const cacheKey = \`user:\${userId}\`;
+    
+    // 캐시에서 확인
+    const cached = await client.get(cacheKey);
+    if (cached) {
+        return JSON.parse(cached);
+    }
+    
+    // DB에서 가져오기
+    const user = await db.users.findOne({ id: userId });
+    
+    // 캐시에 저장 (1시간)
+    await client.setex(cacheKey, 3600, JSON.stringify(user));
+    
+    return user;
+}</pre>
+                    </div>
+                    
+                    <h3>데이터베이스 쿼리 최적화</h3>
+                    <div class="code-example">
+                        <pre>// 인덱스 활용
+// MongoDB
+db.users.createIndex({ email: 1 });
+db.orders.createIndex({ userId: 1, createdAt: -1 });
+
+// PostgreSQL
+CREATE INDEX idx_users_email ON users(email);
+CREATE INDEX idx_orders_user_created ON orders(user_id, created_at DESC);
+
+// 쿼리 최적화
+// 1. 필요한 필드만 선택 (Projection)
+const users = await User.find({}, 'name email'); // id, name, email만
+
+// 2. 페이지네이션
+const page = 1;
+const limit = 20;
+const users = await User.find()
+    .skip((page - 1) * limit)
+    .limit(limit)
+    .sort({ createdAt: -1 });
+
+// 3. 집계 파이프라인 최적화 (MongoDB)
+const stats = await Order.aggregate([
+    { $match: { status: 'completed' } },
+    { $group: { _id: '$userId', total: { $sum: '$amount' } } },
+    { $sort: { total: -1 } },
+    { $limit: 10 }
+]);</pre>
+                    </div>
+                `,
+                problem: "cluster 모듈을 사용하여 CPU 코어 수만큼 워커 프로세스를 생성하고, 각 워커에서 간단한 HTTP 서버를 실행하세요.",
+                solution: `const cluster = require('cluster');
+const os = require('os');
+
+if (cluster.isMaster) {
+    for (let i = 0; i < os.cpus().length; i++) {
+        cluster.fork();
+    }
+} else {
+    const express = require('express');
+    const app = express();
+    app.get('/', (req, res) => {
+        res.json({ pid: process.pid });
+    });
+    app.listen(3000);
+}`,
+                test: (code) => {
+                    try {
+                        return code.includes("cluster") &&
+                               code.includes("fork") &&
+                               code.includes("isMaster") ||
+                               code.includes("isPrimary");
                     } catch (e) {
                         return false;
                     }

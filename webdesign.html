@@ -656,24 +656,24 @@
                 </div>
                 
                 <div class="chapter-box" onclick="showLesson(16)">
-                    <div class="chapter-icon">📝</div>
+                    <div class="chapter-icon">💻</div>
                     <div class="chapter-number">16</div>
-                    <h2>1회차 모의고사</h2>
-                    <p>실전 모의고사 문제 풀이</p>
+                    <h2>1회차 실습하기</h2>
+                    <p>실전 문제 유형 실습</p>
                 </div>
                 
                 <div class="chapter-box" onclick="showLesson(17)">
-                    <div class="chapter-icon">📝</div>
+                    <div class="chapter-icon">💻</div>
                     <div class="chapter-number">17</div>
-                    <h2>2회차 모의고사</h2>
-                    <p>실전 모의고사 문제 풀이</p>
+                    <h2>2회차 실습하기</h2>
+                    <p>실전 문제 유형 실습</p>
                 </div>
                 
                 <div class="chapter-box" onclick="showLesson(18)">
-                    <div class="chapter-icon">📝</div>
+                    <div class="chapter-icon">💻</div>
                     <div class="chapter-number">18</div>
-                    <h2>3회차 모의고사</h2>
-                    <p>실전 모의고사 문제 풀이</p>
+                    <h2>3회차 실습하기</h2>
+                    <p>실전 문제 유형 실습</p>
                 </div>
                 
                 <div class="chapter-box" onclick="showLesson(19)">
@@ -688,6 +688,41 @@
                     <div class="chapter-number">20</div>
                     <h2>자주하는 실수 및 디버깅</h2>
                     <p>흔한 실수와 디버깅 방법</p>
+                </div>
+                
+                <div class="chapter-box" onclick="showLesson(21)">
+                    <div class="chapter-icon">📱</div>
+                    <div class="chapter-number">21</div>
+                    <h2>반응형 웹디자인</h2>
+                    <p>미디어 쿼리와 반응형 레이아웃</p>
+                </div>
+                
+                <div class="chapter-box" onclick="showLesson(22)">
+                    <div class="chapter-icon">📝</div>
+                    <div class="chapter-number">22</div>
+                    <h2>폼 처리 및 검증</h2>
+                    <p>HTML5 폼과 JavaScript 검증</p>
+                </div>
+                
+                <div class="chapter-box" onclick="showLesson(23)">
+                    <div class="chapter-icon">♿</div>
+                    <div class="chapter-number">23</div>
+                    <h2>웹 접근성</h2>
+                    <p>WCAG 가이드라인과 접근성 구현</p>
+                </div>
+                
+                <div class="chapter-box" onclick="showLesson(24)">
+                    <div class="chapter-icon">🖼️</div>
+                    <div class="chapter-number">24</div>
+                    <h2>이미지 최적화 및 처리</h2>
+                    <p>이미지 포맷과 최적화 기법</p>
+                </div>
+                
+                <div class="chapter-box" onclick="showLesson(25)">
+                    <div class="chapter-icon">🔍</div>
+                    <div class="chapter-number">25</div>
+                    <h2>SEO 기본 및 메타 태그</h2>
+                    <p>검색 엔진 최적화 기초</p>
                 </div>
             </div>
         </div>
@@ -745,7 +780,7 @@
                     <ol style="margin-left: 20px; margin-top: 10px;">
                         <li>기초 문법부터 차근차근 학습하고, 각 개념을 이해한 후 예제를 따라해봅니다</li>
                         <li>실제 프로젝트를 만들어보며 반복 연습합니다</li>
-                        <li>모의고사를 통해 시간 안배와 문제 해결 능력을 기릅니다</li>
+                        <li>실습 문제를 통해 시간 안배와 문제 해결 능력을 기릅니다</li>
                         <li>실수하기 쉬운 부분(파일 경로, 선택자 오류 등)을 정리하고 암기합니다</li>
                     </ol>
                     
@@ -3373,19 +3408,92 @@ $(document).keydown(function(e) {
                 }
             },
             {
-                title: "1회차 모의고사",
+                title: "1회차 실습하기",
                 content: `
-                    <h3>모의고사 문제</h3>
-                    <p>다음 요구사항에 맞는 웹페이지를 제작하세요:</p>
+                    <h3>실제 시험에 나오는 내용 소개</h3>
+                    <p>웹디자인개발기능사 실기 시험은 <strong>3시간 동안 실제 웹페이지를 제작</strong>하는 실기 시험입니다. 
+                    시험에서는 요구사항 문서와 이미지 파일이 제공되며, 이를 바탕으로 완전한 웹페이지를 제작해야 합니다.</p>
+                    
+                    <h3>실제 시험 구성 (A유형 예시)</h3>
+                    <p><strong>1. 제공되는 자료:</strong></p>
                     <ul style="margin-left: 20px; margin-top: 10px;">
-                        <li>너비 1200px, 가운데 정렬되는 레이아웃</li>
-                        <li>헤더 영역 (높이 100px)</li>
-                        <li>네비게이션 메뉴 (홈, 소개, 서비스, 연락처)</li>
-                        <li>본문 영역</li>
-                        <li>푸터 영역 (높이 80px)</li>
+                        <li>요구사항 문서 (PDF 또는 워드 파일)</li>
+                        <li>이미지 파일들 (로고, 배너, 아이콘 등)</li>
+                        <li>레이아웃 시안 또는 와이어프레임</li>
+                        <li>색상 코드 및 폰트 정보</li>
                     </ul>
                     
-                    <h3>평가 기준</h3>
+                    <p><strong>2. 실제 시험 요구사항 (A유형 예시):</strong></p>
+                    <ul style="margin-left: 20px; margin-top: 10px;">
+                        <li><strong>HTML 구조 작성 (30점):</strong>
+                            <ul style="margin-left: 15px; margin-top: 5px;">
+                                <li>시맨틱 태그 사용 (header, nav, main, section, footer 등)</li>
+                                <li>올바른 태그 중첩 구조</li>
+                                <li>이미지 alt 속성, 링크 href 속성 등 필수 속성 작성</li>
+                                <li>폴더 구조: images 폴더에 이미지 파일 배치</li>
+                                <li>파일명 규칙 준수 (대소문자 구분, 공백 없음)</li>
+                            </ul>
+                        </li>
+                        <li><strong>CSS 스타일링 (40점):</strong>
+                            <ul style="margin-left: 15px; margin-top: 5px;">
+                                <li>레이아웃: 너비, 가운데 정렬, Flexbox 또는 Float 활용</li>
+                                <li>헤더/푸터: 높이, 배경색, 텍스트 정렬</li>
+                                <li>네비게이션: 가로 메뉴, 호버 효과, 활성 메뉴 표시</li>
+                                <li>본문 영역: 패딩, 마진, 배경색, 텍스트 스타일</li>
+                                <li>반응형: 미디어 쿼리를 통한 모바일 대응 (선택사항이지만 가산점)</li>
+                                <li>색상: 제공된 색상 코드 정확히 사용</li>
+                                <li>폰트: 제공된 폰트 또는 웹폰트 적용</li>
+                            </ul>
+                        </li>
+                        <li><strong>JavaScript/jQuery 기능 (30점):</strong>
+                            <ul style="margin-left: 15px; margin-top: 5px;">
+                                <li>네비게이션 메뉴 호버 효과</li>
+                                <li>스크롤 시 헤더 고정 (sticky header)</li>
+                                <li>스크롤 탑 버튼</li>
+                                <li>이미지 갤러리 또는 라이트박스</li>
+                            </ul>
+                        </li>
+                    </ul>
+                    
+                    <h3>실제 시험 평가 기준</h3>
+                    <ul style="margin-left: 20px; margin-top: 10px;">
+                        <li><strong>코드 정확성:</strong> 문법 오류, 태그 닫기, 속성 오류 등</li>
+                        <li><strong>요구사항 준수:</strong> 제공된 요구사항을 정확히 구현했는지</li>
+                        <li><strong>디자인 구현도:</strong> 시안과 유사한 디자인 구현</li>
+                        <li><strong>기능 작동 여부:</strong> JavaScript/jQuery 기능이 정상 작동하는지</li>
+                        <li><strong>파일 관리:</strong> 올바른 폴더 구조, 파일명 규칙 준수</li>
+                        <li><strong>브라우저 호환성:</strong> 주요 브라우저에서 정상 작동</li>
+                    </ul>
+                    
+                    <h3>실습 문제 (기초 연습용)</h3>
+                    <p>다음은 실제 시험을 대비한 기초 연습 문제입니다. 실제 시험보다 단순화된 버전입니다:</p>
+                    <ul style="margin-left: 20px; margin-top: 10px;">
+                        <li>너비 1200px, 가운데 정렬되는 레이아웃</li>
+                        <li>헤더 영역 (높이 100px, 배경색 #333, 텍스트 흰색)</li>
+                        <li>네비게이션 메뉴 (홈, 소개, 서비스, 연락처) - 가로 배치, 호버 효과</li>
+                        <li>본문 영역 (패딩 40px)</li>
+                        <li>푸터 영역 (높이 80px, 배경색 #333, 텍스트 흰색, 가운데 정렬)</li>
+                    </ul>
+                    
+                    <h3>실제 시험과의 차이점</h3>
+                    <ul style="margin-left: 20px; margin-top: 10px;">
+                        <li><strong>실제 시험:</strong> 구체적인 이미지, 색상 코드, 폰트, 레이아웃 시안 제공</li>
+                        <li><strong>실제 시험:</strong> 더 복잡한 레이아웃과 다양한 기능 요구</li>
+                        <li><strong>실제 시험:</strong> 파일 구조와 네이밍 규칙이 엄격하게 평가됨</li>
+                        <li><strong>실제 시험:</strong> 시간 관리가 매우 중요 (3시간 내 완성)</li>
+                        <li><strong>실제 시험:</strong> 브라우저에서 실제로 테스트하며 디버깅 필요</li>
+                    </ul>
+                    
+                    <h3>시험 대비 팁</h3>
+                    <ul style="margin-left: 20px; margin-top: 10px;">
+                        <li>요구사항 문서를 꼼꼼히 읽고 체크리스트 작성</li>
+                        <li>시간 배분: HTML 구조(30분) → CSS 스타일링(90분) → JavaScript(60분)</li>
+                        <li>중간중간 브라우저에서 확인하며 진행</li>
+                        <li>파일명과 경로를 정확히 작성 (대소문자 구분)</li>
+                        <li>제출 전 모든 기능이 정상 작동하는지 최종 확인</li>
+                    </ul>
+                    
+                    <h3>평가 기준 (참고용)</h3>
                     <ul style="margin-left: 20px; margin-top: 10px;">
                         <li>HTML 구조의 정확성 (30점)</li>
                         <li>CSS 스타일링의 완성도 (40점)</li>
@@ -3407,9 +3515,9 @@ $(document).keydown(function(e) {
                 }
             },
             {
-                title: "2회차 모의고사",
+                title: "2회차 실습하기",
                 content: `
-                    <h3>모의고사 문제</h3>
+                    <h3>실제 시험에 나오는 내용 소개 (B유형)</h3>
                     <p>다음 요구사항에 맞는 웹페이지를 제작하세요:</p>
                     <ul style="margin-left: 20px; margin-top: 10px;">
                         <li>슬라이드 배너 (3개 이미지, 자동 전환)</li>
@@ -3441,27 +3549,104 @@ $(document).keydown(function(e) {
                 }
             },
             {
-                title: "3회차 모의고사",
+                title: "3회차 실습하기",
                 content: `
-                    <h3>모의고사 문제</h3>
-                    <p>다음 요구사항에 맞는 웹페이지를 제작하세요:</p>
+                    <h3>실제 시험에 나오는 내용 소개 (C유형)</h3>
+                    <p>C유형은 <strong>탭 메뉴와 레이어 팝업 구현</strong>이 핵심인 유형입니다. 
+                    jQuery의 이벤트 처리와 애니메이션 효과(fadeIn, fadeOut)를 활용해야 하며, 상호작용 기능 구현이 중요합니다.</p>
+                    
+                    <h3>실제 시험 구성 (C유형 예시)</h3>
+                    <p><strong>1. 제공되는 자료:</strong></p>
                     <ul style="margin-left: 20px; margin-top: 10px;">
-                        <li>탭 메뉴 (3개 탭, 클릭 시 내용 전환)</li>
-                        <li>레이어 팝업 (열기/닫기 버튼)</li>
+                        <li>요구사항 문서 (탭 메뉴, 팝업 상세 스펙)</li>
+                        <li>탭별 콘텐츠 이미지 또는 텍스트</li>
+                        <li>팝업 창 디자인 시안</li>
+                        <li>로고 및 아이콘 이미지</li>
+                        <li>색상 코드 및 폰트 정보</li>
+                    </ul>
+                    
+                    <p><strong>2. 실제 시험 요구사항 (C유형 예시):</strong></p>
+                    <ul style="margin-left: 20px; margin-top: 10px;">
+                        <li><strong>탭 메뉴 구현 (30점):</strong>
+                            <ul style="margin-left: 15px; margin-top: 5px;">
+                                <li>3~5개의 탭 버튼이 가로로 배치됨</li>
+                                <li>탭 클릭 시 해당 탭의 콘텐츠만 표시되고 다른 탭 콘텐츠는 숨김</li>
+                                <li>활성 탭에 active 클래스 추가 및 스타일 변경</li>
+                                <li>탭 전환 시 fadeIn/fadeOut 또는 slide 효과</li>
+                                <li>첫 번째 탭이 기본으로 활성화됨</li>
+                                <li>탭 버튼 호버 효과 (선택사항이지만 가산점)</li>
+                            </ul>
+                        </li>
+                        <li><strong>레이어 팝업 구현 (30점):</strong>
+                            <ul style="margin-left: 15px; margin-top: 5px;">
+                                <li>팝업 열기 버튼 클릭 시 팝업 창 표시</li>
+                                <li>팝업 닫기 버튼(×) 클릭 시 팝업 창 숨김</li>
+                                <li>팝업 배경(오버레이) 클릭 시에도 팝업 닫힘</li>
+                                <li>팝업이 화면 중앙에 위치 (position: fixed, transform 활용)</li>
+                                <li>팝업 표시/숨김 시 fadeIn/fadeOut 효과</li>
+                                <li>팝업이 열려있을 때 배경 스크롤 방지 (body overflow: hidden)</li>
+                                <li>ESC 키를 눌러도 팝업 닫힘 (가산점)</li>
+                            </ul>
+                        </li>
+                        <li><strong>jQuery 코드 정확성 (30점):</strong>
+                            <ul style="margin-left: 15px; margin-top: 5px;">
+                                <li>jQuery 라이브러리 CDN 연결 확인</li>
+                                <li>$(document).ready() 또는 $(function() {}) 사용</li>
+                                <li>이벤트 핸들러: .click(), .on('click') 등</li>
+                                <li>애니메이션: .fadeIn(), .fadeOut(), .slideToggle()</li>
+                                <li>클래스 조작: .addClass(), .removeClass(), .toggleClass()</li>
+                                <li>CSS 조작: .css(), .show(), .hide()</li>
+                                <li>이벤트 전파 방지: .stopPropagation() (필요시)</li>
+                                <li>코드 최적화 및 오류 없음</li>
+                            </ul>
+                        </li>
+                        <li><strong>레이아웃 및 스타일링 (10점):</strong>
+                            <ul style="margin-left: 15px; margin-top: 5px;">
+                                <li>전체 레이아웃 구조</li>
+                                <li>탭 메뉴와 콘텐츠 영역 배치</li>
+                                <li>팝업 창 디자인 (배경, 테두리, 그림자 등)</li>
+                                <li>반응형 레이아웃 (선택사항이지만 가산점)</li>
+                            </ul>
+                        </li>
+                    </ul>
+                    
+                    <h3>실제 시험 평가 기준</h3>
+                    <ul style="margin-left: 20px; margin-top: 10px;">
+                        <li><strong>기능 작동 여부:</strong> 탭 전환이 정상적으로 작동하는지, 팝업이 정확히 열리고 닫히는지</li>
+                        <li><strong>코드 정확성:</strong> jQuery 문법 오류, 이벤트 핸들러 오류 등</li>
+                        <li><strong>요구사항 준수:</strong> 제공된 요구사항을 정확히 구현했는지</li>
+                        <li><strong>애니메이션 효과:</strong> 부드러운 전환 효과 구현</li>
+                        <li><strong>사용자 경험:</strong> 직관적인 인터랙션, 오류 없음</li>
+                        <li><strong>브라우저 호환성:</strong> 주요 브라우저에서 정상 작동</li>
+                        <li><strong>파일 관리:</strong> 올바른 폴더 구조, 이미지 경로 정확성</li>
+                    </ul>
+                    
+                    <h3>실습 문제 (기초 연습용)</h3>
+                    <p>다음은 실제 시험을 대비한 기초 연습 문제입니다. 실제 시험보다 단순화된 버전입니다:</p>
+                    <ul style="margin-left: 20px; margin-top: 10px;">
+                        <li>탭 메뉴 (3개 탭, 클릭 시 내용 전환, fadeIn/fadeOut 효과)</li>
+                        <li>레이어 팝업 (열기/닫기 버튼, 배경 클릭 시 닫힘)</li>
                         <li>jQuery를 활용한 인터랙션</li>
-                        <li>애니메이션 효과</li>
+                        <li>애니메이션 효과 (fadeIn, fadeOut)</li>
                     </ul>
                     
-                    <h3>평가 기준</h3>
+                    <h3>실제 시험과의 차이점</h3>
                     <ul style="margin-left: 20px; margin-top: 10px;">
-                        <li>탭 메뉴 구현 (30점)</li>
-                        <li>팝업 창 구현 (30점)</li>
-                        <li>jQuery 코드 정확성 (30점)</li>
-                        <li>애니메이션 효과 (10점)</li>
+                        <li><strong>실제 시험:</strong> 더 복잡한 탭 구조 (4~5개 탭, 각 탭마다 다양한 콘텐츠)</li>
+                        <li><strong>실제 시험:</strong> 팝업 내부에 폼, 이미지, 동영상 등 다양한 콘텐츠</li>
+                        <li><strong>실제 시험:</strong> ESC 키 이벤트, 배경 스크롤 방지 등 세부 기능 요구</li>
+                        <li><strong>실제 시험:</strong> 여러 개의 팝업 또는 모달 창 (가산점)</li>
+                        <li><strong>실제 시험:</strong> 시간 관리가 매우 중요 (3시간 내 완성)</li>
                     </ul>
                     
-                    <h3>작업 시간</h3>
-                    <p>예상 소요 시간: 90분</p>
+                    <h3>시험 대비 팁</h3>
+                    <ul style="margin-left: 20px; margin-top: 10px;">
+                        <li>탭 메뉴는 인덱스 기반 전환 패턴 연습</li>
+                        <li>팝업은 position: fixed와 z-index 활용 연습</li>
+                        <li>이벤트 위임(.on())을 활용한 효율적인 코드 작성</li>
+                        <li>중간중간 브라우저에서 테스트하며 디버깅</li>
+                        <li>애니메이션 효과는 너무 빠르지 않게 (300ms~500ms 권장)</li>
+                    </ul>
                 `,
                 problem: "탭을 클릭하면 해당 탭에 active 클래스를 추가하고 다른 탭의 active 클래스를 제거하는 jQuery 코드를 작성하세요.",
                 solution: "$('.tab-list li').click(function() {\n    $('.tab-list li').removeClass('active');\n    $(this).addClass('active');\n});",
@@ -3552,6 +3737,937 @@ $(document).keydown(function(e) {
                 test: (code) => {
                     try {
                         return code.includes("F12") || code.includes("f12");
+                    } catch (e) {
+                        return false;
+                    }
+                }
+            },
+            {
+                title: "반응형 웹디자인",
+                content: `
+                    <h3>반응형 웹디자인이란?</h3>
+                    <p>반응형 웹디자인(Responsive Web Design)은 <strong>하나의 웹사이트가 다양한 디바이스와 화면 크기에 맞춰 자동으로 레이아웃이 조정</strong>되는 웹 디자인 기법입니다. 
+                    PC, 태블릿, 스마트폰 등 다양한 환경에서 최적의 사용자 경험을 제공합니다.</p>
+                    
+                    <h3>반응형 웹디자인의 필요성</h3>
+                    <ul style="margin-left: 20px; margin-top: 10px;">
+                        <li><strong>다양한 디바이스 대응:</strong> PC, 태블릿, 스마트폰 등 모든 디바이스 지원</li>
+                        <li><strong>사용자 경험 향상:</strong> 각 디바이스에 최적화된 레이아웃 제공</li>
+                        <li><strong>유지보수 효율성:</strong> 하나의 코드베이스로 모든 디바이스 관리</li>
+                        <li><strong>SEO 향상:</strong> 모바일 친화적인 사이트로 검색 엔진 최적화</li>
+                    </ul>
+                    
+                    <h3>미디어 쿼리(Media Query) 기본</h3>
+                    <p>미디어 쿼리는 <strong>화면 크기와 특성에 따라 다른 CSS 스타일을 적용</strong>하는 방법입니다.</p>
+                    
+                    <div class="code-example">
+                        <pre>/* 기본 스타일 (모바일 퍼스트) */
+.container {
+    width: 100%;
+    padding: 10px;
+}
+
+/* 태블릿 (768px 이상) */
+@media (min-width: 768px) {
+    .container {
+        width: 750px;
+        margin: 0 auto;
+        padding: 20px;
+    }
+}
+
+/* 데스크톱 (1024px 이상) */
+@media (min-width: 1024px) {
+    .container {
+        width: 1200px;
+        padding: 40px;
+    }
+}
+
+/* 매우 큰 화면 (1400px 이상) */
+@media (min-width: 1400px) {
+    .container {
+        width: 1400px;
+    }
+}</pre>
+                    </div>
+                    
+                    <h3>Viewport 메타 태그</h3>
+                    <p>반응형 웹디자인을 위해 <strong>viewport 메타 태그</strong>를 반드시 추가해야 합니다:</p>
+                    
+                    <div class="code-example">
+                        <pre>&lt;!DOCTYPE html&gt;
+&lt;html lang="ko"&gt;
+&lt;head&gt;
+    &lt;meta charset="UTF-8"&gt;
+    &lt;meta name="viewport" content="width=device-width, initial-scale=1.0"&gt;
+    &lt;title&gt;반응형 웹사이트&lt;/title&gt;
+&lt;/head&gt;
+&lt;body&gt;
+    &lt;!-- 내용 --&gt;
+&lt;/body&gt;
+&lt;/html&gt;
+
+/* viewport 속성 설명:
+   - width=device-width: 디바이스의 실제 너비 사용
+   - initial-scale=1.0: 초기 확대/축소 비율 (1.0 = 100%)
+   - maximum-scale=1.0: 최대 확대 비율 제한 (선택사항)
+   - user-scalable=no: 사용자 확대/축소 비활성화 (선택사항, 접근성 문제) */</pre>
+                    </div>
+                    
+                    <h3>Flexbox를 활용한 반응형 레이아웃</h3>
+                    <div class="code-example">
+                        <pre>/* Flexbox 컨테이너 */
+.flex-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+}
+
+/* Flexbox 아이템 */
+.flex-item {
+    flex: 1 1 300px; /* 최소 너비 300px, 유연하게 확장 */
+}
+
+/* 모바일: 한 열로 배치 */
+@media (max-width: 767px) {
+    .flex-item {
+        flex: 1 1 100%; /* 전체 너비 사용 */
+    }
+}
+
+/* 태블릿: 두 열로 배치 */
+@media (min-width: 768px) and (max-width: 1023px) {
+    .flex-item {
+        flex: 1 1 calc(50% - 10px); /* 2열 배치 */
+    }
+}
+
+/* 데스크톱: 세 열로 배치 */
+@media (min-width: 1024px) {
+    .flex-item {
+        flex: 1 1 calc(33.333% - 14px); /* 3열 배치 */
+    }
+}</pre>
+                    </div>
+                    
+                    <h3>그리드 레이아웃을 활용한 반응형</h3>
+                    <div class="code-example">
+                        <pre>/* CSS Grid 컨테이너 */
+.grid-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 20px;
+}
+
+/* 모바일: 한 열 */
+@media (max-width: 767px) {
+    .grid-container {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* 태블릿: 두 열 */
+@media (min-width: 768px) and (max-width: 1023px) {
+    .grid-container {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+/* 데스크톱: 네 열 */
+@media (min-width: 1024px) {
+    .grid-container {
+        grid-template-columns: repeat(4, 1fr);
+    }
+}</pre>
+                    </div>
+                    
+                    <h3>반응형 이미지</h3>
+                    <div class="code-example">
+                        <pre>/* 이미지가 컨테이너 너비에 맞춰 조정 */
+img {
+    max-width: 100%;
+    height: auto;
+}
+
+/* background-size 활용 */
+.hero-image {
+    width: 100%;
+    height: 400px;
+    background-image: url('image.jpg');
+    background-size: cover;
+    background-position: center;
+}
+
+/* picture 태그로 다양한 이미지 제공 */
+&lt;picture&gt;
+    &lt;source media="(min-width: 1024px)" srcset="large.jpg"&gt;
+    &lt;source media="(min-width: 768px)" srcset="medium.jpg"&gt;
+    &lt;img src="small.jpg" alt="반응형 이미지"&gt;
+&lt;/picture&gt;</pre>
+                    </div>
+                    
+                    <h3>반응형 네비게이션 메뉴</h3>
+                    <div class="code-example">
+                        <pre>/* 모바일: 햄버거 메뉴 */
+@media (max-width: 767px) {
+    .nav-menu {
+        display: none;
+        position: absolute;
+        top: 100%;
+        left: 0;
+        width: 100%;
+        background: #fff;
+        flex-direction: column;
+    }
+    
+    .nav-menu.active {
+        display: flex;
+    }
+    
+    .hamburger {
+        display: block;
+    }
+}
+
+/* 데스크톱: 가로 메뉴 */
+@media (min-width: 768px) {
+    .nav-menu {
+        display: flex;
+        flex-direction: row;
+        position: static;
+    }
+    
+    .hamburger {
+        display: none;
+    }
+}</pre>
+                    </div>
+                    
+                    <h3>반응형 타이포그래피</h3>
+                    <div class="code-example">
+                        <pre>/* 기본 폰트 크기 (모바일) */
+body {
+    font-size: 14px;
+}
+
+h1 {
+    font-size: 24px;
+}
+
+/* 태블릿 */
+@media (min-width: 768px) {
+    body {
+        font-size: 16px;
+    }
+    
+    h1 {
+        font-size: 32px;
+    }
+}
+
+/* 데스크톱 */
+@media (min-width: 1024px) {
+    body {
+        font-size: 18px;
+    }
+    
+    h1 {
+        font-size: 48px;
+    }
+}
+
+/* vw 단위 활용 (뷰포트 너비의 % */
+h1 {
+    font-size: clamp(24px, 5vw, 48px); /* 최소 24px, 최대 48px, 5vw */
+}</pre>
+                    </div>
+                `,
+                problem: "미디어 쿼리를 사용하여 768px 이상일 때 container의 너비를 1200px로 설정하고, 가운데 정렬하세요.",
+                solution: "@media (min-width: 768px) {\n    .container {\n        width: 1200px;\n        margin: 0 auto;\n    }\n}",
+                test: (code) => {
+                    try {
+                        return code.includes("@media") &&
+                               code.includes("min-width: 768px") &&
+                               code.includes("width: 1200px") &&
+                               code.includes("margin: 0 auto");
+                    } catch (e) {
+                        return false;
+                    }
+                }
+            },
+            {
+                title: "폼 처리 및 검증",
+                content: `
+                    <h3>HTML5 폼 요소</h3>
+                    <p>HTML5는 다양한 <strong>폼 입력 타입과 검증 기능</strong>을 제공합니다.</p>
+                    
+                    <h3>주요 input 타입</h3>
+                    <div class="code-example">
+                        <pre>&lt;!-- 텍스트 입력 --&gt;
+&lt;input type="text" name="name" placeholder="이름 입력" required&gt;
+
+&lt;!-- 이메일 --&gt;
+&lt;input type="email" name="email" placeholder="이메일 입력" required&gt;
+
+&lt;!-- 비밀번호 --&gt;
+&lt;input type="password" name="password" placeholder="비밀번호" required minlength="8"&gt;
+
+&lt;!-- 전화번호 --&gt;
+&lt;input type="tel" name="phone" placeholder="010-1234-5678" pattern="[0-9]{3}-[0-9]{4}-[0-9]{4}"&gt;
+
+&lt;!-- 날짜 --&gt;
+&lt;input type="date" name="birthday"&gt;
+
+&lt;!-- 숫자 --&gt;
+&lt;input type="number" name="age" min="1" max="100"&gt;
+
+&lt;!-- 범위 --&gt;
+&lt;input type="range" name="volume" min="0" max="100" value="50"&gt;
+
+&lt;!-- 색상 --&gt;
+&lt;input type="color" name="favcolor"&gt;
+
+&lt;!-- 파일 업로드 --&gt;
+&lt;input type="file" name="file" accept="image/*"&gt;
+
+&lt;!-- 체크박스 --&gt;
+&lt;input type="checkbox" name="agree" id="agree" required&gt;
+&lt;label for="agree"&gt;약관에 동의합니다&lt;/label&gt;
+
+&lt;!-- 라디오 버튼 --&gt;
+&lt;input type="radio" name="gender" id="male" value="male"&gt;
+&lt;label for="male"&gt;남성&lt;/label&gt;
+&lt;input type="radio" name="gender" id="female" value="female"&gt;
+&lt;label for="female"&gt;여성&lt;/label&gt;</pre>
+                    </div>
+                    
+                    <h3>HTML5 폼 검증 속성</h3>
+                    <div class="code-example">
+                        <pre>&lt;form id="myForm"&gt;
+    &lt;!-- required: 필수 입력 --&gt;
+    &lt;input type="text" name="name" required&gt;
+    
+    &lt;!-- pattern: 정규표현식 패턴 검증 --&gt;
+    &lt;input type="text" name="phone" pattern="[0-9]{3}-[0-9]{4}-[0-9]{4}" 
+           title="전화번호 형식: 010-1234-5678"&gt;
+    
+    &lt;!-- minlength, maxlength: 길이 제한 --&gt;
+    &lt;input type="password" name="password" minlength="8" maxlength="20"&gt;
+    
+    &lt;!-- min, max: 숫자 범위 --&gt;
+    &lt;input type="number" name="age" min="1" max="120"&gt;
+    
+    &lt;!-- step: 숫자 간격 --&gt;
+    &lt;input type="number" name="price" step="100"&gt;
+    
+    &lt;button type="submit"&gt;제출&lt;/button&gt;
+&lt;/form&gt;</pre>
+                    </div>
+                    
+                    <h3>JavaScript 폼 검증</h3>
+                    <div class="code-example">
+                        <pre>// 폼 제출 이벤트
+document.getElementById('myForm').addEventListener('submit', function(e) {
+    e.preventDefault(); // 기본 제출 동작 방지
+    
+    // 각 필드 검증
+    const name = document.querySelector('[name="name"]').value;
+    const email = document.querySelector('[name="email"]').value;
+    const password = document.querySelector('[name="password"]').value;
+    
+    // 이름 검증
+    if (name.trim() === '') {
+        alert('이름을 입력하세요.');
+        return;
+    }
+    
+    // 이메일 검증
+    const emailPattern = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$/;
+    if (!emailPattern.test(email)) {
+        alert('올바른 이메일 주소를 입력하세요.');
+        return;
+    }
+    
+    // 비밀번호 검증
+    if (password.length < 8) {
+        alert('비밀번호는 8자 이상이어야 합니다.');
+        return;
+    }
+    
+    // 모든 검증 통과 시 제출
+    alert('폼이 제출되었습니다!');
+    this.submit();
+});</pre>
+                    </div>
+                    
+                    <h3>실시간 검증 (입력 시)</h3>
+                    <div class="code-example">
+                        <pre>// 이메일 실시간 검증
+const emailInput = document.querySelector('[name="email"]');
+const emailError = document.getElementById('emailError');
+
+emailInput.addEventListener('blur', function() {
+    const email = this.value;
+    const emailPattern = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$/;
+    
+    if (email && !emailPattern.test(email)) {
+        emailError.textContent = '올바른 이메일 형식이 아닙니다.';
+        emailError.style.display = 'block';
+        this.style.borderColor = '#ff0000';
+    } else {
+        emailError.style.display = 'none';
+        this.style.borderColor = '#00ff00';
+    }
+});
+
+// 비밀번호 강도 검증
+const passwordInput = document.querySelector('[name="password"]');
+const strengthIndicator = document.getElementById('passwordStrength');
+
+passwordInput.addEventListener('input', function() {
+    const password = this.value;
+    let strength = 0;
+    
+    if (password.length >= 8) strength++;
+    if (/[a-z]/.test(password)) strength++;
+    if (/[A-Z]/.test(password)) strength++;
+    if (/[0-9]/.test(password)) strength++;
+    if (/[^a-zA-Z0-9]/.test(password)) strength++;
+    
+    const strengthText = ['매우 약함', '약함', '보통', '강함', '매우 강함'];
+    strengthIndicator.textContent = '강도: ' + strengthText[strength - 1] || '없음';
+});</pre>
+                    </div>
+                    
+                    <h3>jQuery를 활용한 폼 검증</h3>
+                    <div class="code-example">
+                        <pre>$(document).ready(function() {
+    $('#myForm').on('submit', function(e) {
+        e.preventDefault();
+        
+        let isValid = true;
+        
+        // 모든 required 필드 검증
+        $(this).find('[required]').each(function() {
+            if ($(this).val().trim() === '') {
+                $(this).addClass('error');
+                isValid = false;
+            } else {
+                $(this).removeClass('error');
+            }
+        });
+        
+        // 이메일 검증
+        const email = $('[name="email"]').val();
+        const emailPattern = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$/;
+        if (email && !emailPattern.test(email)) {
+            $('#emailError').text('올바른 이메일 형식이 아닙니다.').show();
+            isValid = false;
+        }
+        
+        if (isValid) {
+            alert('폼이 제출되었습니다!');
+            // this.submit(); // 실제 제출
+        }
+    });
+});</pre>
+                    </div>
+                `,
+                problem: "HTML5 input 요소를 사용하여 이메일 주소를 입력받는 필드를 만들고, required 속성을 추가하세요.",
+                solution: "<input type=\"email\" name=\"email\" placeholder=\"이메일 입력\" required>",
+                test: (code) => {
+                    try {
+                        return code.includes("type=\"email\"") &&
+                               code.includes("required") &&
+                               code.includes("input");
+                    } catch (e) {
+                        return false;
+                    }
+                }
+            },
+            {
+                title: "웹 접근성",
+                content: `
+                    <h3>웹 접근성이란?</h3>
+                    <p>웹 접근성(Web Accessibility)은 <strong>장애인을 포함한 모든 사용자가 웹사이트를 이용할 수 있도록 보장</strong>하는 것입니다. 
+                    WCAG(Web Content Accessibility Guidelines) 가이드라인을 따라야 합니다.</p>
+                    
+                    <h3>웹 접근성의 중요성</h3>
+                    <ul style="margin-left: 20px; margin-top: 10px;">
+                        <li><strong>법적 의무:</strong> 장애인차별금지법에 따른 접근성 보장 의무</li>
+                        <li><strong>사용자 범위 확대:</strong> 모든 사용자가 이용 가능</li>
+                        <li><strong>SEO 향상:</strong> 검색 엔진이 콘텐츠를 더 잘 이해</li>
+                        <li><strong>사용성 향상:</strong> 일반 사용자에게도 더 나은 경험 제공</li>
+                    </ul>
+                    
+                    <h3>시맨틱 HTML 사용</h3>
+                    <div class="code-example">
+                        <pre>&lt;!-- 의미 있는 HTML 태그 사용 --&gt;
+&lt;header&gt;
+    &lt;nav&gt;
+        &lt;ul&gt;
+            &lt;li&gt;&lt;a href="#"&gt;홈&lt;/a&gt;&lt;/li&gt;
+            &lt;li&gt;&lt;a href="#"&gt;소개&lt;/a&gt;&lt;/li&gt;
+        &lt;/ul&gt;
+    &lt;/nav&gt;
+&lt;/header&gt;
+
+&lt;main&gt;
+    &lt;article&gt;
+        &lt;h1&gt;제목&lt;/h1&gt;
+        &lt;section&gt;
+            &lt;h2&gt;섹션 제목&lt;/h2&gt;
+            &lt;p&gt;내용&lt;/p&gt;
+        &lt;/section&gt;
+    &lt;/article&gt;
+    
+    &lt;aside&gt;
+        &lt;h2&gt;사이드바&lt;/h2&gt;
+        &lt;p&gt;추가 정보&lt;/p&gt;
+    &lt;/aside&gt;
+&lt;/main&gt;
+
+&lt;footer&gt;
+    &lt;p&gt;저작권 정보&lt;/p&gt;
+&lt;/footer&gt;</pre>
+                    </div>
+                    
+                    <h3>alt 속성과 대체 텍스트</h3>
+                    <div class="code-example">
+                        <pre>&lt;!-- 이미지에 의미 있는 alt 텍스트 제공 --&gt;
+&lt;img src="logo.png" alt="회사 로고"&gt;
+
+&lt;!-- 장식용 이미지는 빈 alt --&gt;
+&lt;img src="decorative-line.png" alt=""&gt;
+
+&lt;!-- 복잡한 이미지는 longdesc 또는 상세 설명 --&gt;
+&lt;img src="chart.png" alt="2023년 매출 차트"&gt;
+&lt;p class="sr-only"&gt;2023년 매출은 전년 대비 20% 증가했습니다...&lt;/p&gt;
+
+/* 스크린 리더 전용 텍스트 */
+.sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+}</pre>
+                    </div>
+                    
+                    <h3>키보드 접근성</h3>
+                    <div class="code-example">
+                        <pre>&lt;!-- 모든 인터랙티브 요소는 키보드로 접근 가능해야 함 --&gt;
+
+/* 포커스 스타일 제공 */
+button:focus,
+a:focus,
+input:focus {
+    outline: 2px solid #0066cc;
+    outline-offset: 2px;
+}
+
+/* tabindex 사용 */
+&lt;button tabindex="0"&gt;일반 순서&lt;/button&gt;
+&lt;button tabindex="-1"&gt;Tab 순서 제외&lt;/button&gt;
+
+/* 키보드 이벤트 처리 */
+document.addEventListener('keydown', function(e) {
+    // Escape 키로 모달 닫기
+    if (e.key === 'Escape') {
+        closeModal();
+    }
+    
+    // Enter 키로 버튼 활성화
+    if (e.key === 'Enter' && e.target === button) {
+        button.click();
+    }
+});</pre>
+                    </div>
+                    
+                    <h3>색상 대비</h3>
+                    <div class="code-example">
+                        <pre>/* WCAG AA 기준: 텍스트 대비 4.5:1 이상 */
+/* 일반 텍스트 */
+.good-contrast {
+    color: #333333; /* 어두운 회색 */
+    background-color: #ffffff; /* 흰색 */
+    /* 대비율: 12.6:1 (합격) */
+}
+
+.bad-contrast {
+    color: #cccccc; /* 밝은 회색 */
+    background-color: #ffffff; /* 흰색 */
+    /* 대비율: 1.6:1 (불합격) */
+}
+
+/* 큰 텍스트(18px 이상) 또는 굵은 텍스트: 3:1 이상 */
+h1 {
+    font-size: 24px;
+    color: #666666;
+    background-color: #ffffff;
+    /* 대비율: 5.7:1 (합격) */
+}
+
+/* 링크는 색상만이 아닌 다른 표시도 제공 */
+a {
+    color: #0066cc;
+    text-decoration: underline; /* 밑줄로도 표시 */
+}
+
+a:focus {
+    outline: 2px solid #0066cc;
+}</pre>
+                    </div>
+                    
+                    <h3>ARIA 속성</h3>
+                    <div class="code-example">
+                        <pre>&lt;!-- ARIA 레이블 제공 --&gt;
+&lt;button aria-label="메뉴 닫기"&gt;×&lt;/button&gt;
+
+&lt;!-- ARIA 역할 지정 --&gt;
+&lt;div role="button" tabindex="0" aria-pressed="false"&gt;토글 버튼&lt;/div&gt;
+
+&lt;!-- ARIA 상태 표시 --&gt;
+&lt;div role="alert" aria-live="polite"&gt;
+    메시지가 여기에 표시됩니다.
+&lt;/div&gt;
+
+&lt;!-- ARIA 라벨 연결 --&gt;
+&lt;label for="username"&gt;사용자 이름&lt;/label&gt;
+&lt;input type="text" id="username" aria-describedby="username-help"&gt;
+&lt;span id="username-help" class="help-text"&gt;영문과 숫자만 사용 가능합니다&lt;/span&gt;
+
+&lt;!-- 모달 접근성 --&gt;
+&lt;div class="modal" role="dialog" aria-modal="true" aria-labelledby="modal-title"&gt;
+    &lt;h2 id="modal-title"&gt;모달 제목&lt;/h2&gt;
+    &lt;button aria-label="모달 닫기"&gt;×&lt;/button&gt;
+    &lt;div class="modal-content"&gt;
+        내용
+    &lt;/div&gt;
+&lt;/div&gt;</pre>
+                    </div>
+                `,
+                problem: "이미지 태그에 적절한 alt 속성을 추가하세요. 이미지는 '회사 소개' 페이지의 메인 배너입니다.",
+                solution: "<img src=\"banner.jpg\" alt=\"회사 소개 페이지 메인 배너\">",
+                test: (code) => {
+                    try {
+                        return code.includes("<img") &&
+                               code.includes("alt=") &&
+                               code.includes("배너") ||
+                               code.includes("banner");
+                    } catch (e) {
+                        return false;
+                    }
+                }
+            },
+            {
+                title: "이미지 최적화 및 처리",
+                content: `
+                    <h3>이미지 최적화의 중요성</h3>
+                    <p>이미지는 웹사이트의 <strong>로딩 속도와 사용자 경험에 큰 영향을 미칩니다</strong>. 
+                    적절한 포맷 선택과 최적화로 성능을 크게 향상시킬 수 있습니다.</p>
+                    
+                    <h3>이미지 포맷 선택</h3>
+                    <ul style="margin-left: 20px; margin-top: 10px;">
+                        <li><strong>JPEG:</strong> 사진, 복잡한 이미지 (압축률 높음, 투명도 불가)</li>
+                        <li><strong>PNG:</strong> 로고, 아이콘, 투명도 필요한 이미지 (압축률 낮음)</li>
+                        <li><strong>GIF:</strong> 간단한 애니메이션 (색상 256개 제한)</li>
+                        <li><strong>WebP:</strong> 최신 포맷 (압축률 높음, 투명도 지원, 브라우저 호환성 주의)</li>
+                        <li><strong>SVG:</strong> 벡터 그래픽 (확대해도 깨지지 않음, 로고/아이콘에 적합)</li>
+                    </ul>
+                    
+                    <h3>반응형 이미지</h3>
+                    <div class="code-example">
+                        <pre>&lt;!-- srcset으로 다양한 해상도 제공 --&gt;
+&lt;img src="image-small.jpg"
+     srcset="image-small.jpg 480w,
+             image-medium.jpg 768w,
+             image-large.jpg 1024w"
+     sizes="(max-width: 480px) 100vw,
+            (max-width: 768px) 50vw,
+            33vw"
+     alt="반응형 이미지"&gt;
+
+/* sizes 속성 설명:
+   - 480px 이하: 뷰포트 너비의 100%
+   - 768px 이하: 뷰포트 너비의 50%
+   - 그 이상: 뷰포트 너비의 33% */
+
+/* picture 태그로 포맷별 이미지 제공 */
+&lt;picture&gt;
+    &lt;source media="(min-width: 1024px)" 
+            srcset="image-large.webp" 
+            type="image/webp"&gt;
+    &lt;source media="(min-width: 1024px)" 
+            srcset="image-large.jpg"&gt;
+    &lt;source media="(min-width: 768px)" 
+            srcset="image-medium.webp" 
+            type="image/webp"&gt;
+    &lt;source media="(min-width: 768px)" 
+            srcset="image-medium.jpg"&gt;
+    &lt;img src="image-small.jpg" alt="반응형 이미지"&gt;
+&lt;/picture&gt;</pre>
+                    </div>
+                    
+                    <h3>이미지 최적화 기법</h3>
+                    <div class="code-example">
+                        <pre>/* 이미지 크기 제한 */
+img {
+    max-width: 100%;
+    height: auto; /* 비율 유지 */
+}
+
+/* 레이지 로딩 (Lazy Loading) */
+&lt;img src="image.jpg" loading="lazy" alt="이미지"&gt;
+
+/* JavaScript로 레이지 로딩 구현 */
+const images = document.querySelectorAll('img[data-src]');
+
+const imageObserver = new IntersectionObserver((entries, observer) => {
+    entries.forEach(entry => {
+        if (entry.isIntersecting) {
+            const img = entry.target;
+            img.src = img.dataset.src;
+            img.removeAttribute('data-src');
+            observer.unobserve(img);
+        }
+    });
+});
+
+images.forEach(img => imageObserver.observe(img));
+
+/* HTML */
+&lt;img data-src="image.jpg" src="placeholder.jpg" alt="이미지"&gt;</pre>
+                    </div>
+                    
+                    <h3>이미지 스프라이트</h3>
+                    <div class="code-example">
+                        <pre>/* 여러 아이콘을 하나의 이미지로 합치기 */
+.icon {
+    background-image: url('sprite.png');
+    background-repeat: no-repeat;
+    width: 32px;
+    height: 32px;
+}
+
+.icon-home {
+    background-position: 0 0;
+}
+
+.icon-user {
+    background-position: -32px 0;
+}
+
+.icon-search {
+    background-position: -64px 0;
+}
+
+/* 사용 */
+&lt;span class="icon icon-home"&gt;&lt;/span&gt;
+&lt;span class="icon icon-user"&gt;&lt;/span&gt;
+&lt;span class="icon icon-search"&gt;&lt;/span&gt;</pre>
+                    </div>
+                    
+                    <h3>CSS로 이미지 효과</h3>
+                    <div class="code-example">
+                        <pre>/* 이미지 필터 효과 */
+img {
+    filter: brightness(1.2) contrast(1.1) saturate(1.1);
+}
+
+/* 호버 효과 */
+.thumbnail {
+    transition: transform 0.3s, box-shadow 0.3s;
+}
+
+.thumbnail:hover {
+    transform: scale(1.05);
+    box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+}
+
+/* 이미지 오버레이 */
+.image-container {
+    position: relative;
+    overflow: hidden;
+}
+
+.image-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0,0.5);
+    opacity: 0;
+    transition: opacity 0.3s;
+}
+
+.image-container:hover .image-overlay {
+    opacity: 1;
+}</pre>
+                    </div>
+                `,
+                problem: "이미지에 레이지 로딩 속성을 추가하고, 반응형으로 만들기 위해 max-width: 100%와 height: auto를 CSS로 적용하세요.",
+                solution: "<img src=\"image.jpg\" loading=\"lazy\" alt=\"이미지\">\n\n<style>\nimg {\n    max-width: 100%;\n    height: auto;\n}\n</style>",
+                test: (code) => {
+                    try {
+                        return (code.includes("loading=\"lazy\"") || code.includes("max-width: 100%")) &&
+                               code.includes("height: auto") ||
+                               code.includes("loading=\"lazy\"");
+                    } catch (e) {
+                        return false;
+                    }
+                }
+            },
+            {
+                title: "SEO 기본 및 메타 태그",
+                content: `
+                    <h3>SEO란?</h3>
+                    <p>SEO(Search Engine Optimization)는 <strong>검색 엔진에서 웹사이트가 상위에 노출되도록 최적화</strong>하는 작업입니다. 
+                    검색 엔진이 웹사이트를 잘 이해하고 인덱싱할 수 있도록 HTML 구조와 메타 정보를 최적화합니다.</p>
+                    
+                    <h3>기본 메타 태그</h3>
+                    <div class="code-example">
+                        <pre>&lt;!DOCTYPE html&gt;
+&lt;html lang="ko"&gt;
+&lt;head&gt;
+    &lt;meta charset="UTF-8"&gt;
+    &lt;meta name="viewport" content="width=device-width, initial-scale=1.0"&gt;
+    
+    &lt;!-- 페이지 제목 (50-60자 권장) --&gt;
+    &lt;title&gt;웹디자인개발기능사 강의 | IT Webbook&lt;/title&gt;
+    
+    &lt;!-- 메타 설명 (150-160자 권장) --&gt;
+    &lt;meta name="description" content="웹디자인개발기능사 시험을 대비한 종합 강의입니다. HTML, CSS, JavaScript 기초부터 실전까지 단계별로 학습할 수 있습니다."&gt;
+    
+    &lt;!-- 키워드 (중요도 감소, 하지만 여전히 사용) --&gt;
+    &lt;meta name="keywords" content="웹디자인개발기능사, HTML, CSS, JavaScript, 웹개발, 자격증"&gt;
+    
+    &lt;!-- 저자 --&gt;
+    &lt;meta name="author" content="IT Webbook"&gt;
+    
+    &lt;!-- 검색 엔진 인덱싱 제어 --&gt;
+    &lt;meta name="robots" content="index, follow"&gt;
+    &lt;!-- noindex: 인덱싱 금지, nofollow: 링크 추적 금지 --&gt;
+    
+    &lt;!-- Open Graph (SNS 공유 최적화) --&gt;
+    &lt;meta property="og:title" content="웹디자인개발기능사 강의"&gt;
+    &lt;meta property="og:description" content="웹디자인개발기능사 시험 대비 강의"&gt;
+    &lt;meta property="og:image" content="https://example.com/image.jpg"&gt;
+    &lt;meta property="og:url" content="https://example.com/page.html"&gt;
+    &lt;meta property="og:type" content="website"&gt;
+    
+    &lt;!-- Twitter Card --&gt;
+    &lt;meta name="twitter:card" content="summary_large_image"&gt;
+    &lt;meta name="twitter:title" content="웹디자인개발기능사 강의"&gt;
+    &lt;meta name="twitter:description" content="웹디자인개발기능사 시험 대비 강의"&gt;
+    &lt;meta name="twitter:image" content="https://example.com/image.jpg"&gt;
+&lt;/head&gt;
+&lt;body&gt;
+    &lt;!-- 내용 --&gt;
+&lt;/body&gt;
+&lt;/html&gt;</pre>
+                    </div>
+                    
+                    <h3>시맨틱 HTML 구조</h3>
+                    <div class="code-example">
+                        <pre>&lt;!-- 올바른 제목 계층 구조 --&gt;
+&lt;article&gt;
+    &lt;h1&gt;주제목 (페이지당 하나)&lt;/h1&gt;
+    
+    &lt;section&gt;
+        &lt;h2&gt;섹션 제목&lt;/h2&gt;
+        &lt;h3&gt;하위 제목&lt;/h3&gt;
+    &lt;/section&gt;
+    
+    &lt;section&gt;
+        &lt;h2&gt;다른 섹션&lt;/h2&gt;
+    &lt;/section&gt;
+&lt;/article&gt;
+
+/* 잘못된 예: h1을 여러 개 사용하거나 계층 건너뛰기 */
+/* &lt;h1&gt;제목&lt;/h1&gt;
+   &lt;h3&gt;제목&lt;/h3&gt; */ /* h2를 건너뛰면 안 됨 */</pre>
+                    </div>
+                    
+                    <h3>이미지 SEO</h3>
+                    <div class="code-example">
+                        <pre>&lt;!-- 의미 있는 파일명 사용 --&gt;
+&lt;!-- 나쁜 예 --&gt;
+&lt;img src="IMG_001.jpg" alt="이미지"&gt;
+
+&lt;!-- 좋은 예 --&gt;
+&lt;img src="webdesign-developer-certificate.jpg" 
+     alt="웹디자인개발기능사 자격증"&gt;
+
+/* 구조화된 데이터 (Schema.org) */
+&lt;script type="application/ld+json"&gt;
+{
+  "@context": "https://schema.org",
+  "@type": "Course",
+  "name": "웹디자인개발기능사 강의",
+  "description": "웹디자인개발기능사 시험 대비 강의",
+  "provider": {
+    "@type": "Organization",
+    "name": "IT Webbook"
+  }
+}
+&lt;/script&gt;</pre>
+                    </div>
+                    
+                    <h3>내부 링크 최적화</h3>
+                    <div class="code-example">
+                        <pre>&lt;!-- 의미 있는 링크 텍스트 사용 --&gt;
+&lt;!-- 나쁜 예 --&gt;
+&lt;a href="page.html"&gt;클릭&lt;/a&gt;
+&lt;a href="page.html"&gt;여기&lt;/a&gt;
+
+&lt;!-- 좋은 예 --&gt;
+&lt;a href="javascript-tutorial.html"&gt;JavaScript 강의 보기&lt;/a&gt;
+&lt;a href="python-tutorial.html"&gt;Python 강의 보기&lt;/a&gt;
+
+/* title 속성으로 추가 정보 제공 */
+&lt;a href="about.html" title="회사 소개 페이지로 이동"&gt;회사 소개&lt;/a&gt;</pre>
+                    </div>
+                    
+                    <h3>사이트맵(Sitemap)</h3>
+                    <div class="code-example">
+                        <pre>&lt;!-- robots.txt 파일 --&gt;
+/* robots.txt */
+User-agent: *
+Allow: /
+Sitemap: https://example.com/sitemap.xml
+
+/* sitemap.xml 예제 */
+&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+&lt;urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"&gt;
+    &lt;url&gt;
+        &lt;loc&gt;https://example.com/index.html&lt;/loc&gt;
+        &lt;lastmod&gt;2024-01-01&lt;/lastmod&gt;
+        &lt;changefreq&gt;weekly&lt;/changefreq&gt;
+        &lt;priority&gt;1.0&lt;/priority&gt;
+    &lt;/url&gt;
+    &lt;url&gt;
+        &lt;loc&gt;https://example.com/javascript.html&lt;/loc&gt;
+        &lt;lastmod&gt;2024-01-01&lt;/lastmod&gt;
+        &lt;changefreq&gt;monthly&lt;/changefreq&gt;
+        &lt;priority&gt;0.8&lt;/priority&gt;
+    &lt;/url&gt;
+&lt;/urlset&gt;</pre>
+                    </div>
+                `,
+                problem: "HTML head 태그에 title, description 메타 태그를 추가하세요. title은 '웹디자인개발기능사 강의', description은 '웹디자인개발기능사 시험 대비 강의입니다'로 설정하세요.",
+                solution: "<head>\n    <title>웹디자인개발기능사 강의</title>\n    <meta name=\"description\" content=\"웹디자인개발기능사 시험 대비 강의입니다\">\n</head>",
+                test: (code) => {
+                    try {
+                        return code.includes("<title>") &&
+                               code.includes("description") &&
+                               code.includes("웹디자인개발기능사");
                     } catch (e) {
                         return false;
                     }

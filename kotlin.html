@@ -647,6 +647,76 @@
                     <h2>데이터 클래스</h2>
                     <p>데이터 보관을 위한 클래스</p>
                 </div>
+                
+                <div class="chapter-box" onclick="showLesson(17)">
+                    <div class="chapter-icon">⚡</div>
+                    <div class="chapter-number">17</div>
+                    <h2>고급 함수</h2>
+                    <p>인라인 함수와 확장 함수 심화</p>
+                </div>
+                
+                <div class="chapter-box" onclick="showLesson(18)">
+                    <div class="chapter-icon">🔷</div>
+                    <div class="chapter-number">18</div>
+                    <h2>제네릭</h2>
+                    <p>타입 안전성을 위한 제네릭 프로그래밍</p>
+                </div>
+                
+                <div class="chapter-box" onclick="showLesson(19)">
+                    <div class="chapter-icon">🌀</div>
+                    <div class="chapter-number">19</div>
+                    <h2>코루틴 기초</h2>
+                    <p>비동기 프로그래밍과 코루틴</p>
+                </div>
+                
+                <div class="chapter-box" onclick="showLesson(20)">
+                    <div class="chapter-icon">📊</div>
+                    <div class="chapter-number">20</div>
+                    <h2>고급 컬렉션과 시퀀스</h2>
+                    <p>지연 평가와 시퀀스 활용</p>
+                </div>
+                
+                <div class="chapter-box" onclick="showLesson(21)">
+                    <div class="chapter-icon">🌀</div>
+                    <div class="chapter-number">21</div>
+                    <h2>고급 코루틴</h2>
+                    <p>채널, 플로우, 액터 패턴</p>
+                </div>
+                
+                <div class="chapter-box" onclick="showLesson(22)">
+                    <div class="chapter-icon">🔧</div>
+                    <div class="chapter-number">22</div>
+                    <h2>DSL 구축</h2>
+                    <p>도메인 특화 언어 만들기</p>
+                </div>
+                
+                <div class="chapter-box" onclick="showLesson(23)">
+                    <div class="chapter-icon">🔍</div>
+                    <div class="chapter-number">23</div>
+                    <h2>리플렉션</h2>
+                    <p>런타임 타입 정보와 동적 호출</p>
+                </div>
+                
+                <div class="chapter-box" onclick="showLesson(24)">
+                    <div class="chapter-icon">📝</div>
+                    <div class="chapter-number">24</div>
+                    <h2>어노테이션 처리</h2>
+                    <p>컴파일 타임 코드 생성</p>
+                </div>
+                
+                <div class="chapter-box" onclick="showLesson(25)">
+                    <div class="chapter-icon">⚡</div>
+                    <div class="chapter-number">25</div>
+                    <h2>함수형 프로그래밍 심화</h2>
+                    <p>모나드와 고급 함수형 패턴</p>
+                </div>
+                
+                <div class="chapter-box" onclick="showLesson(26)">
+                    <div class="chapter-icon">📱</div>
+                    <div class="chapter-number">26</div>
+                    <h2>안드로이드 개발 기초</h2>
+                    <p>Kotlin으로 안드로이드 앱 만들기</p>
+                </div>
             </div>
         </div>
 
@@ -1818,6 +1888,1362 @@ println(age)   // 20</pre>
                         return code.includes("data class Person") &&
                                code.includes("Person(") &&
                                code.includes("println");
+                    } catch (e) {
+                        return false;
+                    }
+                }
+            },
+            {
+                title: "고급 함수",
+                content: `
+                    <h3>인라인 함수(Inline Function)란?</h3>
+                    <p>인라인 함수는 <code>inline</code> 키워드로 선언하며, 함수 호출 시 함수 본문이 호출 위치에 직접 삽입됩니다. 
+                    이는 함수 호출 오버헤드를 줄이고 성능을 향상시킵니다.</p>
+                    
+                    <h3>인라인 함수 기본 사용법</h3>
+                    <div class="code-example">
+                        <pre>// 일반 함수
+fun normalFunction(x: Int, y: Int): Int {
+    return x + y
+}
+
+// 인라인 함수
+inline fun inlineFunction(x: Int, y: Int): Int {
+    return x + y
+}
+
+// 호출 시 인라인 함수는 본문이 직접 삽입됨
+val result1 = normalFunction(1, 2)  // 함수 호출
+val result2 = inlineFunction(1, 2)  // 코드가 직접 삽입: val result2 = 1 + 2</pre>
+                    </div>
+                    
+                    <h3>인라인 함수의 장점</h3>
+                    <ul style="margin-left: 20px; margin-top: 10px;">
+                        <li><strong>성능 향상:</strong> 함수 호출 오버헤드 제거</li>
+                        <li><strong>고차 함수 최적화:</strong> 람다를 인라인으로 처리하여 객체 생성 방지</li>
+                        <li><strong>제네릭 타입 실체화:</strong> reified 타입 파라미터 사용 가능</li>
+                    </ul>
+                    
+                    <h3>인라인 함수와 람다</h3>
+                    <div class="code-example">
+                        <pre>// 인라인 함수에 람다를 전달하면 람다도 인라인됨
+inline fun measureTime(block: () -> Unit) {
+    val start = System.currentTimeMillis()
+    block()
+    val end = System.currentTimeMillis()
+    println("실행 시간: \${end - start}ms")
+}
+
+// 사용
+measureTime {
+    // 이 코드 블록이 직접 삽입됨 (람다 객체 생성 안 됨)
+    repeat(1000000) { }
+}
+
+// 일반 함수는 람다 객체를 생성하므로 오버헤드 발생</pre>
+                    </div>
+                    
+                    <h3>noinline과 crossinline</h3>
+                    <div class="code-example">
+                        <pre>// noinline: 특정 람다를 인라인하지 않음
+inline fun example(
+    inlineBlock: () -> Unit,
+    noinline noInlineBlock: () -> Unit  // 이 람다는 인라인 안 됨
+) {
+    inlineBlock()
+    noInlineBlock()
+}
+
+// crossinline: 람다가 다른 실행 컨텍스트에서 호출될 수 있음을 표시
+inline fun runInBackground(crossinline block: () -> Unit) {
+    Thread {
+        block()  // 다른 스레드에서 실행
+    }.start()
+}</pre>
+                    </div>
+                    
+                    <h3>확장 함수 심화</h3>
+                    <p>확장 함수는 기존 클래스에 새로운 메서드를 추가하는 것처럼 사용할 수 있습니다:</p>
+                    
+                    <div class="code-example">
+                        <pre>// String 클래스에 확장 함수 추가
+fun String.removeSpaces(): String {
+    return this.replace(" ", "")
+}
+
+val text = "Hello World"
+println(text.removeSpaces())  // "HelloWorld"
+
+// 제네릭 확장 함수
+fun <T> List<T>.secondOrNull(): T? {
+    return if (this.size >= 2) this[1] else null
+}
+
+val list = listOf(1, 2, 3)
+println(list.secondOrNull())  // 2</pre>
+                    </div>
+                    
+                    <h3>확장 프로퍼티</h3>
+                    <div class="code-example">
+                        <pre>// 확장 프로퍼티 정의
+val String.firstChar: Char
+    get() = this[0]
+
+val String.isLong: Boolean
+    get() = this.length > 10
+
+val text = "Hello"
+println(text.firstChar)  // 'H'
+println(text.isLong)      // false</pre>
+                    </div>
+                    
+                    <h3>인라인 확장 함수</h3>
+                    <div class="code-example">
+                        <pre>// 인라인 확장 함수
+inline fun <T> T.applyIf(condition: Boolean, block: T.() -> Unit): T {
+    if (condition) {
+        block()
+    }
+    return this
+}
+
+val number = 10
+number.applyIf(number > 5) {
+    println("5보다 큽니다")
+}</pre>
+                    </div>
+                `,
+                problem: "인라인 함수를 사용하여 두 숫자를 더하는 함수를 만들고, 이를 호출하세요.",
+                solution: "inline fun add(a: Int, b: Int): Int {\n    return a + b\n}\n\nval result = add(5, 3)\nprintln(result)",
+                test: (code) => {
+                    try {
+                        return code.includes("inline fun") &&
+                               code.includes("add") &&
+                               code.includes("return");
+                    } catch (e) {
+                        return false;
+                    }
+                }
+            },
+            {
+                title: "제네릭",
+                content: `
+                    <h3>제네릭(Generic)이란?</h3>
+                    <p>제네릭은 <strong>타입을 파라미터로 받는 프로그래밍 기법</strong>입니다. 
+                    코드 재사용성을 높이고 타입 안전성을 보장합니다.</p>
+                    
+                    <h3>제네릭 클래스</h3>
+                    <div class="code-example">
+                        <pre>// 제네릭 클래스 정의
+class Box<T>(val item: T) {
+    fun getItem(): T {
+        return item
+    }
+}
+
+// 사용
+val intBox = Box<Int>(10)
+val stringBox = Box<String>("Hello")
+
+println(intBox.getItem())    // 10
+println(stringBox.getItem()) // "Hello"
+
+// 타입 추론으로 타입 생략 가능
+val inferredBox = Box(20)  // Box<Int>로 추론</pre>
+                    </div>
+                    
+                    <h3>제네릭 함수</h3>
+                    <div class="code-example">
+                        <pre>// 제네릭 함수 정의
+fun <T> swap(list: MutableList<T>, index1: Int, index2: Int) {
+    val temp = list[index1]
+    list[index1] = list[index2]
+    list[index2] = temp
+}
+
+val numbers = mutableListOf(1, 2, 3, 4, 5)
+swap(numbers, 0, 4)
+println(numbers)  // [5, 2, 3, 4, 1]
+
+val words = mutableListOf("a", "b", "c")
+swap(words, 0, 2)
+println(words)  // [c, b, a]</pre>
+                    </div>
+                    
+                    <h3>타입 제약(Type Constraint)</h3>
+                    <div class="code-example">
+                        <pre>// 상한(upper bound) 지정
+fun <T : Number> sum(numbers: List<T>): Double {
+    return numbers.sumOf { it.toDouble() }
+}
+
+val intList = listOf(1, 2, 3)
+val doubleList = listOf(1.5, 2.5, 3.5)
+
+println(sum(intList))    // 6.0
+println(sum(doubleList)) // 7.5
+// println(sum(listOf("a", "b")))  // 오류: String은 Number의 하위 타입이 아님
+
+// 여러 제약 조건
+fun <T> compare(first: T, second: T): Int 
+    where T : Comparable<T>, T : Number {
+    return first.compareTo(second)
+}</pre>
+                    </div>
+                    
+                    <h3>공변성과 반공변성</h3>
+                    <div class="code-example">
+                        <pre>// out: 공변성 (Covariance) - 생산자 역할
+interface Producer<out T> {
+    fun produce(): T
+}
+
+// in: 반공변성 (Contravariance) - 소비자 역할
+interface Consumer<in T> {
+    fun consume(item: T)
+}
+
+// 사용 예제
+class StringProducer : Producer<String> {
+    override fun produce(): String = "Hello"
+}
+
+class AnyConsumer : Consumer<Any> {
+    override fun consume(item: Any) {
+        println(item)
+    }
+}
+
+// 공변성: Producer<String>은 Producer<Any>의 하위 타입
+val producer: Producer<Any> = StringProducer()
+
+// 반공변성: Consumer<Any>는 Consumer<String>의 하위 타입
+val consumer: Consumer<String> = AnyConsumer()</pre>
+                    </div>
+                    
+                    <h3>스타 프로젝션(Star Projection)</h3>
+                    <div class="code-example">
+                        <pre>// 타입 정보를 모를 때 사용
+fun printList(list: List<*>) {
+    for (item in list) {
+        println(item)
+    }
+}
+
+val intList = listOf(1, 2, 3)
+val stringList = listOf("a", "b", "c")
+
+printList(intList)    // 1, 2, 3
+printList(stringList)  // a, b, c
+
+// 제네릭 타입의 타입 파라미터를 모를 때
+fun <T> processBox(box: Box<*>) {
+    // box.item의 타입을 알 수 없음
+    println(box.getItem())
+}</pre>
+                    </div>
+                    
+                    <h3>reified 타입 파라미터</h3>
+                    <p>인라인 함수에서만 사용 가능하며, 런타임에 타입 정보를 유지합니다:</p>
+                    
+                    <div class="code-example">
+                        <pre>// reified를 사용하면 타입 체크 가능
+inline fun <reified T> isInstanceOf(value: Any): Boolean {
+    return value is T
+}
+
+println(isInstanceOf<String>("Hello"))  // true
+println(isInstanceOf<Int>("Hello"))      // false
+
+// 실용적인 예제: 리스트에서 특정 타입만 필터링
+inline fun <reified T> List<*>.filterIsInstance(): List<T> {
+    return this.filter { it is T }.map { it as T }
+}
+
+val mixedList = listOf(1, "Hello", 2, "World", 3)
+val strings = mixedList.filterIsInstance<String>()
+println(strings)  // [Hello, World]</pre>
+                    </div>
+                `,
+                problem: "제네릭 클래스 Container를 만들고, 타입 T의 값을 저장하고 반환하는 메서드를 추가하세요.",
+                solution: "class Container<T>(private var item: T) {\n    fun getItem(): T = item\n    fun setItem(newItem: T) {\n        item = newItem\n    }\n}\n\nval container = Container<String>(\"Hello\")\nprintln(container.getItem())",
+                test: (code) => {
+                    try {
+                        return code.includes("class Container<T>") &&
+                               code.includes("getItem") &&
+                               code.includes("Container<String>");
+                    } catch (e) {
+                        return false;
+                    }
+                }
+            },
+            {
+                title: "코루틴 기초",
+                content: `
+                    <h3>코루틴(Coroutine)이란?</h3>
+                    <p>코루틴은 <strong>비동기 프로그래밍을 간단하게 만드는 경량 스레드</strong>입니다. 
+                    스레드보다 가볍고, 비동기 코드를 동기 코드처럼 작성할 수 있습니다.</p>
+                    
+                    <h3>코루틴의 기본 개념</h3>
+                    <div class="code-example">
+                        <pre>// 코루틴 라이브러리 import 필요
+import kotlinx.coroutines.*
+
+// 간단한 코루틴 실행
+fun main() = runBlocking {
+    launch {
+        delay(1000L)  // 1초 대기 (비동기)
+        println("코루틴 실행!")
+    }
+    println("메인 함수")
+}
+
+// 출력:
+// 메인 함수
+// 코루틴 실행! (1초 후)</pre>
+                    </div>
+                    
+                    <h3>launch와 async</h3>
+                    <div class="code-example">
+                        <pre>// launch: 결과를 반환하지 않는 코루틴
+fun main() = runBlocking {
+    launch {
+        delay(1000L)
+        println("작업 1 완료")
+    }
+    launch {
+        delay(1000L)
+        println("작업 2 완료")
+    }
+    println("모든 작업 시작")
+}
+
+// async: 결과를 반환하는 코루틴
+fun main() = runBlocking {
+    val deferred1 = async {
+        delay(1000L)
+        "결과 1"
+    }
+    val deferred2 = async {
+        delay(1000L)
+        "결과 2"
+    }
+    
+    println(deferred1.await())  // "결과 1"
+    println(deferred2.await())  // "결과 2"
+}</pre>
+                    </div>
+                    
+                    <h3>suspend 함수</h3>
+                    <div class="code-example">
+                        <pre>// suspend 함수: 코루틴 내에서만 호출 가능
+suspend fun fetchData(): String {
+    delay(1000L)  // 비동기 작업 시뮬레이션
+    return "데이터"
+}
+
+// 사용
+fun main() = runBlocking {
+    val data = fetchData()
+    println(data)  // "데이터"
+}
+
+// 여러 suspend 함수 조합
+suspend fun processData(): String {
+    val data1 = fetchData()
+    val data2 = fetchData()
+    return data1 + " + " + data2
+}</pre>
+                    </div>
+                    
+                    <h3>코루틴 스코프</h3>
+                    <div class="code-example">
+                        <pre>// GlobalScope: 애플리케이션 전체 생명주기
+GlobalScope.launch {
+    delay(1000L)
+    println("GlobalScope 코루틴")
+}
+
+// CoroutineScope: 특정 스코프 내에서만 실행
+fun main() = runBlocking {
+    coroutineScope {
+        launch {
+            delay(1000L)
+            println("스코프 내 코루틴 1")
+        }
+        launch {
+            delay(1000L)
+            println("스코프 내 코루틴 2")
+        }
+    }
+    println("모든 코루틴 완료")
+}</pre>
+                    </div>
+                    
+                    <h3>코루틴 컨텍스트와 디스패처</h3>
+                    <div class="code-example">
+                        <pre>// Dispatchers.Default: CPU 집약적 작업
+fun main() = runBlocking {
+    launch(Dispatchers.Default) {
+        println("Default: \${Thread.currentThread().name}")
+    }
+    
+    // Dispatchers.IO: I/O 작업
+    launch(Dispatchers.IO) {
+        println("IO: \${Thread.currentThread().name}")
+    }
+    
+    // Dispatchers.Main: UI 스레드 (안드로이드)
+    launch(Dispatchers.Main) {
+        println("Main: \${Thread.currentThread().name}")
+    }
+}</pre>
+                    </div>
+                    
+                    <h3>코루틴 취소</h3>
+                    <div class="code-example">
+                        <pre>fun main() = runBlocking {
+    val job = launch {
+        repeat(1000) { i ->
+            println("작업 \$i")
+            delay(100L)
+        }
+    }
+    
+    delay(500L)  // 0.5초 후
+    job.cancel()  // 코루틴 취소
+    job.join()    // 취소 완료 대기
+    
+    println("작업 취소됨")
+}</pre>
+                    </div>
+                    
+                    <h3>플로우(Flow)</h3>
+                    <div class="code-example">
+                        <pre>// Flow: 비동기 스트림 데이터
+fun numbers(): Flow<Int> = flow {
+    for (i in 1..5) {
+        delay(100L)
+        emit(i)  // 값 방출
+    }
+}
+
+fun main() = runBlocking {
+    numbers()
+        .filter { it % 2 == 0 }
+        .map { it * it }
+        .collect { value ->
+            println(value)  // 4, 16
+        }
+}</pre>
+                    </div>
+                `,
+                problem: "runBlocking과 launch를 사용하여 1초 후 'Hello Coroutine'을 출력하는 코루틴을 만드세요.",
+                solution: "import kotlinx.coroutines.*\n\nfun main() = runBlocking {\n    launch {\n        delay(1000L)\n        println(\"Hello Coroutine\")\n    }\n}",
+                test: (code) => {
+                    try {
+                        return (code.includes("runBlocking") || code.includes("launch")) &&
+                               code.includes("delay") &&
+                               code.includes("println");
+                    } catch (e) {
+                        return false;
+                    }
+                }
+            },
+            {
+                title: "고급 컬렉션과 시퀀스",
+                content: `
+                    <h3>시퀀스(Sequence)란?</h3>
+                    <p>시퀀스는 <strong>지연 평가(Lazy Evaluation)</strong>를 제공하는 컬렉션입니다. 
+                    필요할 때만 요소를 계산하므로 대용량 데이터 처리에 효율적입니다.</p>
+                    
+                    <h3>시퀀스 vs 리스트</h3>
+                    <div class="code-example">
+                        <pre>// 리스트: 즉시 평가 (Eager Evaluation)
+val list = listOf(1, 2, 3, 4, 5)
+    .map { it * it }      // 모든 요소 계산
+    .filter { it > 10 }   // 모든 요소 필터링
+    .take(2)              // 처음 2개만 사용
+
+// 시퀀스: 지연 평가 (Lazy Evaluation)
+val sequence = sequenceOf(1, 2, 3, 4, 5)
+    .map { it * it }      // 필요할 때만 계산
+    .filter { it > 10 }   // 필요할 때만 필터링
+    .take(2)              // 2개만 계산하면 중단
+
+// 시퀀스가 더 효율적 (불필요한 계산 안 함)</pre>
+                    </div>
+                    
+                    <h3>시퀀스 생성 방법</h3>
+                    <div class="code-example">
+                        <pre>// sequenceOf()로 생성
+val seq1 = sequenceOf(1, 2, 3, 4, 5)
+
+// asSequence()로 리스트 변환
+val list = listOf(1, 2, 3, 4, 5)
+val seq2 = list.asSequence()
+
+// generateSequence()로 무한 시퀀스 생성
+val infiniteSeq = generateSequence(1) { it + 1 }
+val first10 = infiniteSeq.take(10).toList()
+println(first10)  // [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+
+// 시퀀스 빌더
+val seq3 = sequence {
+    yield(1)
+    yield(2)
+    yieldAll(listOf(3, 4, 5))
+}</pre>
+                    </div>
+                    
+                    <h3>시퀀스 연산</h3>
+                    <div class="code-example">
+                        <pre>val numbers = sequenceOf(1, 2, 3, 4, 5, 6, 7, 8, 9, 10)
+
+// 중간 연산 (지연 평가)
+val result = numbers
+    .map { it * it }           // 제곱
+    .filter { it > 20 }        // 20보다 큰 값
+    .take(3)                   // 처음 3개만
+    .toList()                  // 터미널 연산 (실제 계산 수행)
+
+println(result)  // [25, 36, 49]
+
+// 중간 연산은 시퀀스를 반환 (계산 안 함)
+// 터미널 연산이 호출될 때 실제 계산 수행</pre>
+                    </div>
+                    
+                    <h3>고급 컬렉션 연산</h3>
+                    <div class="code-example">
+                        <pre>val numbers = listOf(1, 2, 3, 4, 5)
+
+// groupBy: 그룹화
+val grouped = numbers.groupBy { it % 2 }
+println(grouped)  // {1=[1, 3, 5], 0=[2, 4]}
+
+// partition: 조건에 따라 분할
+val (evens, odds) = numbers.partition { it % 2 == 0 }
+println(evens)  // [2, 4]
+println(odds)   // [1, 3, 5]
+
+// associate: 맵 생성
+val map = numbers.associate { it to it * it }
+println(map)  // {1=1, 2=4, 3=9, 4=16, 5=25}
+
+// flatMap: 평탄화
+val nested = listOf(listOf(1, 2), listOf(3, 4), listOf(5, 6))
+val flattened = nested.flatMap { it }
+println(flattened)  // [1, 2, 3, 4, 5, 6]</pre>
+                    </div>
+                    
+                    <h3>컬렉션 변환 함수</h3>
+                    <div class="code-example">
+                        <pre>val numbers = listOf(1, 2, 3, 4, 5)
+
+// zip: 두 컬렉션 결합
+val names = listOf("홍길동", "김철수", "이영희")
+val ages = listOf(20, 25, 30)
+val zipped = names.zip(ages)
+println(zipped)  // [(홍길동, 20), (김철수, 25), (이영희, 30)]
+
+// unzip: 분리
+val (unzippedNames, unzippedAges) = zipped.unzip()
+
+// windowed: 슬라이딩 윈도우
+val windows = numbers.windowed(3)
+println(windows)  // [[1, 2, 3], [2, 3, 4], [3, 4, 5]]
+
+// chunked: 청크로 분할
+val chunks = numbers.chunked(2)
+println(chunks)  // [[1, 2], [3, 4], [5]]</pre>
+                    </div>
+                    
+                    <h3>시퀀스의 성능 이점</h3>
+                    <div class="code-example">
+                        <pre>// 대용량 데이터 처리 시 시퀀스가 유리
+val largeList = (1..1_000_000).toList()
+
+// 리스트: 모든 요소를 메모리에 저장하고 처리
+val listResult = largeList
+    .map { it * it }
+    .filter { it > 1000 }
+    .take(10)
+    .toList()
+
+// 시퀀스: 필요한 만큼만 처리
+val sequenceResult = largeList.asSequence()
+    .map { it * it }
+    .filter { it > 1000 }
+    .take(10)
+    .toList()
+
+// 시퀀스가 메모리 효율적이고 빠름</pre>
+                    </div>
+                `,
+                problem: "시퀀스를 사용하여 1부터 10까지의 숫자 중 짝수만 필터링하고, 각 값을 제곱한 후 처음 3개만 가져오세요.",
+                solution: "val result = (1..10).asSequence()\n    .filter { it % 2 == 0 }\n    .map { it * it }\n    .take(3)\n    .toList()\nprintln(result)",
+                test: (code) => {
+                    try {
+                        return code.includes("asSequence") &&
+                               code.includes("filter") &&
+                               code.includes("map") &&
+                               code.includes("take");
+                    } catch (e) {
+                        return false;
+                    }
+                }
+            },
+            {
+                title: "고급 코루틴",
+                content: `
+                    <h3>채널(Channel)</h3>
+                    <p>채널은 코루틴 간 데이터를 안전하게 전달하는 방법입니다.</p>
+                    
+                    <div class="code-example">
+                        <pre>import kotlinx.coroutines.*
+import kotlinx.coroutines.channels.*
+
+fun main() = runBlocking {
+    val channel = Channel<Int>()
+    
+    // 생산자 코루틴
+    launch {
+        for (x in 1..5) {
+            channel.send(x * x)
+        }
+        channel.close()
+    }
+    
+    // 소비자 코루틴
+    for (y in channel) {
+        println(y)  // 1, 4, 9, 16, 25
+    }
+}
+
+// 버퍼가 있는 채널
+val bufferedChannel = Channel<Int>(10)  // 버퍼 크기 10
+
+// 생산자-소비자 패턴
+suspend fun produceNumbers(channel: SendChannel<Int>) {
+    for (x in 1..5) {
+        channel.send(x)
+        delay(100)
+    }
+}
+
+suspend fun consumeNumbers(channel: ReceiveChannel<Int>) {
+    for (value in channel) {
+        println("받음: \$value")
+    }
+}
+
+fun main() = runBlocking {
+    val channel = Channel<Int>()
+    launch { produceNumbers(channel) }
+    launch { consumeNumbers(channel) }
+    delay(1000)
+    channel.close()
+}</pre>
+                    </div>
+                    
+                    <h3>플로우(Flow)</h3>
+                    <div class="code-example">
+                        <pre>import kotlinx.coroutines.*
+import kotlinx.coroutines.flow.*
+
+// 플로우 생성
+fun numbers(): Flow<Int> = flow {
+    for (i in 1..5) {
+        delay(100)
+        emit(i)
+    }
+}
+
+fun main() = runBlocking {
+    numbers()
+        .filter { it % 2 == 0 }
+        .map { it * it }
+        .collect { value ->
+            println(value)  // 4, 16
+        }
+}
+
+// StateFlow와 SharedFlow
+val stateFlow = MutableStateFlow(0)
+
+stateFlow.value = 1
+stateFlow.value = 2
+
+stateFlow.collect { value ->
+    println("상태: \$value")
+}
+
+// SharedFlow (핫 플로우)
+val sharedFlow = MutableSharedFlow<Int>()
+
+launch {
+    sharedFlow.emit(1)
+    sharedFlow.emit(2)
+}
+
+sharedFlow.collect { value ->
+    println("값: \$value")
+}</pre>
+                    </div>
+                    
+                    <h3>액터 패턴</h3>
+                    <div class="code-example">
+                        <pre>import kotlinx.coroutines.*
+import kotlinx.coroutines.channels.*
+
+sealed class CounterMsg
+object IncCounter : CounterMsg()
+class GetCounter(val response: CompletableDeferred<Int>) : CounterMsg()
+
+fun CoroutineScope.counterActor() = actor<CounterMsg> {
+    var counter = 0
+    for (msg in channel) {
+        when (msg) {
+            is IncCounter -> counter++
+            is GetCounter -> msg.response.complete(counter)
+        }
+    }
+}
+
+fun main() = runBlocking {
+    val counter = counterActor()
+    
+    // 여러 코루틴에서 동시에 증가
+    withContext(Dispatchers.Default) {
+        repeat(100) {
+            launch {
+                repeat(1000) { counter.send(IncCounter) }
+            }
+        }
+    }
+    
+    // 카운터 값 가져오기
+    val response = CompletableDeferred<Int>()
+    counter.send(GetCounter(response))
+    println("카운터: \${response.await()}")  // 100000
+    counter.close()
+}</pre>
+                    </div>
+                `,
+                problem: "Channel을 사용하여 1부터 5까지의 숫자를 보내고, 받아서 출력하는 코루틴을 만드세요.",
+                solution: "import kotlinx.coroutines.*\nimport kotlinx.coroutines.channels.*\n\nfun main() = runBlocking {\n    val channel = Channel<Int>()\n    \n    launch {\n        for (x in 1..5) {\n            channel.send(x)\n        }\n        channel.close()\n    }\n    \n    for (y in channel) {\n        println(y)\n    }\n}",
+                test: (code) => {
+                    try {
+                        return (code.includes("Channel") || code.includes("channel")) &&
+                               code.includes("send") &&
+                               code.includes("collect") ||
+                               code.includes("for");
+                    } catch (e) {
+                        return false;
+                    }
+                }
+            },
+            {
+                title: "DSL 구축",
+                content: `
+                    <h3>DSL(Domain Specific Language)이란?</h3>
+                    <p>DSL은 특정 도메인에 특화된 언어입니다. Kotlin의 강력한 문법을 활용하여 읽기 쉬운 DSL을 만들 수 있습니다.</p>
+                    
+                    <h3>HTML DSL 예제</h3>
+                    <div class="code-example">
+                        <pre>// HTML DSL 정의
+class HTML {
+    fun body(init: Body.() -> Unit) {
+        Body().init()
+    }
+}
+
+class Body {
+    fun div(init: Div.() -> Unit) {
+        Div().init()
+    }
+}
+
+class Div {
+    var text: String = ""
+    fun p(init: P.() -> Unit) {
+        P().init()
+    }
+}
+
+class P {
+    var text: String = ""
+}
+
+// 사용
+val html = HTML()
+html.body {
+    div {
+        text = "컨테이너"
+        p {
+            text = "단락"
+        }
+    }
+}
+
+// 더 실용적인 HTML 빌더
+fun html(init: HTML.() -> Unit): HTML {
+    val html = HTML()
+    html.init()
+    return html
+}
+
+fun HTML.head(init: Head.() -> Unit) {
+    Head().init()
+}
+
+fun HTML.body(init: Body.() -> Unit) {
+    Body().init()
+}
+
+// 사용
+val page = html {
+    head { }
+    body {
+        div {
+            h1 { +"제목" }
+            p { +"내용" }
+        }
+    }
+}</pre>
+                    </div>
+                    
+                    <h3>SQL DSL 예제</h3>
+                    <div class="code-example">
+                        <pre>// SQL DSL 정의
+class Query {
+    private var select: String = "*"
+    private var from: String = ""
+    private var where: String = ""
+    
+    fun select(columns: String) {
+        this.select = columns
+    }
+    
+    fun from(table: String) {
+        this.from = table
+    }
+    
+    fun where(condition: String) {
+        this.where = condition
+    }
+    
+    override fun toString(): String {
+        return "SELECT \$select FROM \$from" + 
+               (if (where.isNotEmpty()) " WHERE \$where" else "")
+    }
+}
+
+fun query(init: Query.() -> Unit): Query {
+    val query = Query()
+    query.init()
+    return query
+}
+
+// 사용
+val sql = query {
+    select("name, age")
+    from("users")
+    where("age > 18")
+}
+
+println(sql)  // SELECT name, age FROM users WHERE age > 18</pre>
+                    </div>
+                    
+                    <h3>테스트 DSL 예제</h3>
+                    <div class="code-example">
+                        <pre>// 테스트 DSL
+class TestContext {
+    fun should(description: String, block: () -> Unit) {
+        try {
+            block()
+            println("✓ \$description")
+        } catch (e: AssertionError) {
+            println("✗ \$description: \${e.message}")
+        }
+    }
+    
+    infix fun <T> T.shouldBe(expected: T) {
+        assert(this == expected) { "Expected \$expected but got \$this" }
+    }
+}
+
+fun test(init: TestContext.() -> Unit) {
+    TestContext().init()
+}
+
+// 사용
+test {
+    val result = 2 + 2
+    should("2 + 2는 4여야 함") {
+        result shouldBe 4
+    }
+}</pre>
+                    </div>
+                `,
+                problem: "DSL을 사용하여 query { select(\"name\"); from(\"users\") } 형태로 쿼리를 만드는 함수를 작성하세요.",
+                solution: "class Query {\n    private var select: String = \"*\"\n    private var from: String = \"\"\n    \n    fun select(columns: String) { this.select = columns }\n    fun from(table: String) { this.from = table }\n    \n    override fun toString() = \"SELECT \$select FROM \$from\"\n}\n\nfun query(init: Query.() -> Unit): Query {\n    val q = Query()\n    q.init()\n    return q\n}\n\nval sql = query { select(\"name\"); from(\"users\") }",
+                test: (code) => {
+                    try {
+                        return code.includes("class Query") &&
+                               code.includes("fun query") &&
+                               code.includes("init: Query");
+                    } catch (e) {
+                        return false;
+                    }
+                }
+            },
+            {
+                title: "리플렉션",
+                content: `
+                    <h3>리플렉션이란?</h3>
+                    <p>리플렉션은 <strong>런타임에 클래스, 함수, 프로퍼티의 정보를 조사하고 조작</strong>할 수 있는 기능입니다.</p>
+                    
+                    <h3>클래스 정보 조사</h3>
+                    <div class="code-example">
+                        <pre>import kotlin.reflect.full.*
+
+data class Person(val name: String, val age: Int)
+
+fun main() {
+    val person = Person("홍길동", 20)
+    val kClass = person::class
+    
+    // 클래스 이름
+    println(kClass.simpleName)  // Person
+    
+    // 프로퍼티 정보
+    kClass.memberProperties.forEach { prop ->
+        println("\${prop.name}: \${prop.call(person)}")
+    }
+    // name: 홍길동
+    // age: 20
+    
+    // 함수 정보
+    kClass.memberFunctions.forEach { func ->
+        println(func.name)
+    }
+}</pre>
+                    </div>
+                    
+                    <h3>프로퍼티 접근</h3>
+                    <div class="code-example">
+                        <pre>import kotlin.reflect.full.*
+
+class User(val name: String, var age: Int)
+
+fun main() {
+    val user = User("홍길동", 20)
+    val kClass = user::class
+    
+    // 프로퍼티 가져오기
+    val nameProp = kClass.memberProperties.find { it.name == "name" }
+    println(nameProp?.call(user))  // 홍길동
+    
+    // 가변 프로퍼티 수정
+    val ageProp = kClass.memberProperties.find { it.name == "age" } as? KMutableProperty<*>
+    ageProp?.setter?.call(user, 21)
+    println(user.age)  // 21
+}</pre>
+                    </div>
+                    
+                    <h3>함수 호출</h3>
+                    <div class="code-example">
+                        <pre>import kotlin.reflect.full.*
+
+class Calculator {
+    fun add(a: Int, b: Int): Int = a + b
+    fun multiply(a: Int, b: Int): Int = a * b
+}
+
+fun main() {
+    val calc = Calculator()
+    val kClass = calc::class
+    
+    // 함수 찾기
+    val addFunc = kClass.memberFunctions.find { it.name == "add" }
+    
+    // 함수 호출
+    val result = addFunc?.call(calc, 5, 3)
+    println(result)  // 8
+    
+    // 모든 함수 호출
+    kClass.memberFunctions.forEach { func ->
+        if (func.parameters.size == 3) {  // this + 2개 파라미터
+            val result = func.call(calc, 10, 2)
+            println("\${func.name}: \$result")
+        }
+    }
+    // add: 12
+    // multiply: 20
+}</pre>
+                    </div>
+                `,
+                problem: "리플렉션을 사용하여 Person 클래스의 프로퍼티 이름을 모두 출력하세요. (Person은 data class Person(val name: String, val age: Int)로 정의)",
+                solution: "import kotlin.reflect.full.*\n\ndata class Person(val name: String, val age: Int)\n\nval person = Person(\"홍길동\", 20)\nval kClass = person::class\n\nkClass.memberProperties.forEach { prop ->\n    println(prop.name)\n}",
+                test: (code) => {
+                    try {
+                        return code.includes("memberProperties") &&
+                               code.includes("::class") &&
+                               code.includes("forEach");
+                    } catch (e) {
+                        return false;
+                    }
+                }
+            },
+            {
+                title: "어노테이션 처리",
+                content: `
+                    <h3>어노테이션이란?</h3>
+                    <p>어노테이션은 코드에 메타데이터를 추가하는 방법입니다. 컴파일 타임에 처리되어 코드를 생성하거나 검증할 수 있습니다.</p>
+                    
+                    <h3>어노테이션 정의</h3>
+                    <div class="code-example">
+                        <pre>// 어노테이션 정의
+@Target(AnnotationTarget.CLASS, AnnotationTarget.FUNCTION)
+@Retention(AnnotationRetention.RUNTIME)
+annotation class Api(val path: String)
+
+@Target(AnnotationTarget.PROPERTY)
+@Retention(AnnotationRetention.RUNTIME)
+annotation class SerializedName(val name: String)
+
+// 사용
+@Api("/users")
+class UserController {
+    @Api("/list")
+    fun getUsers(): List<User> {
+        return emptyList()
+    }
+}
+
+data class User(
+    @SerializedName("user_name")
+    val name: String,
+    
+    @SerializedName("user_age")
+    val age: Int
+)</pre>
+                    </div>
+                    
+                    <h3>리플렉션으로 어노테이션 읽기</h3>
+                    <div class="code-example">
+                        <pre>import kotlin.reflect.full.*
+
+@Api("/products")
+class ProductController {
+    @Api("/list")
+    fun getProducts() {}
+}
+
+fun main() {
+    val kClass = ProductController::class
+    
+    // 클래스 어노테이션
+    val apiAnnotation = kClass.findAnnotation<Api>()
+    println(apiAnnotation?.path)  // /products
+    
+    // 함수 어노테이션
+    val getProductsFunc = kClass.memberFunctions.find { it.name == "getProducts" }
+    val funcApi = getProductsFunc?.findAnnotation<Api>()
+    println(funcApi?.path)  // /list
+}</pre>
+                    </div>
+                    
+                    <h3>컴파일 타임 처리 (KAPT)</h3>
+                    <div class="code-example">
+                        <pre>// build.gradle.kts
+plugins {
+    kotlin("kapt")
+}
+
+dependencies {
+    kapt("com.google.dagger:dagger-compiler:2.40")
+}
+
+// 어노테이션 프로세서 사용 예제
+// @Entity 어노테이션으로 Room 데이터베이스 엔티티 생성
+@Entity(tableName = "users")
+data class User(
+    @PrimaryKey
+    val id: Int,
+    val name: String,
+    val email: String
+)
+
+// 컴파일 타임에 UserDao 인터페이스 생성
+@Dao
+interface UserDao {
+    @Query("SELECT * FROM users")
+    fun getAll(): List<User>
+}</pre>
+                    </div>
+                `,
+                problem: "어노테이션을 정의하고 클래스에 적용하세요. @Api(path = \"/users\") 형태로 정의하고, UserController 클래스에 적용하세요.",
+                solution: "@Target(AnnotationTarget.CLASS)\n@Retention(AnnotationRetention.RUNTIME)\nannotation class Api(val path: String)\n\n@Api(\"/users\")\nclass UserController",
+                test: (code) => {
+                    try {
+                        return code.includes("annotation class Api") &&
+                               code.includes("@Api") &&
+                               code.includes("class UserController");
+                    } catch (e) {
+                        return false;
+                    }
+                }
+            },
+            {
+                title: "함수형 프로그래밍 심화",
+                content: `
+                    <h3>모나드(Monad) 개념</h3>
+                    <p>모나드는 값을 감싸고 연산을 체이닝할 수 있는 구조입니다. Maybe, Either, List 등이 모나드입니다.</p>
+                    
+                    <h3>Maybe 모나드 구현</h3>
+                    <div class="code-example">
+                        <pre>sealed class Maybe<out T> {
+    data class Just<out T>(val value: T) : Maybe<T>()
+    object Nothing : Maybe<Nothing>()
+    
+    fun <R> map(f: (T) -> R): Maybe<R> = when (this) {
+        is Just -> Just(f(value))
+        is Nothing -> Nothing
+    }
+    
+    fun <R> flatMap(f: (T) -> Maybe<R>): Maybe<R> = when (this) {
+        is Just -> f(value)
+        is Nothing -> Nothing
+    }
+}
+
+// 사용
+fun divide(a: Int, b: Int): Maybe<Int> {
+    return if (b != 0) Maybe.Just(a / b) else Maybe.Nothing
+}
+
+val result = Maybe.Just(10)
+    .flatMap { divide(it, 2) }
+    .map { it * 3 }
+
+when (result) {
+    is Maybe.Just -> println("결과: \${result.value}")  // 결과: 15
+    is Maybe.Nothing -> println("오류")
+}</pre>
+                    </div>
+                    
+                    <h3>Either 모나드</h3>
+                    <div class="code-example">
+                        <pre>sealed class Either<out L, out R> {
+    data class Left<out L>(val value: L) : Either<L, Nothing>()
+    data class Right<out R>(val value: R) : Either<Nothing, R>()
+    
+    fun <T> map(f: (R) -> T): Either<L, T> = when (this) {
+        is Right -> Right(f(value))
+        is Left -> this
+    }
+    
+    fun <T> flatMap(f: (R) -> Either<L, T>): Either<L, T> = when (this) {
+        is Right -> f(value)
+        is Left -> this
+    }
+}
+
+// 사용
+fun parseNumber(s: String): Either<String, Int> {
+    return try {
+        Either.Right(s.toInt())
+    } catch (e: Exception) {
+        Either.Left("파싱 실패: \$s")
+    }
+}
+
+val result = parseNumber("123")
+    .map { it * 2 }
+    .map { it + 10 }
+
+when (result) {
+    is Either.Right -> println("결과: \${result.value}")  // 결과: 256
+    is Either.Left -> println("오류: \${result.value}")
+}</pre>
+                    </div>
+                    
+                    <h3>고차 함수와 커링</h3>
+                    <div class="code-example">
+                        <pre>// 커링: 여러 인자를 받는 함수를 하나의 인자를 받는 함수들의 체인으로 변환
+fun add(a: Int, b: Int): Int = a + b
+
+// 커링된 버전
+fun addCurried(a: Int): (Int) -> Int = { b -> a + b }
+
+// 사용
+val add5 = addCurried(5)
+println(add5(3))  // 8
+
+// 부분 적용
+fun multiply(a: Int, b: Int, c: Int): Int = a * b * c
+
+fun multiplyPartial(a: Int, b: Int): (Int) -> Int = { c -> a * b * c }
+
+val multiplyBy10 = multiplyPartial(2, 5)
+println(multiplyBy10(3))  // 30
+
+// 함수 합성
+infix fun <A, B, C> ((B) -> C).compose(f: (A) -> B): (A) -> C {
+    return { x -> this(f(x)) }
+}
+
+val addOne = { x: Int -> x + 1 }
+val multiplyTwo = { x: Int -> x * 2 }
+
+val addThenMultiply = multiplyTwo compose addOne
+println(addThenMultiply(5))  // 12 ((5 + 1) * 2)</pre>
+                    </div>
+                `,
+                problem: "Maybe 모나드를 사용하여 값이 있을 때만 2를 곱하는 map 함수를 구현하세요.",
+                solution: "sealed class Maybe<out T> {\n    data class Just<out T>(val value: T) : Maybe<T>()\n    object Nothing : Maybe<Nothing>()\n    \n    fun <R> map(f: (T) -> R): Maybe<R> = when (this) {\n        is Just -> Just(f(value))\n        is Nothing -> Nothing\n    }\n}\n\nval result = Maybe.Just(5).map { it * 2 }",
+                test: (code) => {
+                    try {
+                        return code.includes("sealed class Maybe") &&
+                               code.includes("fun <R> map") &&
+                               code.includes("Just(f(value))");
+                    } catch (e) {
+                        return false;
+                    }
+                }
+            },
+            {
+                title: "안드로이드 개발 기초",
+                content: `
+                    <h3>안드로이드 프로젝트 구조</h3>
+                    <p>Kotlin은 안드로이드 공식 언어로, 안드로이드 앱 개발에 널리 사용됩니다.</p>
+                    
+                    <h3>기본 Activity</h3>
+                    <div class="code-example">
+                        <pre>// MainActivity.kt
+import android.os.Bundle
+import androidx.appcompat.app.AppCompatActivity
+import android.widget.Button
+import android.widget.TextView
+
+class MainActivity : AppCompatActivity() {
+    private lateinit var textView: TextView
+    private lateinit var button: Button
+    
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setContentView(R.layout.activity_main)
+        
+        textView = findViewById(R.id.textView)
+        button = findViewById(R.id.button)
+        
+        button.setOnClickListener {
+            textView.text = "버튼이 클릭되었습니다!"
+        }
+    }
+}
+
+// activity_main.xml
+/* &lt;LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"&gt;
+    
+    &lt;TextView
+        android:id="@+id/textView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Hello Android" /&gt;
+    
+    &lt;Button
+        android:id="@+id/button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="클릭" /&gt;
+&lt;/LinearLayout&gt; */</pre>
+                    </div>
+                    
+                    <h3>ViewModel과 LiveData</h3>
+                    <div class="code-example">
+                        <pre>// ViewModel
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.LiveData
+
+class MainViewModel : ViewModel() {
+    private val _count = MutableLiveData<Int>(0)
+    val count: LiveData<Int> = _count
+    
+    fun increment() {
+        _count.value = (_count.value ?: 0) + 1
+    }
+}
+
+// Activity에서 사용
+import androidx.lifecycle.ViewModelProvider
+
+class MainActivity : AppCompatActivity() {
+    private lateinit var viewModel: MainViewModel
+    
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setContentView(R.layout.activity_main)
+        
+        viewModel = ViewModelProvider(this)[MainViewModel::class.java]
+        
+        viewModel.count.observe(this) { count ->
+            textView.text = "카운트: \$count"
+        }
+        
+        button.setOnClickListener {
+            viewModel.increment()
+        }
+    }
+}</pre>
+                    </div>
+                    
+                    <h3>RecyclerView</h3>
+                    <div class="code-example">
+                        <pre>// Adapter
+import android.view.LayoutInflater
+import android.view.ViewGroup
+import androidx.recyclerview.widget.RecyclerView
+
+class ItemAdapter(private val items: List<String>) :
+    RecyclerView.Adapter<ItemAdapter.ViewHolder>() {
+    
+    class ViewHolder(val view: View) : RecyclerView.ViewHolder(view)
+    
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
+        val view = LayoutInflater.from(parent.context)
+            .inflate(R.layout.item_layout, parent, false)
+        return ViewHolder(view)
+    }
+    
+    override fun onBindViewHolder(holder: ViewHolder, position: Int) {
+        val item = items[position]
+        holder.view.findViewById<TextView>(R.id.itemText).text = item
+    }
+    
+    override fun getItemCount() = items.size
+}
+
+// Activity에서 사용
+val recyclerView = findViewById<RecyclerView>(R.id.recyclerView)
+val adapter = ItemAdapter(listOf("항목1", "항목2", "항목3"))
+recyclerView.adapter = adapter
+recyclerView.layoutManager = LinearLayoutManager(this)</pre>
+                    </div>
+                `,
+                problem: "안드로이드 Activity에서 Button의 클릭 이벤트를 처리하는 코드를 작성하세요. 버튼 클릭 시 TextView에 '클릭됨'을 표시하세요.",
+                solution: "import android.widget.Button\nimport android.widget.TextView\n\nclass MainActivity : AppCompatActivity() {\n    override fun onCreate(savedInstanceState: Bundle?) {\n        super.onCreate(savedInstanceState)\n        setContentView(R.layout.activity_main)\n        \n        val button = findViewById<Button>(R.id.button)\n        val textView = findViewById<TextView>(R.id.textView)\n        \n        button.setOnClickListener {\n            textView.text = \"클릭됨\"\n        }\n    }\n}",
+                test: (code) => {
+                    try {
+                        return code.includes("setOnClickListener") &&
+                               code.includes("findViewById") &&
+                               code.includes("textView.text");
                     } catch (e) {
                         return false;
                     }

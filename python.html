@@ -675,6 +675,76 @@
                     <h2>정규표현식</h2>
                     <p>패턴 매칭과 문자열 검색</p>
                 </div>
+                
+                <div class="chapter-box" onclick="showLesson(21)">
+                    <div class="chapter-icon">🔐</div>
+                    <div class="chapter-number">21</div>
+                    <h2>컨텍스트 매니저</h2>
+                    <p>with 문과 리소스 관리</p>
+                </div>
+                
+                <div class="chapter-box" onclick="showLesson(22)">
+                    <div class="chapter-icon">🎭</div>
+                    <div class="chapter-number">22</div>
+                    <h2>메타클래스와 디스크립터</h2>
+                    <p>고급 객체지향 프로그래밍</p>
+                </div>
+                
+                <div class="chapter-box" onclick="showLesson(23)">
+                    <div class="chapter-icon">⚡</div>
+                    <div class="chapter-number">23</div>
+                    <h2>비동기 프로그래밍</h2>
+                    <p>async/await와 asyncio</p>
+                </div>
+                
+                <div class="chapter-box" onclick="showLesson(24)">
+                    <div class="chapter-icon">📝</div>
+                    <div class="chapter-number">24</div>
+                    <h2>타입 힌팅</h2>
+                    <p>타입 어노테이션과 타입 체크</p>
+                </div>
+                
+                <div class="chapter-box" onclick="showLesson(25)">
+                    <div class="chapter-icon">🔄</div>
+                    <div class="chapter-number">25</div>
+                    <h2>멀티스레딩과 멀티프로세싱</h2>
+                    <p>동시성 프로그래밍과 병렬 처리</p>
+                </div>
+                
+                <div class="chapter-box" onclick="showLesson(26)">
+                    <div class="chapter-icon">🌐</div>
+                    <div class="chapter-number">26</div>
+                    <h2>네트워크 프로그래밍</h2>
+                    <p>소켓 프로그래밍과 HTTP 클라이언트</p>
+                </div>
+                
+                <div class="chapter-box" onclick="showLesson(27)">
+                    <div class="chapter-icon">🗄️</div>
+                    <div class="chapter-number">27</div>
+                    <h2>데이터베이스 연동</h2>
+                    <p>SQLite, MySQL 연동 및 ORM</p>
+                </div>
+                
+                <div class="chapter-box" onclick="showLesson(28)">
+                    <div class="chapter-icon">🕷️</div>
+                    <div class="chapter-number">28</div>
+                    <h2>웹 스크래핑</h2>
+                    <p>BeautifulSoup과 Selenium 활용</p>
+                </div>
+                
+                <div class="chapter-box" onclick="showLesson(29)">
+                    <div class="chapter-icon">📦</div>
+                    <div class="chapter-number">29</div>
+                    <h2>패키지 배포 및 관리</h2>
+                    <p>PyPI 배포와 패키지 관리</p>
+                </div>
+                
+                <div class="chapter-box" onclick="showLesson(30)">
+                    <div class="chapter-icon">🎨</div>
+                    <div class="chapter-number">30</div>
+                    <h2>디자인 패턴</h2>
+                    <p>객체지향 디자인 패턴 구현</p>
+                </div>
             </div>
         </div>
 
@@ -2207,6 +2277,1187 @@ print(new_text)</pre>
                         return code.includes("import re") &&
                                code.includes("findall") &&
                                code.includes("\\d{2,3}-\\d{3,4}-\\d{4}");
+                    } catch (e) {
+                        return false;
+                    }
+                }
+            },
+            {
+                title: "컨텍스트 매니저",
+                content: `
+                    <h3>컨텍스트 매니저(Context Manager)란?</h3>
+                    <p>컨텍스트 매니저는 <code>with</code> 문과 함께 사용하여 리소스를 안전하게 관리하는 객체입니다. 
+                    파일 열기/닫기, 락 획득/해제 등에서 자주 사용됩니다.</p>
+                    
+                    <h3>with 문 기본 사용법</h3>
+                    <div class="code-example">
+                        <pre># 파일 열기/닫기 자동 처리
+with open('data.txt', 'r') as f:
+    content = f.read()
+    print(content)
+# 파일이 자동으로 닫힘 (예외 발생해도 안전)
+
+# 여러 파일 동시 처리
+with open('input.txt', 'r') as infile, open('output.txt', 'w') as outfile:
+    data = infile.read()
+    outfile.write(data)</pre>
+                    </div>
+                    
+                    <h3>컨텍스트 매니저 직접 만들기</h3>
+                    <div class="code-example">
+                        <pre># 클래스 기반 컨텍스트 매니저
+class FileManager:
+    def __init__(self, filename, mode):
+        self.filename = filename
+        self.mode = mode
+        self.file = None
+    
+    def __enter__(self):
+        self.file = open(self.filename, self.mode)
+        return self.file
+    
+    def __exit__(self, exc_type, exc_val, exc_tb):
+        if self.file:
+            self.file.close()
+        return False  # 예외를 다시 발생시킴
+
+# 사용
+with FileManager('test.txt', 'w') as f:
+    f.write('Hello, World!')</pre>
+                    </div>
+                    
+                    <h3>contextlib.contextmanager 데코레이터</h3>
+                    <div class="code-example">
+                        <pre>from contextlib import contextmanager
+
+@contextmanager
+def file_manager(filename, mode):
+    file = open(filename, mode)
+    try:
+        yield file  # with 블록으로 전달
+    finally:
+        file.close()  # 항상 실행
+
+# 사용
+with file_manager('test.txt', 'w') as f:
+    f.write('Hello, World!')</pre>
+                    </div>
+                    
+                    <h3>실용적인 예제</h3>
+                    <div class="code-example">
+                        <pre># 타이머 컨텍스트 매니저
+from contextlib import contextmanager
+import time
+
+@contextmanager
+def timer():
+    start = time.time()
+    try:
+        yield
+    finally:
+        end = time.time()
+        print(f"실행 시간: {end - start:.2f}초")
+
+# 사용
+with timer():
+    # 시간을 측정할 코드
+    sum(range(1000000))
+
+# 임시 디렉토리 변경
+from contextlib import contextmanager
+import os
+
+@contextmanager
+def change_dir(path):
+    old_path = os.getcwd()
+    try:
+        os.chdir(path)
+        yield
+    finally:
+        os.chdir(old_path)
+
+# 사용
+with change_dir('/tmp'):
+    print(os.getcwd())  # /tmp
+print(os.getcwd())  # 원래 경로</pre>
+                    </div>
+                `,
+                problem: "with 문을 사용하여 'test.txt' 파일을 열고 'Hello Python'을 작성하세요.",
+                solution: "with open('test.txt', 'w') as f:\n    f.write('Hello Python')",
+                test: (code) => {
+                    try {
+                        return code.includes("with open") &&
+                               code.includes("'w'") &&
+                               code.includes("write");
+                    } catch (e) {
+                        return false;
+                    }
+                }
+            },
+            {
+                title: "메타클래스와 디스크립터",
+                content: `
+                    <h3>메타클래스(Metaclass)란?</h3>
+                    <p>메타클래스는 <strong>클래스를 만드는 클래스</strong>입니다. 
+                    클래스의 생성과 동작을 커스터마이징할 수 있습니다.</p>
+                    
+                    <h3>메타클래스 기본 개념</h3>
+                    <div class="code-example">
+                        <pre># type을 사용한 동적 클래스 생성
+MyClass = type('MyClass', (object,), {'x': 10})
+
+obj = MyClass()
+print(obj.x)  # 10
+
+# 메타클래스 정의
+class Meta(type):
+    def __new__(cls, name, bases, attrs):
+        # 클래스 생성 전에 속성 수정
+        attrs['created_by'] = 'Meta'
+        return super().__new__(cls, name, bases, attrs)
+
+# 메타클래스 사용
+class MyClass(metaclass=Meta):
+    pass
+
+print(MyClass.created_by)  # 'Meta'</pre>
+                    </div>
+                    
+                    <h3>디스크립터(Descriptor)란?</h3>
+                    <p>디스크립터는 <code>__get__</code>, <code>__set__</code>, <code>__delete__</code> 메서드를 가진 객체입니다. 
+                    속성 접근을 제어합니다.</p>
+                    
+                    <h3>디스크립터 구현</h3>
+                    <div class="code-example">
+                        <pre># 프로퍼티 디스크립터
+class Property:
+    def __init__(self, getter):
+        self.getter = getter
+        self.setter = None
+    
+    def __get__(self, obj, objtype=None):
+        return self.getter(obj)
+    
+    def __set__(self, obj, value):
+        if self.setter:
+            self.setter(obj, value)
+        else:
+            raise AttributeError("읽기 전용 속성")
+    
+    def setter_method(self, setter):
+        self.setter = setter
+        return self
+
+# 사용
+class Person:
+    def __init__(self, name):
+        self._name = name
+    
+    @Property
+    def name(self):
+        return self._name
+    
+    @name.setter_method
+    def name(self, value):
+        self._name = value
+
+p = Person("홍길동")
+print(p.name)  # "홍길동"
+p.name = "김철수"
+print(p.name)  # "김철수"</pre>
+                    </div>
+                    
+                    <h3>실용적인 예제</h3>
+                    <div class="code-example">
+                        <pre># 타입 검증 디스크립터
+class Typed:
+    def __init__(self, expected_type):
+        self.expected_type = expected_type
+    
+    def __set_name__(self, owner, name):
+        self.name = name
+    
+    def __get__(self, obj, objtype=None):
+        return obj.__dict__.get(self.name)
+    
+    def __set__(self, obj, value):
+        if not isinstance(value, self.expected_type):
+            raise TypeError(f"{self.name}은(는) {self.expected_type}이어야 합니다")
+        obj.__dict__[self.name] = value
+
+# 사용
+class Person:
+    name = Typed(str)
+    age = Typed(int)
+    
+    def __init__(self, name, age):
+        self.name = name
+        self.age = age
+
+p = Person("홍길동", 20)
+# p.age = "20"  # TypeError 발생</pre>
+                    </div>
+                `,
+                problem: "메타클래스를 사용하여 클래스를 생성할 때 'version' 속성을 자동으로 추가하세요.",
+                solution: "class Meta(type):\n    def __new__(cls, name, bases, attrs):\n        attrs['version'] = '1.0'\n        return super().__new__(cls, name, bases, attrs)\n\nclass MyClass(metaclass=Meta):\n    pass\n\nprint(MyClass.version)",
+                test: (code) => {
+                    try {
+                        return code.includes("class Meta") &&
+                               code.includes("metaclass=Meta") &&
+                               code.includes("version");
+                    } catch (e) {
+                        return false;
+                    }
+                }
+            },
+            {
+                title: "비동기 프로그래밍",
+                content: `
+                    <h3>비동기 프로그래밍이란?</h3>
+                    <p>비동기 프로그래밍은 <strong>여러 작업을 동시에 처리</strong>하여 성능을 향상시키는 기법입니다. 
+                    Python의 <code>asyncio</code> 모듈을 사용합니다.</p>
+                    
+                    <h3>async/await 기본 사용법</h3>
+                    <div class="code-example">
+                        <pre>import asyncio
+
+# 비동기 함수 정의
+async def fetch_data():
+    await asyncio.sleep(1)  # 비동기 대기
+    return "데이터"
+
+# 비동기 함수 실행
+async def main():
+    result = await fetch_data()
+    print(result)
+
+# 실행
+asyncio.run(main())</pre>
+                    </div>
+                    
+                    <h3>여러 작업 동시 실행</h3>
+                    <div class="code-example">
+                        <pre>import asyncio
+
+async def task(name, delay):
+    print(f"{name} 시작")
+    await asyncio.sleep(delay)
+    print(f"{name} 완료")
+    return f"{name} 결과"
+
+async def main():
+    # 여러 작업 동시 실행
+    results = await asyncio.gather(
+        task("작업1", 1),
+        task("작업2", 2),
+        task("작업3", 1.5)
+    )
+    print(results)
+
+asyncio.run(main())
+# 출력:
+# 작업1 시작
+# 작업2 시작
+# 작업3 시작
+# 작업1 완료
+# 작업3 완료
+# 작업2 완료
+# ['작업1 결과', '작업2 결과', '작업3 결과']</pre>
+                    </div>
+                    
+                    <h3>비동기 반복자</h3>
+                    <div class="code-example">
+                        <pre>import asyncio
+
+class AsyncCounter:
+    def __init__(self, stop):
+        self.stop = stop
+        self.current = 0
+    
+    def __aiter__(self):
+        return self
+    
+    async def __anext__(self):
+        if self.current < self.stop:
+            await asyncio.sleep(0.5)
+            self.current += 1
+            return self.current
+        else:
+            raise StopAsyncIteration
+
+async def main():
+    async for value in AsyncCounter(5):
+        print(value)
+
+asyncio.run(main())</pre>
+                    </div>
+                `,
+                problem: "async 함수를 만들어서 1초 대기 후 'Hello Async'를 출력하세요.",
+                solution: "import asyncio\n\nasync def hello():\n    await asyncio.sleep(1)\n    print('Hello Async')\n\nasyncio.run(hello())",
+                test: (code) => {
+                    try {
+                        return code.includes("async def") &&
+                               code.includes("await asyncio.sleep") &&
+                               code.includes("asyncio.run");
+                    } catch (e) {
+                        return false;
+                    }
+                }
+            },
+            {
+                title: "타입 힌팅",
+                content: `
+                    <h3>타입 힌팅(Type Hinting)이란?</h3>
+                    <p>타입 힌팅은 변수, 함수 매개변수, 반환값의 <strong>타입을 명시</strong>하는 기능입니다. 
+                    Python 3.5+에서 지원하며, 코드 가독성과 유지보수성을 향상시킵니다.</p>
+                    
+                    <h3>기본 타입 힌팅</h3>
+                    <div class="code-example">
+                        <pre># 변수 타입 힌팅
+name: str = "홍길동"
+age: int = 20
+price: float = 99.99
+is_active: bool = True
+
+# 함수 타입 힌팅
+def greet(name: str) -> str:
+    return f"안녕하세요, {name}님!"
+
+result: str = greet("홍길동")
+print(result)  # "안녕하세요, 홍길동님!"</pre>
+                    </div>
+                    
+                    <h3>컬렉션 타입 힌팅</h3>
+                    <div class="code-example">
+                        <pre>from typing import List, Dict, Tuple, Optional
+
+# 리스트 타입 힌팅
+def process_numbers(numbers: List[int]) -> List[int]:
+    return [n * 2 for n in numbers]
+
+# 딕셔너리 타입 힌팅
+def get_user_info(user_id: int) -> Dict[str, str]:
+    return {"name": "홍길동", "email": "hong@example.com"}
+
+# 튜플 타입 힌팅
+def get_coordinates() -> Tuple[float, float]:
+    return (37.5665, 126.9780)
+
+# Optional 타입 (None 가능)
+def find_user(name: str) -> Optional[Dict[str, str]]:
+    if name == "홍길동":
+        return {"name": "홍길동", "age": "20"}
+    return None</pre>
+                    </div>
+                    
+                    <h3>제네릭 타입</h3>
+                    <div class="code-example">
+                        <pre>from typing import TypeVar, Generic
+
+T = TypeVar('T')
+
+class Stack(Generic[T]):
+    def __init__(self):
+        self.items: List[T] = []
+    
+    def push(self, item: T) -> None:
+        self.items.append(item)
+    
+    def pop(self) -> T:
+        return self.items.pop()
+
+# 사용
+int_stack = Stack[int]()
+int_stack.push(1)
+int_stack.push(2)
+
+str_stack = Stack[str]()
+str_stack.push("Hello")</pre>
+                    </div>
+                    
+                    <h3>타입 체크 도구</h3>
+                    <div class="code-example">
+                        <pre># mypy를 사용한 타입 체크
+# pip install mypy
+# mypy script.py
+
+def add(a: int, b: int) -> int:
+    return a + b
+
+result = add(1, 2)  # OK
+# result = add("1", "2")  # 타입 오류 (mypy가 감지)</pre>
+                    </div>
+                `,
+                problem: "타입 힌팅을 사용하여 두 정수를 받아 합을 반환하는 함수를 작성하세요.",
+                solution: "def add(a: int, b: int) -> int:\n    return a + b\n\nresult = add(5, 3)\nprint(result)",
+                test: (code) => {
+                    try {
+                        return code.includes("def add") &&
+                               code.includes(": int") &&
+                               code.includes("-> int");
+                    } catch (e) {
+                        return false;
+                    }
+                }
+            },
+            {
+                title: "멀티스레딩과 멀티프로세싱",
+                content: `
+                    <h3>멀티스레딩과 멀티프로세싱의 차이</h3>
+                    <p><strong>멀티스레딩(Threading):</strong> 하나의 프로세스 내에서 여러 스레드가 동시에 실행됩니다. 
+                    메모리를 공유하지만 GIL(Global Interpreter Lock) 때문에 CPU 집약적 작업에는 비효율적입니다.</p>
+                    
+                    <p><strong>멀티프로세싱(Multiprocessing):</strong> 여러 프로세스가 동시에 실행됩니다. 
+                    각 프로세스는 독립적인 메모리 공간을 가지며, CPU 집약적 작업에 적합합니다.</p>
+                    
+                    <h3>멀티스레딩 기본</h3>
+                    <div class="code-example">
+                        <pre>import threading
+import time
+
+def worker(name, delay):
+    print(f"{name} 시작")
+    time.sleep(delay)
+    print(f"{name} 완료")
+
+# 스레드 생성 및 실행
+thread1 = threading.Thread(target=worker, args=("작업1", 2))
+thread2 = threading.Thread(target=worker, args=("작업2", 1))
+
+thread1.start()
+thread2.start()
+
+thread1.join()  # 스레드 완료 대기
+thread2.join()
+
+print("모든 작업 완료")
+
+# 출력:
+# 작업1 시작
+# 작업2 시작
+# 작업2 완료
+# 작업1 완료
+# 모든 작업 완료</pre>
+                    </div>
+                    
+                    <h3>스레드 동기화</h3>
+                    <div class="code-example">
+                        <pre>import threading
+
+# Lock을 사용한 동기화
+counter = 0
+lock = threading.Lock()
+
+def increment():
+    global counter
+    for _ in range(100000):
+        with lock:  # Lock 획득
+            counter += 1
+        # Lock 자동 해제
+
+threads = []
+for i in range(5):
+    t = threading.Thread(target=increment)
+    threads.append(t)
+    t.start()
+
+for t in threads:
+    t.join()
+
+print(f"최종 카운터 값: {counter}")  # 500000
+
+# Lock 없이 실행하면 경쟁 조건 발생 가능</pre>
+                    </div>
+                    
+                    <h3>멀티프로세싱 기본</h3>
+                    <div class="code-example">
+                        <pre>import multiprocessing
+import time
+
+def cpu_intensive_task(n):
+    result = 0
+    for i in range(n):
+        result += i * i
+    return result
+
+if __name__ == '__main__':
+    # 프로세스 풀 생성
+    with multiprocessing.Pool(processes=4) as pool:
+        # 여러 작업 병렬 실행
+        results = pool.map(cpu_intensive_task, [1000000, 2000000, 3000000, 4000000])
+        print(results)
+
+# 각 프로세스가 독립적으로 CPU 집약적 작업 수행</pre>
+                    </div>
+                    
+                    <h3>프로세스 간 통신</h3>
+                    <div class="code-example">
+                        <pre>import multiprocessing
+
+def producer(queue):
+    for i in range(5):
+        queue.put(f"아이템 {i}")
+        print(f"생산: 아이템 {i}")
+
+def consumer(queue):
+    while True:
+        item = queue.get()
+        if item is None:  # 종료 신호
+            break
+        print(f"소비: {item}")
+
+if __name__ == '__main__':
+    queue = multiprocessing.Queue()
+    
+    p1 = multiprocessing.Process(target=producer, args=(queue,))
+    p2 = multiprocessing.Process(target=consumer, args=(queue,))
+    
+    p1.start()
+    p2.start()
+    
+    p1.join()
+    queue.put(None)  # 종료 신호
+    p2.join()</pre>
+                    </div>
+                `,
+                problem: "threading 모듈을 사용하여 두 개의 스레드를 생성하고, 각각 '스레드 1'과 '스레드 2'를 출력하도록 하세요.",
+                solution: "import threading\n\ndef print_name(name):\n    print(name)\n\nthread1 = threading.Thread(target=print_name, args=('스레드 1',))\nthread2 = threading.Thread(target=print_name, args=('스레드 2',))\n\nthread1.start()\nthread2.start()\n\nthread1.join()\nthread2.join()",
+                test: (code) => {
+                    try {
+                        return code.includes("threading.Thread") &&
+                               code.includes("start()") &&
+                               code.includes("join()");
+                    } catch (e) {
+                        return false;
+                    }
+                }
+            },
+            {
+                title: "네트워크 프로그래밍",
+                content: `
+                    <h3>소켓 프로그래밍</h3>
+                    <p>소켓(Socket)은 네트워크 통신의 기본 단위입니다. TCP와 UDP 프로토콜을 사용합니다.</p>
+                    
+                    <h3>TCP 서버/클라이언트</h3>
+                    <div class="code-example">
+                        <pre># TCP 서버
+import socket
+
+server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+server_socket.bind(('localhost', 8888))
+server_socket.listen(5)
+
+print("서버 시작, 클라이언트 대기 중...")
+
+while True:
+    client_socket, address = server_socket.accept()
+    print(f"연결됨: {address}")
+    
+    data = client_socket.recv(1024).decode('utf-8')
+    print(f"받은 데이터: {data}")
+    
+    response = f"서버 응답: {data}"
+    client_socket.send(response.encode('utf-8'))
+    
+    client_socket.close()
+
+# TCP 클라이언트
+import socket
+
+client_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+client_socket.connect(('localhost', 8888))
+
+message = "Hello Server"
+client_socket.send(message.encode('utf-8'))
+
+response = client_socket.recv(1024).decode('utf-8')
+print(f"서버 응답: {response}")
+
+client_socket.close()</pre>
+                    </div>
+                    
+                    <h3>HTTP 클라이언트 (requests)</h3>
+                    <div class="code-example">
+                        <pre>import requests
+
+# GET 요청
+response = requests.get('https://api.github.com/users/octocat')
+print(response.status_code)  # 200
+print(response.json())  # JSON 응답
+
+# POST 요청
+data = {'name': '홍길동', 'age': 20}
+response = requests.post('https://httpbin.org/post', json=data)
+print(response.json())
+
+# 헤더 추가
+headers = {'Authorization': 'Bearer token123'}
+response = requests.get('https://api.example.com/data', headers=headers)
+
+# 세션 사용 (쿠키 유지)
+session = requests.Session()
+session.get('https://example.com/login', auth=('user', 'pass'))
+response = session.get('https://example.com/protected')</pre>
+                    </div>
+                    
+                    <h3>HTTP 서버 (http.server)</h3>
+                    <div class="code-example">
+                        <pre>from http.server import HTTPServer, BaseHTTPRequestHandler
+
+class MyHandler(BaseHTTPRequestHandler):
+    def do_GET(self):
+        self.send_response(200)
+        self.send_header('Content-type', 'text/html')
+        self.end_headers()
+        self.wfile.write(b'<h1>Hello World</h1>')
+    
+    def do_POST(self):
+        content_length = int(self.headers['Content-Length'])
+        post_data = self.rfile.read(content_length)
+        
+        self.send_response(200)
+        self.send_header('Content-type', 'application/json')
+        self.end_headers()
+        self.wfile.write(b'{"status": "success"}')
+
+server = HTTPServer(('localhost', 8000), MyHandler)
+print("서버 시작: http://localhost:8000")
+server.serve_forever()</pre>
+                    </div>
+                `,
+                problem: "requests 모듈을 사용하여 'https://httpbin.org/get'에 GET 요청을 보내고 응답을 출력하세요.",
+                solution: "import requests\n\nresponse = requests.get('https://httpbin.org/get')\nprint(response.json())",
+                test: (code) => {
+                    try {
+                        return code.includes("requests.get") &&
+                               code.includes("httpbin.org") &&
+                               code.includes("response");
+                    } catch (e) {
+                        return false;
+                    }
+                }
+            },
+            {
+                title: "데이터베이스 연동",
+                content: `
+                    <h3>SQLite 데이터베이스</h3>
+                    <p>SQLite는 파일 기반 경량 데이터베이스로, 별도 서버 설치 없이 사용할 수 있습니다.</p>
+                    
+                    <div class="code-example">
+                        <pre>import sqlite3
+
+# 데이터베이스 연결
+conn = sqlite3.connect('example.db')
+cursor = conn.cursor()
+
+# 테이블 생성
+cursor.execute('''
+    CREATE TABLE IF NOT EXISTS users (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        name TEXT NOT NULL,
+        email TEXT UNIQUE,
+        age INTEGER
+    )
+''')
+
+# 데이터 삽입
+cursor.execute("INSERT INTO users (name, email, age) VALUES (?, ?, ?)",
+               ('홍길동', 'hong@example.com', 20))
+conn.commit()
+
+# 데이터 조회
+cursor.execute("SELECT * FROM users")
+rows = cursor.fetchall()
+for row in rows:
+    print(row)
+
+# 데이터 수정
+cursor.execute("UPDATE users SET age = ? WHERE name = ?", (21, '홍길동'))
+conn.commit()
+
+# 데이터 삭제
+cursor.execute("DELETE FROM users WHERE name = ?", ('홍길동',))
+conn.commit()
+
+conn.close()</pre>
+                    </div>
+                    
+                    <h3>MySQL 연동 (mysql-connector-python)</h3>
+                    <div class="code-example">
+                        <pre>import mysql.connector
+
+# 데이터베이스 연결
+conn = mysql.connector.connect(
+    host='localhost',
+    user='root',
+    password='password',
+    database='mydb'
+)
+
+cursor = conn.cursor()
+
+# 테이블 생성
+cursor.execute('''
+    CREATE TABLE IF NOT EXISTS products (
+        id INT AUTO_INCREMENT PRIMARY KEY,
+        name VARCHAR(100) NOT NULL,
+        price DECIMAL(10, 2),
+        stock INT
+    )
+''')
+
+# 데이터 삽입
+cursor.execute("INSERT INTO products (name, price, stock) VALUES (%s, %s, %s)",
+               ('노트북', 999.99, 10))
+conn.commit()
+
+# 데이터 조회
+cursor.execute("SELECT * FROM products WHERE price > %s", (500,))
+products = cursor.fetchall()
+for product in products:
+    print(product)
+
+cursor.close()
+conn.close()</pre>
+                    </div>
+                    
+                    <h3>ORM - SQLAlchemy</h3>
+                    <div class="code-example">
+                        <pre>from sqlalchemy import create_engine, Column, Integer, String
+from sqlalchemy.ext.declarative import declarative_base
+from sqlalchemy.orm import sessionmaker
+
+Base = declarative_base()
+
+# 모델 정의
+class User(Base):
+    __tablename__ = 'users'
+    
+    id = Column(Integer, primary_key=True)
+    name = Column(String(50))
+    email = Column(String(100), unique=True)
+    age = Column(Integer)
+
+# 데이터베이스 연결
+engine = create_engine('sqlite:///example.db')
+Base.metadata.create_all(engine)
+
+Session = sessionmaker(bind=engine)
+session = Session()
+
+# 데이터 추가
+user = User(name='홍길동', email='hong@example.com', age=20)
+session.add(user)
+session.commit()
+
+# 데이터 조회
+users = session.query(User).filter(User.age > 18).all()
+for user in users:
+    print(f"{user.name}: {user.email}")
+
+# 데이터 수정
+user = session.query(User).filter(User.name == '홍길동').first()
+user.age = 21
+session.commit()
+
+# 데이터 삭제
+session.delete(user)
+session.commit()
+
+session.close()</pre>
+                    </div>
+                `,
+                problem: "sqlite3를 사용하여 'test.db' 데이터베이스에 연결하고, 'CREATE TABLE test (id INTEGER PRIMARY KEY, name TEXT)' 쿼리를 실행하세요.",
+                solution: "import sqlite3\n\nconn = sqlite3.connect('test.db')\ncursor = conn.cursor()\ncursor.execute('CREATE TABLE test (id INTEGER PRIMARY KEY, name TEXT)')\nconn.commit()\nconn.close()",
+                test: (code) => {
+                    try {
+                        return code.includes("sqlite3.connect") &&
+                               code.includes("CREATE TABLE") &&
+                               code.includes("execute");
+                    } catch (e) {
+                        return false;
+                    }
+                }
+            },
+            {
+                title: "웹 스크래핑",
+                content: `
+                    <h3>BeautifulSoup을 사용한 HTML 파싱</h3>
+                    <p>BeautifulSoup은 HTML과 XML 문서를 파싱하고 탐색하는 라이브러리입니다.</p>
+                    
+                    <div class="code-example">
+                        <pre>from bs4 import BeautifulSoup
+import requests
+
+# 웹페이지 가져오기
+url = 'https://example.com'
+response = requests.get(url)
+html = response.text
+
+# HTML 파싱
+soup = BeautifulSoup(html, 'html.parser')
+
+# 태그 찾기
+title = soup.find('title')
+print(title.text)  # 페이지 제목
+
+# 모든 링크 찾기
+links = soup.find_all('a')
+for link in links:
+    print(link.get('href'), link.text)
+
+# CSS 선택자 사용
+articles = soup.select('article h2')
+for article in articles:
+    print(article.text)
+
+# 속성으로 찾기
+images = soup.find_all('img', src=True)
+for img in images:
+    print(img['src'])
+
+# 클래스로 찾기
+divs = soup.find_all('div', class_='content')
+for div in divs:
+    print(div.text)</pre>
+                    </div>
+                    
+                    <h3>Selenium을 사용한 동적 웹 스크래핑</h3>
+                    <div class="code-example">
+                        <pre>from selenium import webdriver
+from selenium.webdriver.common.by import By
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
+
+# 브라우저 드라이버 설정
+driver = webdriver.Chrome()  # ChromeDriver 필요
+
+# 웹페이지 열기
+driver.get('https://example.com')
+
+# 요소 찾기 및 클릭
+button = driver.find_element(By.ID, 'button-id')
+button.click()
+
+# 명시적 대기
+wait = WebDriverWait(driver, 10)
+element = wait.until(EC.presence_of_element_located((By.CLASS_NAME, 'content')))
+
+# 텍스트 가져오기
+text = element.text
+print(text)
+
+# JavaScript 실행
+driver.execute_script("window.scrollTo(0, document.body.scrollHeight);")
+
+# 스크린샷 저장
+driver.save_screenshot('screenshot.png')
+
+# 브라우저 닫기
+driver.quit()</pre>
+                    </div>
+                    
+                    <h3>데이터 수집 및 저장</h3>
+                    <div class="code-example">
+                        <pre>import requests
+from bs4 import BeautifulSoup
+import csv
+import json
+
+def scrape_products():
+    url = 'https://example.com/products'
+    response = requests.get(url)
+    soup = BeautifulSoup(response.text, 'html.parser')
+    
+    products = []
+    for product in soup.find_all('div', class_='product'):
+        name = product.find('h3').text
+        price = product.find('span', class_='price').text
+        products.append({'name': name, 'price': price})
+    
+    return products
+
+# CSV로 저장
+products = scrape_products()
+with open('products.csv', 'w', newline='', encoding='utf-8') as f:
+    writer = csv.DictWriter(f, fieldnames=['name', 'price'])
+    writer.writeheader()
+    writer.writerows(products)
+
+# JSON으로 저장
+with open('products.json', 'w', encoding='utf-8') as f:
+    json.dump(products, f, ensure_ascii=False, indent=2)</pre>
+                    </div>
+                `,
+                problem: "BeautifulSoup을 사용하여 HTML 문자열 '<html><body><h1>제목</h1></body></html>'을 파싱하고, h1 태그의 텍스트를 출력하세요.",
+                solution: "from bs4 import BeautifulSoup\n\nhtml = '<html><body><h1>제목</h1></body></html>'\nsoup = BeautifulSoup(html, 'html.parser')\nh1 = soup.find('h1')\nprint(h1.text)",
+                test: (code) => {
+                    try {
+                        return code.includes("BeautifulSoup") &&
+                               code.includes("find('h1')") &&
+                               code.includes("text");
+                    } catch (e) {
+                        return false;
+                    }
+                }
+            },
+            {
+                title: "패키지 배포 및 관리",
+                content: `
+                    <h3>패키지 구조</h3>
+                    <p>Python 패키지를 만들고 배포하는 방법을 알아봅니다.</p>
+                    
+                    <div class="code-example">
+                        <pre># 프로젝트 구조
+my_package/
+    setup.py
+    README.md
+    LICENSE
+    my_package/
+        __init__.py
+        module1.py
+        module2.py
+        subpackage/
+            __init__.py
+            module3.py
+
+# setup.py
+from setuptools import setup, find_packages
+
+setup(
+    name='my-package',
+    version='1.0.0',
+    author='홍길동',
+    author_email='hong@example.com',
+    description='나의 패키지 설명',
+    long_description=open('README.md').read(),
+    long_description_content_type='text/markdown',
+    url='https://github.com/username/my-package',
+    packages=find_packages(),
+    classifiers=[
+        'Programming Language :: Python :: 3',
+        'License :: OSI Approved :: MIT License',
+        'Operating System :: OS Independent',
+    ],
+    python_requires='>=3.6',
+    install_requires=[
+        'requests>=2.25.0',
+        'beautifulsoup4>=4.9.0',
+    ],
+)</pre>
+                    </div>
+                    
+                    <h3>로컬 설치 및 개발 모드</h3>
+                    <div class="code-example">
+                        <pre># 개발 모드로 설치 (수정 사항이 즉시 반영)
+pip install -e .
+
+# 일반 설치
+pip install .
+
+# 빌드
+python setup.py sdist bdist_wheel
+
+# 생성된 파일
+# dist/my-package-1.0.0.tar.gz
+# dist/my_package-1.0.0-py3-none-any.whl</pre>
+                    </div>
+                    
+                    <h3>PyPI에 배포</h3>
+                    <div class="code-example">
+                        <pre># twine 설치
+pip install twine
+
+# 빌드
+python setup.py sdist bdist_wheel
+
+# 테스트 서버에 업로드
+twine upload --repository-url https://test.pypi.org/legacy/ dist/*
+
+# 실제 PyPI에 업로드
+twine upload dist/*
+
+# 설치
+pip install my-package
+
+# 업그레이드
+pip install --upgrade my-package</pre>
+                    </div>
+                    
+                    <h3>가상 환경 관리</h3>
+                    <div class="code-example">
+                        <pre># venv로 가상 환경 생성
+python -m venv venv
+
+# 활성화 (Windows)
+venv\\Scripts\\activate
+
+# 활성화 (Linux/Mac)
+source venv/bin/activate
+
+# requirements.txt 생성
+pip freeze > requirements.txt
+
+# requirements.txt로 설치
+pip install -r requirements.txt
+
+# deactivate로 비활성화
+deactivate</pre>
+                    </div>
+                `,
+                problem: "setuptools의 setup 함수를 사용하여 'my-package'라는 이름의 패키지를 정의하세요. (최소한 name과 version 포함)",
+                solution: "from setuptools import setup\n\nsetup(\n    name='my-package',\n    version='1.0.0'\n)",
+                test: (code) => {
+                    try {
+                        return code.includes("from setuptools import setup") &&
+                               code.includes("name='my-package'") &&
+                               code.includes("version");
+                    } catch (e) {
+                        return false;
+                    }
+                }
+            },
+            {
+                title: "디자인 패턴",
+                content: `
+                    <h3>싱글톤 패턴</h3>
+                    <p>클래스의 인스턴스가 하나만 존재하도록 보장하는 패턴입니다.</p>
+                    
+                    <div class="code-example">
+                        <pre>class Singleton:
+    _instance = None
+    
+    def __new__(cls):
+        if cls._instance is None:
+            cls._instance = super().__new__(cls)
+        return cls._instance
+
+# 사용
+s1 = Singleton()
+s2 = Singleton()
+print(s1 is s2)  # True (같은 인스턴스)
+
+# 데코레이터를 사용한 싱글톤
+def singleton(cls):
+    instances = {}
+    def get_instance(*args, **kwargs):
+        if cls not in instances:
+            instances[cls] = cls(*args, **kwargs)
+        return instances[cls]
+    return get_instance
+
+@singleton
+class Database:
+    def __init__(self):
+        print("데이터베이스 연결")</pre>
+                    </div>
+                    
+                    <h3>팩토리 패턴</h3>
+                    <div class="code-example">
+                        <pre>class Animal:
+    def speak(self):
+        pass
+
+class Dog(Animal):
+    def speak(self):
+        return "멍멍"
+
+class Cat(Animal):
+    def speak(self):
+        return "야옹"
+
+class AnimalFactory:
+    @staticmethod
+    def create_animal(animal_type):
+        if animal_type == "dog":
+            return Dog()
+        elif animal_type == "cat":
+            return Cat()
+        else:
+            raise ValueError(f"알 수 없는 동물: {animal_type}")
+
+# 사용
+animal = AnimalFactory.create_animal("dog")
+print(animal.speak())  # "멍멍"</pre>
+                    </div>
+                    
+                    <h3>옵저버 패턴</h3>
+                    <div class="code-example">
+                        <pre>class Observer:
+    def update(self, message):
+        pass
+
+class EmailObserver(Observer):
+    def update(self, message):
+        print(f"이메일 알림: {message}")
+
+class SMSObserver(Observer):
+    def update(self, message):
+        print(f"SMS 알림: {message}")
+
+class Subject:
+    def __init__(self):
+        self._observers = []
+    
+    def attach(self, observer):
+        self._observers.append(observer)
+    
+    def detach(self, observer):
+        self._observers.remove(observer)
+    
+    def notify(self, message):
+        for observer in self._observers:
+            observer.update(message)
+
+# 사용
+subject = Subject()
+email_obs = EmailObserver()
+sms_obs = SMSObserver()
+
+subject.attach(email_obs)
+subject.attach(sms_obs)
+
+subject.notify("새로운 주문이 들어왔습니다")
+# 이메일 알림: 새로운 주문이 들어왔습니다
+# SMS 알림: 새로운 주문이 들어왔습니다</pre>
+                    </div>
+                    
+                    <h3>전략 패턴</h3>
+                    <div class="code-example">
+                        <pre>class PaymentStrategy:
+    def pay(self, amount):
+        pass
+
+class CreditCardPayment(PaymentStrategy):
+    def pay(self, amount):
+        print(f"신용카드로 {amount}원 결제")
+
+class PayPalPayment(PaymentStrategy):
+    def pay(self, amount):
+        print(f"PayPal로 {amount}원 결제")
+
+class PaymentProcessor:
+    def __init__(self, strategy):
+        self.strategy = strategy
+    
+    def process_payment(self, amount):
+        self.strategy.pay(amount)
+
+# 사용
+processor = PaymentProcessor(CreditCardPayment())
+processor.process_payment(10000)  # 신용카드로 10000원 결제
+
+processor.strategy = PayPalPayment()
+processor.process_payment(5000)  # PayPal로 5000원 결제</pre>
+                    </div>
+                `,
+                problem: "싱글톤 패턴을 구현하여, __new__ 메서드를 오버라이드하여 항상 같은 인스턴스를 반환하도록 하세요.",
+                solution: "class Singleton:\n    _instance = None\n    \n    def __new__(cls):\n        if cls._instance is None:\n            cls._instance = super().__new__(cls)\n        return cls._instance\n\ns1 = Singleton()\ns2 = Singleton()\nprint(s1 is s2)",
+                test: (code) => {
+                    try {
+                        return code.includes("class Singleton") &&
+                               code.includes("__new__") &&
+                               code.includes("_instance");
                     } catch (e) {
                         return false;
                     }
