@@ -4388,10 +4388,14 @@
             window.scrollTo(0, 0);
             document.getElementById('mainScreen').style.display = 'block';
             document.getElementById('lessonScreen').classList.remove('active');
+            // History API: 메인 화면 상태 저장
+            if (window.history && window.history.pushState) {
+                window.history.pushState({ page: 'main' }, '', window.location.pathname);
+            }
         }
 
         // 레슨 표시
-        function showLesson(chapterNum) {
+        function showLesson(chapterNum, useHistory = true) {
             window.scrollTo(0, 0);
             const lesson = lessons[chapterNum - 1];
             if (!lesson) {
@@ -4401,6 +4405,11 @@
 
             document.getElementById('mainScreen').style.display = 'none';
             document.getElementById('lessonScreen').classList.add('active');
+            
+            // History API: 현재 장 번호를 상태로 저장
+            if (useHistory && window.history && window.history.pushState) {
+                window.history.pushState({ page: 'lesson', chapter: chapterNum }, '', `#chapter${chapterNum}`);
+            }
             
             document.getElementById('lessonTitle').textContent = lesson.title;
             document.getElementById('lessonContent').innerHTML = lesson.content;
@@ -4545,6 +4554,38 @@
                 showMainScreen();
             }
         }
+
+        // History API: 뒤로 가기/앞으로 가기 버튼 처리
+        window.addEventListener('popstate', function(event) {
+            if (event.state) {
+                if (event.state.page === 'main') {
+                    showMainScreen();
+                } else if (event.state.page === 'lesson' && event.state.chapter) {
+                    showLesson(event.state.chapter, false); // History를 다시 추가하지 않음
+                }
+            } else {
+                // 초기 상태 또는 직접 URL 접근 시 메인 화면 표시
+                showMainScreen();
+            }
+        });
+
+        // 초기 로드 시 History 상태 설정
+        window.addEventListener('DOMContentLoaded', function() {
+            if (window.location.hash) {
+                const chapterMatch = window.location.hash.match(/^#chapter(\d+)$/);
+                if (chapterMatch) {
+                    const chapterNum = parseInt(chapterMatch[1]);
+                    if (chapterNum > 0 && chapterNum <= lessons.length) {
+                        showLesson(chapterNum, false);
+                    }
+                }
+            } else {
+                // 초기 상태 설정
+                if (window.history && window.history.replaceState) {
+                    window.history.replaceState({ page: 'main' }, '', window.location.pathname);
+                }
+            }
+        });
 
         // 햄버거 메뉴 토글
         function toggleMenu() {
