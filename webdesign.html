@@ -2999,6 +2999,21 @@ $(document).keydown(function(e) {
                     시맨틱 HTML 태그의 이해와 CSS 레이아웃 구현 능력을 중점적으로 평가합니다. 
                     JavaScript나 jQuery는 거의 사용하지 않으며, 순수 CSS만으로 스타일링을 완성합니다.</p>
                     
+                    <h3>A유형 레이아웃 구조 시각화</h3>
+                    <p>다음은 A유형의 기본 레이아웃 구조를 시각적으로 표현한 것입니다:</p>
+                    
+                    <div style="border: 2px solid #333; padding: 20px; margin: 20px 0; background: #f9f9f9;">
+                        <div style="background: #4a90e2; color: white; padding: 15px; text-align: center; margin-bottom: 10px;">
+                            <strong>HEADER</strong> (로고 + 네비게이션 메뉴)
+                        </div>
+                        <div style="background: #50c878; color: white; padding: 100px 15px; text-align: center; margin-bottom: 10px;">
+                            <strong>MAIN</strong> (본문 내용)
+                        </div>
+                        <div style="background: #333; color: white; padding: 15px; text-align: center;">
+                            <strong>FOOTER</strong> (저작권 정보)
+                        </div>
+                    </div>
+                    
                     <h3>A유형 특징 상세 분석</h3>
                     <p><strong>주요 구현 사항:</strong></p>
                     <ul style="margin-left: 20px; margin-top: 10px;">
@@ -3012,6 +3027,142 @@ $(document).keydown(function(e) {
                         <li><strong>레이아웃 구성:</strong> 전체 레이아웃을 1200px 너비로 제한하고 가운데 정렬합니다</li>
                     </ul>
                     
+                    <h3>A유형 실제 코드 예제</h3>
+                    <p><strong>1. HTML 구조 (index.html):</strong></p>
+                    <div class="code-example">
+                        <pre>&lt;!DOCTYPE html&gt;
+&lt;html lang="ko"&gt;
+&lt;head&gt;
+    &lt;meta charset="UTF-8"&gt;
+    &lt;meta name="viewport" content="width=device-width, initial-scale=1.0"&gt;
+    &lt;title&gt;A유형 예제&lt;/title&gt;
+    &lt;link rel="stylesheet" href="css/style.css"&gt;
+&lt;/head&gt;
+&lt;body&gt;
+    &lt;div class="wrap"&gt;
+        &lt;header&gt;
+            &lt;div class="header-inner"&gt;
+                &lt;h1 class="logo"&gt;로고&lt;/h1&gt;
+                &lt;nav class="gnb"&gt;
+                    &lt;ul&gt;
+                        &lt;li&gt;&lt;a href="#"&gt;홈&lt;/a&gt;&lt;/li&gt;
+                        &lt;li&gt;&lt;a href="#"&gt;소개&lt;/a&gt;&lt;/li&gt;
+                        &lt;li&gt;&lt;a href="#"&gt;서비스&lt;/a&gt;&lt;/li&gt;
+                        &lt;li&gt;&lt;a href="#"&gt;연락처&lt;/a&gt;&lt;/li&gt;
+                    &lt;/ul&gt;
+                &lt;/nav&gt;
+            &lt;/div&gt;
+        &lt;/header&gt;
+        
+        &lt;main&gt;
+            &lt;section&gt;
+                &lt;h2&gt;본문 제목&lt;/h2&gt;
+                &lt;p&gt;본문 내용이 여기에 들어갑니다.&lt;/p&gt;
+            &lt;/section&gt;
+        &lt;/main&gt;
+        
+        &lt;footer&gt;
+            &lt;div class="footer-inner"&gt;
+                &lt;p&gt;Copyright © 2024. All rights reserved.&lt;/p&gt;
+            &lt;/div&gt;
+        &lt;/footer&gt;
+    &lt;/div&gt;
+&lt;/body&gt;
+&lt;/html&gt;</pre>
+                    </div>
+                    
+                    <p><strong>2. CSS 스타일링 (css/style.css):</strong></p>
+                    <div class="code-example">
+                        <pre>/* 기본 리셋 */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* 전체 레이아웃 */
+.wrap {
+    width: 1200px;
+    margin: 0 auto;
+}
+
+/* 헤더 영역 */
+header {
+    background: #333;
+    color: white;
+    padding: 20px 0;
+}
+
+.header-inner {
+    width: 1200px;
+    margin: 0 auto;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.logo {
+    font-size: 24px;
+}
+
+/* 네비게이션 메뉴 */
+.gnb ul {
+    display: flex;
+    list-style: none;
+    gap: 30px;
+}
+
+.gnb ul li a {
+    color: white;
+    text-decoration: none;
+    font-size: 16px;
+    transition: color 0.3s;
+}
+
+.gnb ul li a:hover {
+    color: #4a90e2;
+}
+
+/* 본문 영역 */
+main {
+    min-height: 500px;
+    padding: 40px;
+}
+
+/* 푸터 영역 */
+footer {
+    background: #333;
+    color: white;
+    padding: 20px 0;
+    text-align: center;
+}
+
+.footer-inner {
+    width: 1200px;
+    margin: 0 auto;
+}</pre>
+                    </div>
+                    
+                    <h3>헤더 구조 상세 설명</h3>
+                    <p>헤더는 다음과 같은 구조로 이루어집니다:</p>
+                    
+                    <div style="border: 1px solid #ddd; padding: 15px; margin: 15px 0; background: #fff;">
+                        <div style="display: flex; justify-content: space-between; align-items: center; background: #f0f0f0; padding: 10px;">
+                            <div style="background: #4a90e2; color: white; padding: 8px 15px; border-radius: 4px;">
+                                <strong>로고</strong>
+                            </div>
+                            <div style="display: flex; gap: 15px;">
+                                <span style="padding: 8px 15px; background: #e0e0e0; border-radius: 4px;">홈</span>
+                                <span style="padding: 8px 15px; background: #e0e0e0; border-radius: 4px;">소개</span>
+                                <span style="padding: 8px 15px; background: #e0e0e0; border-radius: 4px;">서비스</span>
+                                <span style="padding: 8px 15px; background: #e0e0e0; border-radius: 4px;">연락처</span>
+                            </div>
+                        </div>
+                        <p style="margin-top: 10px; font-size: 12px; color: #666;">
+                            ↑ header-inner에 display: flex, justify-content: space-between 적용
+                        </p>
+                    </div>
+                    
                     <p><strong>평가 비중:</strong></p>
                     <ul style="margin-left: 20px; margin-top: 10px;">
                         <li><strong>HTML 구조 작성:</strong> 30점 - 시맨틱 태그 사용, 올바른 구조</li>
@@ -3019,6 +3170,81 @@ $(document).keydown(function(e) {
                         <li><strong>네비게이션 메뉴:</strong> 20점 - 가로 메뉴 구현</li>
                         <li><strong>전체 완성도:</strong> 10점 - 디자인, 파일 관리 등</li>
                     </ul>
+                    
+                    <h3>단계별 구현 과정 (코드로 이해하기)</h3>
+                    
+                    <p><strong>Step 1: 기본 HTML 구조</strong></p>
+                    <div class="code-example">
+                        <pre>&lt;!-- 가장 먼저 작성하는 기본 구조 --&gt;
+&lt;!DOCTYPE html&gt;
+&lt;html lang="ko"&gt;
+&lt;head&gt;
+    &lt;meta charset="UTF-8"&gt;
+    &lt;meta name="viewport" content="width=device-width, initial-scale=1.0"&gt;
+    &lt;title&gt;A유형&lt;/title&gt;
+    &lt;link rel="stylesheet" href="css/style.css"&gt;
+&lt;/head&gt;
+&lt;body&gt;
+    &lt;!-- 여기에 내용 추가 --&gt;
+&lt;/body&gt;
+&lt;/html&gt;</pre>
+                    </div>
+                    
+                    <p><strong>Step 2: wrap 컨테이너 추가</strong></p>
+                    <div class="code-example">
+                        <pre>&lt;body&gt;
+    &lt;div class="wrap"&gt;
+        &lt;!-- 모든 내용을 wrap으로 감싸기 --&gt;
+    &lt;/div&gt;
+&lt;/body&gt;
+
+/* CSS */
+.wrap {
+    width: 1200px;        /* 너비 고정 */
+    margin: 0 auto;       /* 가운데 정렬 (핵심!) */
+}</pre>
+                    </div>
+                    
+                    <p><strong>Step 3: 헤더 구조 작성</strong></p>
+                    <div class="code-example">
+                        <pre>&lt;header&gt;
+    &lt;div class="header-inner"&gt;
+        &lt;h1 class="logo"&gt;로고&lt;/h1&gt;
+        &lt;nav class="gnb"&gt;
+            &lt;ul&gt;
+                &lt;li&gt;&lt;a href="#"&gt;홈&lt;/a&gt;&lt;/li&gt;
+                &lt;li&gt;&lt;a href="#"&gt;소개&lt;/a&gt;&lt;/li&gt;
+            &lt;/ul&gt;
+        &lt;/nav&gt;
+    &lt;/div&gt;
+&lt;/header&gt;
+
+/* CSS - 헤더 가로 배치 */
+.header-inner {
+    display: flex;                    /* Flexbox 사용 */
+    justify-content: space-between;    /* 양쪽 끝 배치 */
+    align-items: center;              /* 수직 가운데 */
+}</pre>
+                    </div>
+                    
+                    <p><strong>Step 4: 네비게이션 메뉴 가로 배치</strong></p>
+                    <div class="code-example">
+                        <pre>/* CSS - 메뉴 가로 배치 (가장 중요!) */
+.gnb ul {
+    display: flex;        /* 가로 배치 */
+    list-style: none;     /* 불릿 포인트 제거 */
+    gap: 30px;            /* 메뉴 간 간격 */
+}
+
+.gnb ul li a {
+    text-decoration: none;  /* 링크 밑줄 제거 */
+    color: white;
+}
+
+.gnb ul li a:hover {
+    color: #4a90e2;  /* 호버 시 색상 변경 */
+}</pre>
+                    </div>
                     
                     <h3>A유형 작업 순서 완벽 가이드</h3>
                     <p><strong>1단계: HTML 구조 작성 (30분 예상)</strong></p>
@@ -3123,6 +3349,27 @@ $(document).keydown(function(e) {
                     실무에서 가장 많이 사용되는 기능들을 구현합니다. 
                     슬라이드 배너와 드롭다운 메뉴 구현이 주된 과제이며, 자동 슬라이드 전환과 호버 효과 구현이 핵심입니다.</p>
                     
+                    <h3>B유형 레이아웃 구조 시각화</h3>
+                    <p>B유형은 A유형에 슬라이드 배너와 드롭다운 메뉴가 추가됩니다:</p>
+                    
+                    <div style="border: 2px solid #333; padding: 20px; margin: 20px 0; background: #f9f9f9;">
+                        <div style="background: #4a90e2; color: white; padding: 15px; text-align: center; margin-bottom: 10px;">
+                            <strong>HEADER</strong> (로고 + 드롭다운 메뉴)
+                        </div>
+                        <div style="background: #ff6b6b; color: white; padding: 80px 15px; text-align: center; margin-bottom: 10px; position: relative;">
+                            <strong>슬라이드 배너</strong> (자동 전환)
+                            <div style="position: absolute; bottom: 10px; left: 50%; transform: translateX(-50%); font-size: 12px;">
+                                이미지 1 | 이미지 2 | 이미지 3
+                            </div>
+                        </div>
+                        <div style="background: #50c878; color: white; padding: 100px 15px; text-align: center; margin-bottom: 10px;">
+                            <strong>MAIN</strong> (본문 내용)
+                        </div>
+                        <div style="background: #333; color: white; padding: 15px; text-align: center;">
+                            <strong>FOOTER</strong>
+                        </div>
+                    </div>
+                    
                     <h3>B유형 특징 상세 분석</h3>
                     <p><strong>주요 구현 사항:</strong></p>
                     <ul style="margin-left: 20px; margin-top: 10px;">
@@ -3133,6 +3380,166 @@ $(document).keydown(function(e) {
                         jQuery의 hover 이벤트와 slideDown/slideUp을 활용합니다</li>
                         <li><strong>jQuery 라이브러리:</strong> CDN을 통해 jQuery를 연결하고, 동적 기능을 구현합니다</li>
                     </ul>
+                    
+                    <h3>B유형 실제 코드 예제</h3>
+                    <p><strong>1. 슬라이드 배너 HTML 구조:</strong></p>
+                    <div class="code-example">
+                        <pre>&lt;!-- 슬라이드 배너 HTML --&gt;
+&lt;div class="slide-banner"&gt;
+    &lt;ul class="slide-list"&gt;
+        &lt;li&gt;&lt;img src="images/slide1.jpg" alt="슬라이드1"&gt;&lt;/li&gt;
+        &lt;li&gt;&lt;img src="images/slide2.jpg" alt="슬라이드2"&gt;&lt;/li&gt;
+        &lt;li&gt;&lt;img src="images/slide3.jpg" alt="슬라이드3"&gt;&lt;/li&gt;
+    &lt;/ul&gt;
+&lt;/div&gt;
+
+/* CSS - 슬라이드 배너 */
+.slide-banner {
+    width: 100%;
+    height: 400px;
+    overflow: hidden;  /* 중요: 넘치는 부분 숨김 */
+    position: relative;
+}
+
+.slide-list {
+    display: flex;           /* 가로 배치 */
+    width: 300%;            /* 이미지 3개 = 300% */
+    transition: transform 0.5s;  /* 부드러운 전환 */
+}
+
+.slide-list li {
+    width: 33.333%;         /* 각 이미지 너비 */
+    flex-shrink: 0;         /* 축소 방지 */
+}
+
+.slide-list li img {
+    width: 100%;
+    height: 400px;
+    object-fit: cover;
+}</pre>
+                    </div>
+                    
+                    <p><strong>2. 슬라이드 배너 jQuery 코드:</strong></p>
+                    <div class="code-example">
+                        <pre>&lt;!-- jQuery 라이브러리 연결 (body 끝에) --&gt;
+&lt;script src="https://code.jquery.com/jquery-3.6.0.min.js"&gt;&lt;/script&gt;
+&lt;script&gt;
+$(document).ready(function() {
+    var current = 0;  // 현재 슬라이드 인덱스
+    var slideCount = $('.slide-list li').length;  // 슬라이드 개수 (3개)
+    
+    // 3초마다 자동 전환
+    setInterval(function() {
+        current = (current + 1) % slideCount;  // 다음 슬라이드 (0, 1, 2, 0, 1, 2...)
+        var moveX = current * (100 / slideCount);  // 이동 거리 계산 (0%, 33.333%, 66.666%)
+        
+        $('.slide-list').css('transform', 'translateX(-' + moveX + '%)');
+    }, 3000);  // 3000ms = 3초
+});
+&lt;/script&gt;</pre>
+                    </div>
+                    
+                    <p><strong>슬라이드 동작 원리 시각화:</strong></p>
+                    <div style="border: 1px solid #ddd; padding: 15px; margin: 15px 0; background: #fff; overflow: hidden;">
+                        <div style="display: flex; width: 300%; transition: transform 0.5s; transform: translateX(0%);" id="slideDemo">
+                            <div style="width: 33.333%; flex-shrink: 0; background: #ff6b6b; color: white; padding: 40px; text-align: center;">
+                                <strong>이미지 1</strong>
+                            </div>
+                            <div style="width: 33.333%; flex-shrink: 0; background: #4a90e2; color: white; padding: 40px; text-align: center;">
+                                <strong>이미지 2</strong>
+                            </div>
+                            <div style="width: 33.333%; flex-shrink: 0; background: #50c878; color: white; padding: 40px; text-align: center;">
+                                <strong>이미지 3</strong>
+                            </div>
+                        </div>
+                        <p style="margin-top: 10px; font-size: 12px; color: #666;">
+                            ↑ slide-list가 translateX(-33.333%)로 이동하면 이미지 2가 보임<br>
+                            ↑ translateX(-66.666%)로 이동하면 이미지 3이 보임
+                        </p>
+                    </div>
+                    
+                    <p><strong>3. 드롭다운 메뉴 HTML 구조:</strong></p>
+                    <div class="code-example">
+                        <pre>&lt;!-- 드롭다운 메뉴 HTML --&gt;
+&lt;nav class="gnb"&gt;
+    &lt;ul&gt;
+        &lt;li&gt;
+            &lt;a href="#"&gt;메뉴1&lt;/a&gt;
+            &lt;ul class="sub-menu"&gt;
+                &lt;li&gt;&lt;a href="#"&gt;서브메뉴1-1&lt;/a&gt;&lt;/li&gt;
+                &lt;li&gt;&lt;a href="#"&gt;서브메뉴1-2&lt;/a&gt;&lt;/li&gt;
+            &lt;/ul&gt;
+        &lt;/li&gt;
+        &lt;li&gt;
+            &lt;a href="#"&gt;메뉴2&lt;/a&gt;
+            &lt;ul class="sub-menu"&gt;
+                &lt;li&gt;&lt;a href="#"&gt;서브메뉴2-1&lt;/a&gt;&lt;/li&gt;
+            &lt;/ul&gt;
+        &lt;/li&gt;
+    &lt;/ul&gt;
+&lt;/nav&gt;
+
+/* CSS - 드롭다운 메뉴 */
+.gnb > ul > li {
+    position: relative;  /* 중요: 서브메뉴 위치 기준 */
+}
+
+.sub-menu {
+    display: none;           /* 기본적으로 숨김 */
+    position: absolute;      /* 절대 위치 */
+    top: 100%;              /* 메인 메뉴 아래 */
+    left: 0;
+    background: white;
+    min-width: 150px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+    z-index: 1000;
+}
+
+.sub-menu li {
+    padding: 10px;
+    border-bottom: 1px solid #eee;
+}</pre>
+                    </div>
+                    
+                    <p><strong>4. 드롭다운 메뉴 jQuery 코드:</strong></p>
+                    <div class="code-example">
+                        <pre>&lt;script&gt;
+$(document).ready(function() {
+    // 메인 메뉴에 마우스 오버 시
+    $('.gnb > ul > li').hover(
+        function() {
+            // 마우스 오버: 서브메뉴 보이기
+            $(this).find('.sub-menu').stop().slideDown(300);
+        },
+        function() {
+            // 마우스 아웃: 서브메뉴 숨기기
+            $(this).find('.sub-menu').stop().slideUp(300);
+        }
+    );
+});
+&lt;/script&gt;</pre>
+                    </div>
+                    
+                    <p><strong>드롭다운 메뉴 동작 시각화:</strong></p>
+                    <div style="border: 1px solid #ddd; padding: 15px; margin: 15px 0; background: #fff;">
+                        <div style="display: flex; gap: 20px; position: relative;">
+                            <div style="position: relative;">
+                                <div style="padding: 10px 20px; background: #4a90e2; color: white; border-radius: 4px;">
+                                    메뉴1
+                                </div>
+                                <div style="position: absolute; top: 100%; left: 0; background: white; border: 1px solid #ddd; margin-top: 5px; min-width: 150px; box-shadow: 0 2px 5px rgba(0,0,0,0.2);">
+                                    <div style="padding: 10px; border-bottom: 1px solid #eee;">서브메뉴1-1</div>
+                                    <div style="padding: 10px;">서브메뉴1-2</div>
+                                </div>
+                            </div>
+                            <div style="padding: 10px 20px; background: #e0e0e0; border-radius: 4px;">
+                                메뉴2
+                            </div>
+                        </div>
+                        <p style="margin-top: 10px; font-size: 12px; color: #666;">
+                            ↑ 메뉴1에 마우스 오버 시 서브메뉴가 slideDown으로 나타남
+                        </p>
+                    </div>
                     
                     <p><strong>평가 비중:</strong></p>
                     <ul style="margin-left: 20px; margin-top: 10px;">
@@ -3265,6 +3672,39 @@ $(document).keydown(function(e) {
                     클릭 이벤트 처리, 상태 관리(active 클래스), 애니메이션 효과(fadeIn, fadeOut)를 모두 포함합니다. 
                     탭 메뉴와 팝업 창 구현이 주된 과제이며, index() 메서드와 클래스 토글 기능 구현이 핵심입니다.</p>
                     
+                    <h3>C유형 레이아웃 구조 시각화</h3>
+                    <p>C유형은 A유형에 탭 메뉴와 레이어 팝업이 추가됩니다:</p>
+                    
+                    <div style="border: 2px solid #333; padding: 20px; margin: 20px 0; background: #f9f9f9;">
+                        <div style="background: #4a90e2; color: white; padding: 15px; text-align: center; margin-bottom: 10px;">
+                            <strong>HEADER</strong>
+                        </div>
+                        <div style="background: #50c878; color: white; padding: 100px 15px; text-align: center; margin-bottom: 10px;">
+                            <div style="background: #fff; color: #333; padding: 20px; margin-bottom: 20px; border-radius: 4px;">
+                                <div style="display: flex; gap: 10px; margin-bottom: 15px; justify-content: center;">
+                                    <button style="padding: 10px 20px; background: #4a90e2; color: white; border: none; border-radius: 4px;">
+                                        탭1 (활성)
+                                    </button>
+                                    <button style="padding: 10px 20px; background: #e0e0e0; color: #333; border: none; border-radius: 4px;">
+                                        탭2
+                                    </button>
+                                    <button style="padding: 10px 20px; background: #e0e0e0; color: #333; border: none; border-radius: 4px;">
+                                        탭3
+                                    </button>
+                                </div>
+                                <div style="background: #f0f0f0; padding: 20px; border-radius: 4px;">
+                                    탭1 내용 표시
+                                </div>
+                            </div>
+                            <button style="padding: 10px 20px; background: #ff6b6b; color: white; border: none; border-radius: 4px;">
+                                팝업 열기
+                            </button>
+                        </div>
+                        <div style="background: #333; color: white; padding: 15px; text-align: center;">
+                            <strong>FOOTER</strong>
+                        </div>
+                    </div>
+                    
                     <h3>C유형 특징 상세 분석</h3>
                     <p><strong>주요 구현 사항:</strong></p>
                     <ul style="margin-left: 20px; margin-top: 10px;">
@@ -3275,6 +3715,185 @@ $(document).keydown(function(e) {
                         닫기 버튼을 클릭하면 사라지는 기능을 구현합니다. position: fixed와 fadeIn/fadeOut을 활용합니다</li>
                         <li><strong>상태 관리:</strong> active 클래스를 추가/제거하여 현재 활성화된 탭과 내용을 관리합니다</li>
                     </ul>
+                    
+                    <h3>C유형 실제 코드 예제</h3>
+                    <p><strong>1. 탭 메뉴 HTML 구조:</strong></p>
+                    <div class="code-example">
+                        <pre>&lt;!-- 탭 메뉴 HTML --&gt;
+&lt;div class="tab-menu"&gt;
+    &lt;ul class="tab-list"&gt;
+        &lt;li class="active"&gt;탭1&lt;/li&gt;
+        &lt;li&gt;탭2&lt;/li&gt;
+        &lt;li&gt;탭3&lt;/li&gt;
+    &lt;/ul&gt;
+    &lt;div class="tab-content"&gt;
+        &lt;div class="tab-item active"&gt;탭1 내용&lt;/div&gt;
+        &lt;div class="tab-item"&gt;탭2 내용&lt;/div&gt;
+        &lt;div class="tab-item"&gt;탭3 내용&lt;/div&gt;
+    &lt;/div&gt;
+&lt;/div&gt;
+
+/* CSS - 탭 메뉴 */
+.tab-list {
+    display: flex;
+    list-style: none;
+    gap: 10px;
+    margin-bottom: 20px;
+}
+
+.tab-list li {
+    padding: 10px 20px;
+    background: #e0e0e0;
+    cursor: pointer;
+    border-radius: 4px;
+}
+
+.tab-list li.active {
+    background: #4a90e2;
+    color: white;
+}
+
+.tab-item {
+    display: none;  /* 기본적으로 숨김 */
+    padding: 20px;
+    background: #f0f0f0;
+}
+
+.tab-item.active {
+    display: block;  /* active 클래스가 있으면 표시 */
+}</pre>
+                    </div>
+                    
+                    <p><strong>2. 탭 메뉴 jQuery 코드:</strong></p>
+                    <div class="code-example">
+                        <pre>&lt;script&gt;
+$(document).ready(function() {
+    $('.tab-list li').click(function() {
+        // 1. 모든 탭과 내용에서 active 클래스 제거
+        $('.tab-list li').removeClass('active');
+        $('.tab-item').removeClass('active');
+        
+        // 2. 클릭한 탭의 인덱스 찾기 (0, 1, 2)
+        var index = $(this).index();
+        
+        // 3. 클릭한 탭에 active 클래스 추가
+        $(this).addClass('active');
+        
+        // 4. 같은 인덱스의 내용에 active 클래스 추가
+        $('.tab-item').eq(index).addClass('active');
+    });
+});
+&lt;/script&gt;</pre>
+                    </div>
+                    
+                    <p><strong>탭 메뉴 동작 원리 시각화:</strong></p>
+                    <div style="border: 1px solid #ddd; padding: 20px; margin: 15px 0; background: #fff;">
+                        <div style="display: flex; gap: 10px; margin-bottom: 15px;">
+                            <div style="padding: 10px 20px; background: #4a90e2; color: white; border-radius: 4px; cursor: pointer;">
+                                탭1 (index: 0)
+                            </div>
+                            <div style="padding: 10px 20px; background: #e0e0e0; border-radius: 4px; cursor: pointer;">
+                                탭2 (index: 1)
+                            </div>
+                            <div style="padding: 10px 20px; background: #e0e0e0; border-radius: 4px; cursor: pointer;">
+                                탭3 (index: 2)
+                            </div>
+                        </div>
+                        <div style="background: #f0f0f0; padding: 20px; border-radius: 4px;">
+                            <strong>탭1 내용</strong> (tab-item.eq(0) - active 클래스 있음)
+                        </div>
+                        <p style="margin-top: 10px; font-size: 12px; color: #666;">
+                            ↑ 탭2 클릭 시: index = 1 → tab-item.eq(1)에 active 추가 → 탭2 내용 표시
+                        </p>
+                    </div>
+                    
+                    <p><strong>3. 레이어 팝업 HTML 구조:</strong></p>
+                    <div class="code-example">
+                        <pre>&lt;!-- 팝업 열기 버튼 --&gt;
+&lt;button id="popup-open"&gt;팝업 열기&lt;/button&gt;
+
+&lt;!-- 팝업 오버레이 (배경) --&gt;
+&lt;div class="popup-overlay"&gt;
+    &lt;div class="popup-content"&gt;
+        &lt;h2&gt;팝업 제목&lt;/h2&gt;
+        &lt;p&gt;팝업 내용&lt;/p&gt;
+        &lt;button class="popup-close"&gt;닫기&lt;/button&gt;
+    &lt;/div&gt;
+&lt;/div&gt;
+
+/* CSS - 레이어 팝업 */
+.popup-overlay {
+    display: none;              /* 기본적으로 숨김 */
+    position: fixed;            /* 화면 기준 고정 */
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);  /* 반투명 검은 배경 */
+    z-index: 9999;              /* 최상위 레이어 */
+}
+
+.popup-content {
+    position: absolute;
+    top: 50%;                   /* 가운데 정렬 */
+    left: 50%;
+    transform: translate(-50%, -50%);  /* 정확히 가운데 */
+    background: white;
+    padding: 30px;
+    border-radius: 8px;
+    min-width: 400px;
+    max-width: 90%;
+}
+
+.popup-close {
+    margin-top: 20px;
+    padding: 10px 20px;
+    background: #333;
+    color: white;
+    border: none;
+    cursor: pointer;
+}</pre>
+                    </div>
+                    
+                    <p><strong>4. 레이어 팝업 jQuery 코드:</strong></p>
+                    <div class="code-example">
+                        <pre>&lt;script&gt;
+$(document).ready(function() {
+    // 팝업 열기
+    $('#popup-open').click(function() {
+        $('.popup-overlay').fadeIn(300);  // 서서히 나타남
+    });
+    
+    // 팝업 닫기
+    $('.popup-close').click(function() {
+        $('.popup-overlay').fadeOut(300);  // 서서히 사라짐
+    });
+    
+    // 오버레이 클릭 시 닫기 (선택사항)
+    $('.popup-overlay').click(function(e) {
+        if ($(e.target).hasClass('popup-overlay')) {
+            $(this).fadeOut(300);
+        }
+    });
+});
+&lt;/script&gt;</pre>
+                    </div>
+                    
+                    <p><strong>팝업 구조 시각화:</strong></p>
+                    <div style="border: 1px solid #ddd; padding: 20px; margin: 15px 0; background: #fff; position: relative;">
+                        <div style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 1; display: flex; align-items: center; justify-content: center;">
+                            <div style="background: white; padding: 30px; border-radius: 8px; z-index: 2; position: relative;">
+                                <h3 style="margin: 0 0 15px 0;">팝업 제목</h3>
+                                <p style="margin: 0 0 15px 0;">팝업 내용이 여기에 표시됩니다.</p>
+                                <button style="padding: 10px 20px; background: #333; color: white; border: none; border-radius: 4px; cursor: pointer;">
+                                    닫기
+                                </button>
+                            </div>
+                        </div>
+                        <p style="position: relative; z-index: 0; margin-top: 200px; font-size: 12px; color: #666;">
+                            ↑ popup-overlay가 position: fixed로 화면 전체를 덮고, popup-content가 가운데에 위치
+                        </p>
+                    </div>
                     
                     <p><strong>평가 비중:</strong></p>
                     <ul style="margin-left: 20px; margin-top: 10px;">
