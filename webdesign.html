@@ -13,12 +13,28 @@
 
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(135deg, rgba(102, 126, 234, 0.5) 0%, rgba(118, 75, 162, 0.5) 100%),
+                        url('https://images.unsplash.com/photo-1467232004584-a241de8bcf5d?ixlib=rb-4.0.3&auto=format&fit=crop&w=2069&q=80');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
             min-height: 100vh;
             padding: 20px;
             padding-left: 180px;
             padding-right: 180px;
             overflow-x: hidden;
+            position: relative;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(135deg, rgba(102, 126, 234, 0.4) 0%, rgba(118, 75, 162, 0.4) 100%);
+            z-index: -1;
         }
 
         .container {
@@ -38,11 +54,11 @@
         }
 
         .side-banner.left {
-            left: 10px;
+            left: 30px;
         }
 
         .side-banner.right {
-            right: 10px;
+            right: 30px;
         }
 
         .side-banner img {
@@ -3564,7 +3580,7 @@ $(document).keydown(function(e) {
                     <div class="practice-section">
                         <h3>📝 학습 완료</h3>
                         <p>강의를 모두 학습하셨습니다. 다음 장으로 넘어가세요.</p>
-                        <button class="next-button" onclick="nextChapter(${chapterNum})" style="margin-top: 20px;">
+                        <button class="next-button show" onclick="nextChapter(${chapterNum})" style="margin-top: 20px; display: inline-block;">
                             다음 장으로 →
                         </button>
                     </div>

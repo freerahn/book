@@ -13,11 +13,27 @@
 
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #4ECDC4 0%, #44A08D 100%);
+            background: linear-gradient(135deg, rgba(78, 205, 196, 0.5) 0%, rgba(68, 160, 141, 0.5) 100%),
+                        url('https://images.unsplash.com/photo-1552664730-d307ca884978?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
             min-height: 100vh;
             padding: 20px;
             padding-left: 180px;
             padding-right: 180px;
+            position: relative;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(135deg, rgba(78, 205, 196, 0.4) 0%, rgba(68, 160, 141, 0.4) 100%);
+            z-index: -1;
         }
 
         .container {
@@ -36,11 +52,11 @@
         }
 
         .side-banner.left {
-            left: 10px;
+            left: 30px;
         }
 
         .side-banner.right {
-            right: 10px;
+            right: 30px;
         }
 
         .side-banner img {
@@ -3184,7 +3200,7 @@
                 practiceSection.innerHTML = `
                     <h3>📝 학습 완료</h3>
                     <p>강의를 모두 학습하셨습니다. 다음 장으로 넘어가세요.</p>
-                    <button class="next-button" onclick="nextChapter(${chapterNum})" style="margin-top: 20px;">다음 장으로 →</button>
+                    <button class="next-button show" onclick="nextChapter(${chapterNum})" style="margin-top: 20px; display: inline-block;">다음 장으로 →</button>
                 `;
             } else if (!lesson.questions || lesson.questions.length === 0) {
                 // 문제가 없는 경우 (일부 강의에 문제가 추가되지 않은 경우)

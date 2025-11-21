@@ -13,11 +13,27 @@
 
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #a8e063 0%, #56ab2f 100%);
+            background: linear-gradient(135deg, rgba(168, 224, 99, 0.5) 0%, rgba(86, 171, 47, 0.5) 100%),
+                        url('https://images.unsplash.com/photo-1526379095098-d400fd0bf935?ixlib=rb-4.0.3&auto=format&fit=crop&w=2032&q=80');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
             min-height: 100vh;
             padding: 20px;
             padding-left: 180px;
             padding-right: 180px;
+            position: relative;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(135deg, rgba(168, 224, 99, 0.4) 0%, rgba(86, 171, 47, 0.4) 100%);
+            z-index: -1;
         }
 
         .container {
@@ -36,11 +52,11 @@
         }
 
         .side-banner.left {
-            left: 10px;
+            left: 30px;
         }
 
         .side-banner.right {
-            right: 10px;
+            right: 30px;
         }
 
         .side-banner img {
