@@ -1,0 +1,1752 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Node.js 기초 강의</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+            padding-left: 180px;
+            padding-right: 180px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        /* 좌우 고정 배너 */
+        .side-banner {
+            position: fixed;
+            top: 50%;
+            transform: translateY(-50%);
+            z-index: 1000;
+            width: 150px;
+            transition: opacity 0.3s ease;
+        }
+
+        .side-banner.left {
+            left: 10px;
+        }
+
+        .side-banner.right {
+            right: 10px;
+        }
+
+        .side-banner img {
+            width: 100%;
+            height: auto;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+            cursor: pointer;
+            transition: transform 0.3s ease;
+        }
+
+        .side-banner img:hover {
+            transform: scale(1.05);
+        }
+
+        /* 모바일에서는 배너 숨김 */
+        @media (max-width: 1400px) {
+            body {
+                padding-left: 20px;
+                padding-right: 20px;
+            }
+            .side-banner {
+                display: none;
+            }
+        }
+
+        /* 네비게이션 바 */
+        .navbar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            z-index: 2000;
+            padding: 15px 0;
+        }
+
+        .navbar-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 30px;
+        }
+
+        .navbar a {
+            text-decoration: none;
+            color: #333;
+            font-size: 16px;
+            font-weight: 500;
+            padding: 8px 15px;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+        }
+
+        .navbar a:hover {
+            background: #667eea;
+            color: white;
+        }
+
+        .navbar a.active {
+            background: #667eea;
+            color: white;
+        }
+
+        body {
+            padding-top: 70px;
+        }
+
+        /* 메인 화면 스타일 */
+        .main-screen {
+            text-align: center;
+            padding: 40px 20px;
+        }
+
+        .main-screen h1 {
+            color: white;
+            font-size: 3em;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .main-screen p {
+            color: rgba(255,255,255,0.9);
+            font-size: 1.2em;
+            margin-bottom: 50px;
+        }
+
+        .chapter-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 25px;
+            margin-top: 40px;
+        }
+
+        .chapter-box {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: 3px solid transparent;
+            text-align: center;
+        }
+
+        .chapter-box:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 40px rgba(0,0,0,0.3);
+            border-color: #667eea;
+        }
+
+        .chapter-box h2 {
+            color: #667eea;
+            font-size: 1.8em;
+            margin-bottom: 10px;
+        }
+
+        .chapter-box p {
+            color: #666;
+            font-size: 1em;
+            line-height: 1.6;
+        }
+
+        .chapter-icon {
+            font-size: 4em;
+            margin-bottom: 10px;
+            display: block;
+            transition: transform 0.3s ease;
+            filter: drop-shadow(0 2px 4px rgba(0,0,0,0.1));
+        }
+
+        .chapter-box:hover .chapter-icon {
+            transform: scale(1.15) rotate(5deg);
+        }
+
+        .chapter-number {
+            display: inline-block;
+            background: #667eea;
+            color: white;
+            width: 35px;
+            height: 35px;
+            border-radius: 50%;
+            line-height: 35px;
+            font-weight: bold;
+            font-size: 0.9em;
+            margin-bottom: 15px;
+            margin-top: 5px;
+        }
+
+        /* 학습 화면 스타일 */
+        .lesson-screen {
+            display: none;
+            background: white;
+            border-radius: 15px;
+            padding: 40px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            margin-top: 20px;
+        }
+
+        .lesson-screen.active {
+            display: block;
+        }
+
+        .lesson-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 2px solid #eee;
+        }
+
+        .lesson-header h2 {
+            color: #667eea;
+            font-size: 2em;
+        }
+
+        .back-button {
+            background: #667eea;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1em;
+            transition: background 0.3s;
+        }
+
+        .back-button:hover {
+            background: #5568d3;
+        }
+
+        .lesson-content {
+            line-height: 1.8;
+            color: #333;
+            font-size: 1.1em;
+            margin-bottom: 40px;
+        }
+
+        .lesson-content h3 {
+            color: #764ba2;
+            margin-top: 30px;
+            margin-bottom: 15px;
+            font-size: 1.5em;
+        }
+
+        .lesson-content p {
+            margin-bottom: 15px;
+        }
+
+        .lesson-content code {
+            background: #f4f4f4;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-family: 'Courier New', monospace;
+            color: #e83e8c;
+        }
+
+        .code-example {
+            background: #2d2d2d;
+            color: #f8f8f2;
+            padding: 20px;
+            border-radius: 8px;
+            margin: 20px 0;
+            overflow-x: auto;
+            font-family: 'Courier New', monospace;
+        }
+
+        .code-example pre {
+            margin: 0;
+        }
+
+        /* 실습 영역 */
+        .practice-section {
+            background: #f8f9fa;
+            border-radius: 10px;
+            padding: 30px;
+            margin-top: 40px;
+            border-left: 5px solid #667eea;
+        }
+
+        .practice-section h3 {
+            color: #667eea;
+            margin-bottom: 20px;
+            font-size: 1.5em;
+        }
+
+        .problem {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+
+        .problem p {
+            color: #333;
+            font-size: 1.1em;
+            line-height: 1.6;
+        }
+
+        .code-editor {
+            width: 100%;
+            min-height: 150px;
+            padding: 15px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            font-family: 'Courier New', monospace;
+            font-size: 14px;
+            resize: vertical;
+            margin-bottom: 15px;
+            white-space: pre-wrap;
+        }
+
+        .success-message {
+            background: #d4edda;
+            color: #155724;
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 15px;
+            display: none;
+        }
+
+        .success-message.show {
+            display: block;
+        }
+
+        .error-message {
+            background: #f8d7da;
+            color: #721c24;
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 15px;
+            display: none;
+        }
+
+        .error-message.show {
+            display: block;
+        }
+
+        .run-button {
+            background: #667eea;
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            border-radius: 8px;
+            font-size: 1.1em;
+            cursor: pointer;
+            transition: background 0.3s;
+            margin-top: 15px;
+        }
+
+        .run-button:hover {
+            background: #5568d3;
+        }
+
+        .next-button {
+            background: #28a745;
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            border-radius: 8px;
+            font-size: 1.1em;
+            cursor: pointer;
+            transition: background 0.3s;
+            margin-top: 20px;
+            display: none;
+        }
+
+        .next-button.show {
+            display: inline-block;
+        }
+
+        .next-button:hover {
+            background: #218838;
+        }
+
+        .output {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 15px;
+            min-height: 50px;
+            font-family: 'Courier New', monospace;
+        }
+    </style>
+</head>
+<body>
+    <!-- 네비게이션 바 -->
+    <nav class="navbar">
+        <div class="navbar-content">
+            <a href="index.html">홈</a>
+            <a href="webdesign.html">웹디자인개발기능사</a>
+            <a href="cs.html">CS리더스관리사</a>
+            <a href="javascript.html">JavaScript</a>
+            <a href="node.html" class="active">Node.js</a>
+            <a href="python.html">Python</a>
+            <a href="kotlin.html">Kotlin</a>
+        </div>
+    </nav>
+
+    <!-- 좌측 배너 -->
+    <div class="side-banner left" id="leftBanner">
+        <img src="images/wecandeo.jpg" alt="WeCanDo 배너" onclick="window.open('https://www.wecandeo.com', '_blank')">
+    </div>
+
+    <!-- 우측 배너 -->
+    <div class="side-banner right" id="rightBanner">
+        <img src="images/malgnsoft.jpg" alt="MalgnSoft 배너" onclick="window.open('https://www.malgnsoft.com', '_blank')">
+    </div>
+
+    <div class="container">
+        <!-- 메인 화면 -->
+        <div class="main-screen" id="mainScreen">
+            <h1>🟢 Node.js 기초 강의</h1>
+            <p>서버 사이드 JavaScript 개발 기초를 탄탄히 다지세요!</p>
+            
+            <div class="chapter-grid" id="chapterGrid">
+                <div class="chapter-box" onclick="showLesson(1)">
+                    <div class="chapter-icon">🚀</div>
+                    <div class="chapter-number">1</div>
+                    <h2>Node.js 개발 환경 및 기본 이해</h2>
+                    <p>Node.js의 탄생 배경과 npm 핵심 명령어</p>
+                </div>
+                
+                <div class="chapter-box" onclick="showLesson(2)">
+                    <div class="chapter-icon">⚡</div>
+                    <div class="chapter-number">2</div>
+                    <h2>필수 JavaScript 비동기 마스터</h2>
+                    <p>Callback, Promise, async/await 패턴</p>
+                </div>
+                
+                <div class="chapter-box" onclick="showLesson(3)">
+                    <div class="chapter-icon">🔄</div>
+                    <div class="chapter-number">3</div>
+                    <h2>Node.js의 심장, 이벤트 루프</h2>
+                    <p>이벤트 루프의 동작 순서와 Microtask vs Macrotask</p>
+                </div>
+                
+                <div class="chapter-box" onclick="showLesson(4)">
+                    <div class="chapter-icon">📦</div>
+                    <div class="chapter-number">4</div>
+                    <h2>모듈 시스템 완벽 이해</h2>
+                    <p>CommonJS와 ES Modules의 차이점</p>
+                </div>
+                
+                <div class="chapter-box" onclick="showLesson(5)">
+                    <div class="chapter-icon">🌐</div>
+                    <div class="chapter-number">5</div>
+                    <h2>Node.js 내장 HTTP 서버</h2>
+                    <p>내장 http 모듈로 서버 구축하기</p>
+                </div>
+                
+                <div class="chapter-box" onclick="showLesson(6)">
+                    <div class="chapter-icon">🎯</div>
+                    <div class="chapter-number">6</div>
+                    <h2>Express.js 기초 및 미들웨어</h2>
+                    <p>Express.js 구조와 미들웨어의 역할</p>
+                </div>
+                
+                <div class="chapter-box" onclick="showLesson(7)">
+                    <div class="chapter-icon">🔗</div>
+                    <div class="chapter-number">7</div>
+                    <h2>RESTful API 설계와 라우팅</h2>
+                    <p>RESTful 디자인 원칙과 라우트 구조</p>
+                </div>
+                
+                <div class="chapter-box" onclick="showLesson(8)">
+                    <div class="chapter-icon">📄</div>
+                    <div class="chapter-number">8</div>
+                    <h2>템플릿 엔진과 정적 파일 제공</h2>
+                    <p>EJS/Pug 템플릿 엔진과 서버 측 렌더링</p>
+                </div>
+                
+                <div class="chapter-box" onclick="showLesson(9)">
+                    <div class="chapter-icon">📁</div>
+                    <div class="chapter-number">9</div>
+                    <h2>파일 시스템 및 스트림 활용</h2>
+                    <p>fs 모듈과 Stream을 이용한 파일 처리</p>
+                </div>
+                
+                <div class="chapter-box" onclick="showLesson(10)">
+                    <div class="chapter-icon">🍃</div>
+                    <div class="chapter-number">10</div>
+                    <h2>NoSQL 데이터베이스 연동</h2>
+                    <p>MongoDB와 Mongoose 심화 활용</p>
+                </div>
+                
+                <div class="chapter-box" onclick="showLesson(11)">
+                    <div class="chapter-icon">🗄️</div>
+                    <div class="chapter-number">11</div>
+                    <h2>관계형 데이터베이스 및 ORM</h2>
+                    <p>Sequelize/Prisma를 활용한 모델 관계 설정</p>
+                </div>
+                
+                <div class="chapter-box" onclick="showLesson(12)">
+                    <div class="chapter-icon">🔐</div>
+                    <div class="chapter-number">12</div>
+                    <h2>사용자 인증 마스터</h2>
+                    <p>Session, Cookie, JWT 기반 인증 구현</p>
+                </div>
+                
+                <div class="chapter-box" onclick="showLesson(13)">
+                    <div class="chapter-icon">🛡️</div>
+                    <div class="chapter-number">13</div>
+                    <h2>보안 취약점과 방어 전략</h2>
+                    <p>CORS, XSS, CSRF 공격 방어</p>
+                </div>
+                
+                <div class="chapter-box" onclick="showLesson(14)">
+                    <div class="chapter-icon">💬</div>
+                    <div class="chapter-number">14</div>
+                    <h2>Socket.IO 실시간 채팅</h2>
+                    <p>WebSocket과 Socket.IO 룸 활용</p>
+                </div>
+                
+                <div class="chapter-box" onclick="showLesson(15)">
+                    <div class="chapter-icon">⚙️</div>
+                    <div class="chapter-number">15</div>
+                    <h2>Worker Threads 및 Cluster</h2>
+                    <p>CPU 부하 해소와 멀티 코어 활용</p>
+                </div>
+                
+                <div class="chapter-box" onclick="showLesson(16)">
+                    <div class="chapter-icon">⚠️</div>
+                    <div class="chapter-number">16</div>
+                    <h2>에러 처리 및 로깅 전략</h2>
+                    <p>비동기 에러 핸들링과 Winston 로깅</p>
+                </div>
+                
+                <div class="chapter-box" onclick="showLesson(17)">
+                    <div class="chapter-icon">⚡</div>
+                    <div class="chapter-number">17</div>
+                    <h2>캐싱 및 성능 최적화</h2>
+                    <p>Redis 캐싱과 HTTP 캐싱 헤더</p>
+                </div>
+                
+                <div class="chapter-box" onclick="showLesson(18)">
+                    <div class="chapter-icon">🧪</div>
+                    <div class="chapter-number">18</div>
+                    <h2>단위 및 통합 테스트</h2>
+                    <p>Jest/Mocha와 TDD 접근법</p>
+                </div>
+                
+                <div class="chapter-box" onclick="showLesson(19)">
+                    <div class="chapter-icon">🚢</div>
+                    <div class="chapter-number">19</div>
+                    <h2>배포 자동화 및 프로세스 관리</h2>
+                    <p>Docker와 PM2를 이용한 배포</p>
+                </div>
+                
+                <div class="chapter-box" onclick="showLesson(20)">
+                    <div class="chapter-icon">☁️</div>
+                    <div class="chapter-number">20</div>
+                    <h2>실제 서비스 배포 및 모니터링</h2>
+                    <p>AWS/GCP/Azure 배포와 모니터링 구축</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- 학습 화면들 -->
+        <div id="lessonScreens"></div>
+    </div>
+
+    <script>
+        // 강의 내용 데이터
+        const lessons = [
+            {
+                title: "Node.js 개발 환경 및 기본 이해",
+                content: `
+                    <h3>Node.js란 무엇인가?</h3>
+                    <p>Node.js는 2009년 Ryan Dahl이 개발한 서버 사이드 JavaScript 런타임 환경입니다. 
+                    Chrome의 V8 JavaScript 엔진을 기반으로 하여, 브라우저 밖에서도 JavaScript를 실행할 수 있게 해줍니다. 
+                    Node.js의 가장 큰 특징은 <strong>Non-blocking I/O</strong>와 <strong>이벤트 기반 아키텍처</strong>입니다.</p>
+                    
+                    <h3>Node.js의 탄생 배경</h3>
+                    <p>기존의 서버 사이드 언어들은 동기식(Synchronous) I/O를 사용하여, 
+                    파일 읽기나 네트워크 요청 같은 작업을 할 때 그 작업이 완료될 때까지 기다려야 했습니다. 
+                    이는 서버의 성능을 크게 저하시켰습니다.</p>
+                    
+                    <p>Node.js는 <strong>비동기식(Asynchronous) I/O</strong>를 사용하여, 
+                    I/O 작업을 기다리는 동안 다른 작업을 처리할 수 있게 했습니다. 
+                    이를 통해 단일 스레드로도 수천 개의 동시 연결을 처리할 수 있게 되었습니다.</p>
+                    
+                    <h3>Non-blocking I/O의 개념</h3>
+                    <p><strong>Blocking I/O:</strong> 작업이 완료될 때까지 다음 코드 실행이 멈춤</p>
+                    <div class="code-example">
+                        <pre>// Blocking 예시 (동기식)
+const data = fs.readFileSync('file.txt'); // 파일 읽기가 끝날 때까지 대기
+console.log(data); // 위 작업이 끝난 후 실행</pre>
+                    </div>
+                    
+                    <p><strong>Non-blocking I/O:</strong> 작업을 시작하고, 완료되면 콜백 함수 실행</p>
+                    <div class="code-example">
+                        <pre>// Non-blocking 예시 (비동기식)
+fs.readFile('file.txt', (err, data) => {
+    // 파일 읽기가 끝나면 이 콜백 실행
+    console.log(data);
+});
+console.log('다음 코드'); // 파일 읽기를 기다리지 않고 즉시 실행</pre>
+                    </div>
+                    
+                    <h3>npm/yarn/pnpm 핵심 명령어</h3>
+                    <p><strong>npm (Node Package Manager):</strong> Node.js의 기본 패키지 관리자</p>
+                    <div class="code-example">
+                        <pre># 패키지 설치
+npm install 패키지명
+npm install -g 패키지명  # 전역 설치
+
+# package.json 생성
+npm init
+npm init -y  # 기본값으로 생성
+
+# 패키지 제거
+npm uninstall 패키지명
+
+# 의존성 업데이트
+npm update
+
+# 스크립트 실행
+npm run 스크립트명</pre>
+                    </div>
+                    
+                    <p><strong>yarn:</strong> Facebook에서 개발한 빠른 패키지 관리자</p>
+                    <div class="code-example">
+                        <pre># 패키지 설치
+yarn add 패키지명
+yarn global add 패키지명
+
+# package.json 생성
+yarn init
+
+# 스크립트 실행
+yarn run 스크립트명</pre>
+                    </div>
+                    
+                    <p><strong>pnpm:</strong> 디스크 공간을 효율적으로 사용하는 패키지 관리자</p>
+                    <div class="code-example">
+                        <pre># 패키지 설치
+pnpm add 패키지명
+pnpm add -g 패키지명</pre>
+                    </div>
+                    
+                    <h3>package.json 완벽 해부</h3>
+                    <p>package.json은 프로젝트의 메타데이터와 의존성을 관리하는 파일입니다.</p>
+                    <div class="code-example">
+                        <pre>{
+  "name": "my-project",           // 프로젝트 이름
+  "version": "1.0.0",            // 버전
+  "description": "설명",          // 프로젝트 설명
+  "main": "index.js",            // 진입점 파일
+  "scripts": {                    // 실행 가능한 스크립트
+    "start": "node index.js",
+    "dev": "nodemon index.js"
+  },
+  "dependencies": {               // 프로덕션 의존성
+    "express": "^4.18.0"
+  },
+  "devDependencies": {            // 개발 의존성
+    "nodemon": "^2.0.0"
+  },
+  "engines": {                    // Node.js 버전 요구사항
+    "node": ">=14.0.0"
+  }
+}</pre>
+                    </div>
+                    
+                    <h3>Node.js 설치 및 확인</h3>
+                    <div class="code-example">
+                        <pre># Node.js 버전 확인
+node --version
+node -v
+
+# npm 버전 확인
+npm --version
+npm -v
+
+# 첫 번째 Node.js 프로그램
+console.log('Hello, Node.js!');</pre>
+                    </div>
+                `,
+                problem: "Node.js를 사용하여 'Hello, Node.js!'를 출력하는 코드를 작성하세요.",
+                solution: "console.log('Hello, Node.js!');",
+                test: (code) => {
+                    try {
+                        const result = code.trim();
+                        return result.includes("console.log") && 
+                               (result.includes("'Hello, Node.js!'") || 
+                                result.includes('"Hello, Node.js!"'));
+                    } catch (e) {
+                        return false;
+                    }
+                }
+            },
+            {
+                title: "필수 JavaScript 비동기 마스터",
+                content: `
+                    <h3>Callback Hell의 시각화와 해결책</h3>
+                    <p>Callback Hell은 콜백 함수가 중첩되어 코드가 피라미드처럼 보이는 현상입니다.</p>
+                    
+                    <p><strong>Callback Hell 예시:</strong></p>
+                    <div class="code-example">
+                        <pre>// Callback Hell
+fs.readFile('file1.txt', (err, data1) => {
+    fs.readFile('file2.txt', (err, data2) => {
+        fs.readFile('file3.txt', (err, data3) => {
+            // 계속 중첩...
+            console.log(data1, data2, data3);
+        });
+    });
+});</pre>
+                    </div>
+                    
+                    <p><strong>해결책 1: Promise 사용</strong></p>
+                    <div class="code-example">
+                        <pre>// Promise로 개선
+fs.promises.readFile('file1.txt')
+    .then(data1 => fs.promises.readFile('file2.txt'))
+    .then(data2 => fs.promises.readFile('file3.txt'))
+    .then(data3 => console.log(data1, data2, data3))
+    .catch(err => console.error(err));</pre>
+                    </div>
+                    
+                    <p><strong>해결책 2: async/await 사용</strong></p>
+                    <div class="code-example">
+                        <pre>// async/await로 개선
+async function readFiles() {
+    try {
+        const data1 = await fs.promises.readFile('file1.txt');
+        const data2 = await fs.promises.readFile('file2.txt');
+        const data3 = await fs.promises.readFile('file3.txt');
+        console.log(data1, data2, data3);
+    } catch (err) {
+        console.error(err);
+    }
+}</pre>
+                    </div>
+                    
+                    <h3>Promise의 상태와 체이닝(Chaining)</h3>
+                    <p><strong>Promise의 3가지 상태:</strong></p>
+                    <ul style="margin-left: 20px; margin-top: 10px;">
+                        <li><strong>Pending (대기):</strong> 아직 완료되지 않은 상태</li>
+                        <li><strong>Fulfilled (이행):</strong> 성공적으로 완료된 상태</li>
+                        <li><strong>Rejected (거부):</strong> 실패한 상태</li>
+                    </ul>
+                    
+                    <p><strong>Promise 생성:</strong></p>
+                    <div class="code-example">
+                        <pre>const promise = new Promise((resolve, reject) => {
+    // 비동기 작업
+    setTimeout(() => {
+        const success = true;
+        if (success) {
+            resolve('성공!');
+        } else {
+            reject('실패!');
+        }
+    }, 1000);
+});</pre>
+                    </div>
+                    
+                    <p><strong>Promise 체이닝:</strong></p>
+                    <div class="code-example">
+                        <pre>promise
+    .then(result => {
+        console.log(result); // '성공!'
+        return result + ' 추가 작업';
+    })
+    .then(result => {
+        console.log(result); // '성공! 추가 작업'
+        return result.toUpperCase();
+    })
+    .then(result => {
+        console.log(result); // '성공! 추가 작업'
+    })
+    .catch(error => {
+        console.error(error);
+    });</pre>
+                    </div>
+                    
+                    <h3>async/await 패턴의 동작 원리</h3>
+                    <p>async/await는 Promise를 더 쉽게 사용할 수 있게 해주는 문법적 설탕(Syntactic Sugar)입니다.</p>
+                    
+                    <p><strong>async 함수:</strong> 항상 Promise를 반환합니다</p>
+                    <div class="code-example">
+                        <pre>async function fetchData() {
+    return '데이터';
+}
+
+// 위 함수는 다음과 동일
+function fetchData() {
+    return Promise.resolve('데이터');
+}</pre>
+                    </div>
+                    
+                    <p><strong>await 키워드:</strong> Promise가 완료될 때까지 기다립니다</p>
+                    <div class="code-example">
+                        <pre>async function getUserData() {
+    try {
+        const user = await fetchUser();      // Promise 완료 대기
+        const profile = await fetchProfile(user.id);  // 다음 Promise 대기
+        return { user, profile };
+    } catch (error) {
+        console.error('에러 발생:', error);
+    }
+}</pre>
+                    </div>
+                    
+                    <p><strong>병렬 처리:</strong> 여러 Promise를 동시에 실행</p>
+                    <div class="code-example">
+                        <pre>// 순차 처리 (느림)
+const data1 = await fetchData1();  // 1초 대기
+const data2 = await fetchData2();  // 1초 대기
+// 총 2초 소요
+
+// 병렬 처리 (빠름)
+const [data1, data2] = await Promise.all([
+    fetchData1(),  // 동시 실행
+    fetchData2()   // 동시 실행
+]);
+// 총 1초 소요</pre>
+                    </div>
+                `,
+                problem: "Promise를 사용하여 비동기 함수를 작성하고, 성공 시 'Success'를 출력하는 코드를 작성하세요.",
+                solution: `const promise = new Promise((resolve, reject) => {
+    resolve('Success');
+});
+
+promise.then(result => {
+    console.log(result);
+});`,
+                test: (code) => {
+                    try {
+                        const result = code.trim();
+                        return result.includes("Promise") && 
+                               result.includes("resolve") && 
+                               result.includes("then");
+                    } catch (e) {
+                        return false;
+                    }
+                }
+            },
+            {
+                title: "Node.js의 심장, 이벤트 루프",
+                content: `
+                    <h3>이벤트 루프의 동작 순서</h3>
+                    <p>이벤트 루프는 Node.js의 핵심으로, 비동기 작업을 처리하는 메커니즘입니다.</p>
+                    
+                    <p><strong>이벤트 루프의 단계:</strong></p>
+                    <ol style="margin-left: 20px; margin-top: 10px;">
+                        <li><strong>Timer:</strong> setTimeout, setInterval 콜백 실행</li>
+                        <li><strong>Pending Callbacks:</strong> 지연된 I/O 콜백 실행</li>
+                        <li><strong>Idle, Prepare:</strong> 내부 사용</li>
+                        <li><strong>Poll:</strong> 새로운 I/O 이벤트 가져오기</li>
+                        <li><strong>Check:</strong> setImmediate 콜백 실행</li>
+                        <li><strong>Close Callbacks:</strong> close 이벤트 콜백 실행</li>
+                    </ol>
+                    
+                    <h3>Microtask vs Macrotask</h3>
+                    <p><strong>Microtask:</strong> Promise.then(), process.nextTick()</p>
+                    <p><strong>Macrotask:</strong> setTimeout, setInterval, setImmediate, I/O 작업</p>
+                    
+                    <div class="code-example">
+                        <pre>console.log('1');
+
+setTimeout(() => console.log('2'), 0);
+Promise.resolve().then(() => console.log('3'));
+process.nextTick(() => console.log('4'));
+
+console.log('5');
+
+// 출력 순서: 1, 5, 4, 3, 2
+// process.nextTick > Promise > setTimeout</pre>
+                    </div>
+                `,
+                problem: "process.nextTick을 사용하여 콜백 함수를 실행하는 코드를 작성하세요. 콜백에서는 'Next Tick'을 출력하세요.",
+                solution: `process.nextTick(() => {
+    console.log('Next Tick');
+});`,
+                test: (code) => {
+                    try {
+                        const result = code.trim();
+                        return result.includes("process.nextTick") && 
+                               result.includes("console.log");
+                    } catch (e) {
+                        return false;
+                    }
+                }
+            },
+            {
+                title: "모듈 시스템 완벽 이해",
+                content: `
+                    <h3>CommonJS와 ES Modules (ESM)의 차이점</h3>
+                    <p><strong>CommonJS (require/module.exports):</strong> Node.js의 기본 모듈 시스템</p>
+                    <div class="code-example">
+                        <pre>// 내보내기
+module.exports = {
+    name: 'Node.js',
+    version: '18.0.0'
+};
+
+// 가져오기
+const { name, version } = require('./module');</pre>
+                    </div>
+                    
+                    <p><strong>ES Modules (import/export):</strong> ES6 표준 모듈 시스템</p>
+                    <div class="code-example">
+                        <pre>// 내보내기
+export const name = 'Node.js';
+export default { version: '18.0.0' };
+
+// 가져오기
+import { name } from './module.js';
+import module from './module.js';</pre>
+                    </div>
+                    
+                    <h3>require와 import의 동작 방식</h3>
+                    <p><strong>require:</strong> 동기적으로 모듈을 로드하고 캐시에 저장</p>
+                    <p><strong>import:</strong> 정적 분석을 통해 컴파일 타임에 모듈을 로드</p>
+                `,
+                problem: "CommonJS 형식으로 name 변수를 'Node.js'로 내보내는 코드를 작성하세요.",
+                solution: `const name = 'Node.js';
+module.exports = { name };`,
+                test: (code) => {
+                    try {
+                        const result = code.trim();
+                        return result.includes("module.exports") && 
+                               result.includes("name");
+                    } catch (e) {
+                        return false;
+                    }
+                }
+            },
+            {
+                title: "Node.js 내장 HTTP 서버와 요청/응답 처리",
+                content: `
+                    <h3>내장 http 모듈로 서버 구축</h3>
+                    <div class="code-example">
+                        <pre>const http = require('http');
+
+const server = http.createServer((req, res) => {
+    res.writeHead(200, { 'Content-Type': 'text/plain' });
+    res.end('Hello, Node.js!');
+});
+
+server.listen(3000, () => {
+    console.log('서버가 3000번 포트에서 실행 중입니다');
+});</pre>
+                    </div>
+                    
+                    <h3>Request/Response Lifecycle</h3>
+                    <p>요청이 들어오면 createServer의 콜백이 실행되고, 
+                    res 객체를 통해 응답을 보냅니다.</p>
+                    
+                    <h3>헤더 및 상태 코드 관리</h3>
+                    <div class="code-example">
+                        <pre>res.writeHead(200, {
+    'Content-Type': 'application/json',
+    'Access-Control-Allow-Origin': '*'
+});
+res.end(JSON.stringify({ message: 'Success' }));</pre>
+                    </div>
+                `,
+                problem: "Node.js의 http 모듈을 사용하여 3000번 포트에서 'Hello, Node.js!'를 응답하는 서버를 작성하세요.",
+                solution: `const http = require('http');
+
+const server = http.createServer((req, res) => {
+    res.writeHead(200, { 'Content-Type': 'text/plain' });
+    res.end('Hello, Node.js!');
+});
+
+server.listen(3000);`,
+                test: (code) => {
+                    try {
+                        const result = code.trim();
+                        return result.includes("http.createServer") && 
+                               result.includes("listen(3000)") && 
+                               result.includes("res.end");
+                    } catch (e) {
+                        return false;
+                    }
+                }
+            },
+            {
+                title: "Express.js 기초 및 미들웨어의 꽃",
+                content: `
+                    <h3>Express.js 구조 이해</h3>
+                    <div class="code-example">
+                        <pre>const express = require('express');
+const app = express();
+
+app.get('/', (req, res) => {
+    res.send('Hello, Express!');
+});
+
+app.listen(3000);</pre>
+                    </div>
+                    
+                    <h3>미들웨어의 역할과 흐름 제어</h3>
+                    <p>미들웨어는 요청과 응답 사이에서 실행되는 함수입니다.</p>
+                    <div class="code-example">
+                        <pre>// 전역 미들웨어
+app.use((req, res, next) => {
+    console.log('미들웨어 실행');
+    next(); // 다음 미들웨어로 이동
+});
+
+// 특정 라우트 미들웨어
+app.get('/user', middleware, (req, res) => {
+    res.send('User page');
+});</pre>
+                    </div>
+                `,
+                problem: "Express.js를 사용하여 '/' 경로에 GET 요청이 오면 'Hello, Express!'를 응답하는 코드를 작성하세요.",
+                solution: `const express = require('express');
+const app = express();
+
+app.get('/', (req, res) => {
+    res.send('Hello, Express!');
+});`,
+                test: (code) => {
+                    try {
+                        const result = code.trim();
+                        return result.includes("express()") && 
+                               result.includes("app.get('/'") && 
+                               result.includes("res.send");
+                    } catch (e) {
+                        return false;
+                    }
+                }
+            },
+            {
+                title: "RESTful API 설계와 라우팅 심화",
+                content: `
+                    <h3>RESTful 디자인 원칙</h3>
+                    <ul style="margin-left: 20px; margin-top: 10px;">
+                        <li>리소스 기반 URL 설계</li>
+                        <li>HTTP 메서드 활용 (GET, POST, PUT, DELETE)</li>
+                        <li>상태 코드 적절한 사용</li>
+                    </ul>
+                    
+                    <div class="code-example">
+                        <pre>// RESTful API 예시
+app.get('/users', getUsers);        // 모든 사용자 조회
+app.get('/users/:id', getUser);     // 특정 사용자 조회
+app.post('/users', createUser);     // 사용자 생성
+app.put('/users/:id', updateUser);  // 사용자 수정
+app.delete('/users/:id', deleteUser); // 사용자 삭제</pre>
+                    </div>
+                    
+                    <h3>Router Class를 이용한 라우트 구조</h3>
+                    <div class="code-example">
+                        <pre>const router = express.Router();
+
+router.get('/', (req, res) => {
+    res.send('Router example');
+});
+
+app.use('/api', router);</pre>
+                    </div>
+                `,
+                problem: "Express.js를 사용하여 '/users/:id' 경로에 GET 요청이 오면 URL 파라미터 id를 반환하는 라우트를 작성하세요.",
+                solution: `app.get('/users/:id', (req, res) => {
+    res.send(req.params.id);
+});`,
+                test: (code) => {
+                    try {
+                        const result = code.trim();
+                        return result.includes("app.get('/users/:id'") && 
+                               result.includes("req.params");
+                    } catch (e) {
+                        return false;
+                    }
+                }
+            },
+            {
+                title: "템플릿 엔진과 정적 파일 제공",
+                content: `
+                    <h3>EJS/Pug 템플릿 엔진 연동</h3>
+                    <div class="code-example">
+                        <pre>// EJS 설정
+app.set('view engine', 'ejs');
+app.set('views', './views');
+
+app.get('/', (req, res) => {
+    res.render('index', { title: 'Home' });
+});</pre>
+                    </div>
+                    
+                    <h3>서버 측 렌더링(SSR) 이해</h3>
+                    <p>서버에서 HTML을 생성하여 클라이언트에 전달하는 방식입니다.</p>
+                    
+                    <h3>정적 파일 서비스</h3>
+                    <div class="code-example">
+                        <pre>app.use(express.static('public'));</pre>
+                    </div>
+                `,
+                problem: "Express.js에서 'public' 폴더의 정적 파일을 제공하는 미들웨어를 설정하는 코드를 작성하세요.",
+                solution: `const express = require('express');
+const app = express();
+
+app.use(express.static('public'));`,
+                test: (code) => {
+                    try {
+                        const result = code.trim();
+                        return result.includes("express.static") && 
+                               result.includes("app.use");
+                    } catch (e) {
+                        return false;
+                    }
+                }
+            },
+            {
+                title: "파일 시스템 (fs) 및 스트림 활용 실습",
+                content: `
+                    <h3>비동기/동기 fs 메서드 비교</h3>
+                    <div class="code-example">
+                        <pre>// 동기식 (Blocking)
+const data = fs.readFileSync('file.txt');
+
+// 비동기식 (Non-blocking)
+fs.readFile('file.txt', (err, data) => {
+    if (err) throw err;
+    console.log(data);
+});</pre>
+                    </div>
+                    
+                    <h3>Stream을 이용한 대용량 파일 처리</h3>
+                    <div class="code-example">
+                        <pre>const fs = require('fs');
+
+const readStream = fs.createReadStream('large-file.txt');
+const writeStream = fs.createWriteStream('output.txt');
+
+readStream.pipe(writeStream);</pre>
+                    </div>
+                `,
+                problem: "fs 모듈을 사용하여 'file.txt' 파일을 비동기로 읽어서 콘솔에 출력하는 코드를 작성하세요.",
+                solution: `const fs = require('fs');
+
+fs.readFile('file.txt', 'utf8', (err, data) => {
+    if (err) throw err;
+    console.log(data);
+});`,
+                test: (code) => {
+                    try {
+                        const result = code.trim();
+                        return result.includes("fs.readFile") && 
+                               result.includes("'file.txt'") && 
+                               result.includes("console.log");
+                    } catch (e) {
+                        return false;
+                    }
+                }
+            },
+            {
+                title: "NoSQL 데이터베이스 연동 및 Mongoose 심화",
+                content: `
+                    <h3>MongoDB 설치 및 연결</h3>
+                    <div class="code-example">
+                        <pre>const mongoose = require('mongoose');
+
+mongoose.connect('mongodb://localhost:27017/mydb', {
+    useNewUrlParser: true,
+    useUnifiedTopology: true
+});</pre>
+                    </div>
+                    
+                    <h3>Mongoose Schema 설계</h3>
+                    <div class="code-example">
+                        <pre>const userSchema = new mongoose.Schema({
+    name: String,
+    email: { type: String, required: true },
+    age: Number
+});
+
+const User = mongoose.model('User', userSchema);</pre>
+                    </div>
+                    
+                    <h3>Populate, Virtuals 등 고급 기능</h3>
+                    <p>Populate는 다른 컬렉션의 문서를 참조할 때 사용합니다.</p>
+                `,
+                problem: "Mongoose를 사용하여 name(String, required)과 age(Number) 필드를 가진 User 스키마를 작성하고 모델을 생성하는 코드를 작성하세요.",
+                solution: `const mongoose = require('mongoose');
+
+const userSchema = new mongoose.Schema({
+    name: { type: String, required: true },
+    age: Number
+});
+
+const User = mongoose.model('User', userSchema);`,
+                test: (code) => {
+                    try {
+                        const result = code.trim();
+                        return result.includes("mongoose.Schema") && 
+                               result.includes("name") && 
+                               result.includes("mongoose.model");
+                    } catch (e) {
+                        return false;
+                    }
+                }
+            },
+            {
+                title: "관계형 데이터베이스 및 ORM (Sequelize/Prisma)",
+                content: `
+                    <h3>SQL 기본 개념 복습</h3>
+                    <p>관계형 데이터베이스는 테이블 간의 관계를 통해 데이터를 저장합니다.</p>
+                    
+                    <h3>Sequelize를 활용한 모델 관계 설정</h3>
+                    <div class="code-example">
+                        <pre>// 1:N 관계
+User.hasMany(Post);
+Post.belongsTo(User);
+
+// N:M 관계
+User.belongsToMany(Tag, { through: 'UserTag' });
+Tag.belongsToMany(User, { through: 'UserTag' });</pre>
+                    </div>
+                    
+                    <h3>Prisma를 활용한 모델 관계</h3>
+                    <p>Prisma는 타입 안전한 ORM으로, 스키마 파일로 모델을 정의합니다.</p>
+                `,
+                problem: "Sequelize에서 User 모델과 Post 모델 간의 1:N 관계를 설정하는 코드를 작성하세요. (User hasMany Post)",
+                solution: `User.hasMany(Post);
+Post.belongsTo(User);`,
+                test: (code) => {
+                    try {
+                        const result = code.trim();
+                        return result.includes("hasMany") && 
+                               result.includes("belongsTo");
+                    } catch (e) {
+                        return false;
+                    }
+                }
+            },
+            {
+                title: "사용자 인증 (Authentication) 마스터",
+                content: `
+                    <h3>Session & Cookie 기반 인증</h3>
+                    <div class="code-example">
+                        <pre>const session = require('express-session');
+
+app.use(session({
+    secret: 'my-secret-key',
+    resave: false,
+    saveUninitialized: false
+}));</pre>
+                    </div>
+                    
+                    <h3>JWT (JSON Web Token) 원리 및 구현</h3>
+                    <div class="code-example">
+                        <pre>const jwt = require('jsonwebtoken');
+
+// 토큰 생성
+const token = jwt.sign({ userId: 123 }, 'secret-key');
+
+// 토큰 검증
+const decoded = jwt.verify(token, 'secret-key');</pre>
+                    </div>
+                    
+                    <h3>인증 미들웨어 설계</h3>
+                    <div class="code-example">
+                        <pre>function authenticate(req, res, next) {
+    const token = req.headers.authorization;
+    if (!token) return res.status(401).send('Unauthorized');
+    // 토큰 검증 로직
+    next();
+}</pre>
+                    </div>
+                `,
+                problem: "jsonwebtoken을 사용하여 { userId: 123 } 페이로드로 'secret-key'를 시크릿으로 사용하여 JWT 토큰을 생성하는 코드를 작성하세요.",
+                solution: `const jwt = require('jsonwebtoken');
+
+const token = jwt.sign({ userId: 123 }, 'secret-key');`,
+                test: (code) => {
+                    try {
+                        const result = code.trim();
+                        return result.includes("jwt.sign") && 
+                               result.includes("userId") && 
+                               result.includes("'secret-key'");
+                    } catch (e) {
+                        return false;
+                    }
+                }
+            },
+            {
+                title: "보안 취약점과 방어 전략 (Security)",
+                content: `
+                    <h3>비밀번호 해싱 (Bcrypt/Argon2)</h3>
+                    <div class="code-example">
+                        <pre>const bcrypt = require('bcrypt');
+
+// 비밀번호 해싱
+const hashedPassword = await bcrypt.hash('password', 10);
+
+// 비밀번호 검증
+const isValid = await bcrypt.compare('password', hashedPassword);</pre>
+                    </div>
+                    
+                    <h3>CORS, XSS, CSRF 공격 방어</h3>
+                    <p><strong>CORS:</strong> Cross-Origin Resource Sharing 설정</p>
+                    <p><strong>XSS:</strong> Cross-Site Scripting 방어</p>
+                    <p><strong>CSRF:</strong> Cross-Site Request Forgery 방어</p>
+                    
+                    <h3>Helmet 미들웨어를 이용한 보안 강화</h3>
+                    <div class="code-example">
+                        <pre>const helmet = require('helmet');
+app.use(helmet());</pre>
+                    </div>
+                `,
+                problem: "bcrypt를 사용하여 'password123' 비밀번호를 해싱하는 코드를 작성하세요. (비동기 방식 사용)",
+                solution: `const bcrypt = require('bcrypt');
+
+const hashedPassword = await bcrypt.hash('password123', 10);`,
+                test: (code) => {
+                    try {
+                        const result = code.trim();
+                        return result.includes("bcrypt.hash") && 
+                               result.includes("'password123'");
+                    } catch (e) {
+                        return false;
+                    }
+                }
+            },
+            {
+                title: "Socket.IO를 이용한 실시간 채팅 애플리케이션",
+                content: `
+                    <h3>WebSocket 기본 원리</h3>
+                    <p>WebSocket은 양방향 통신을 위한 프로토콜입니다.</p>
+                    
+                    <h3>Socket.IO 룸 및 네임스페이스 활용</h3>
+                    <div class="code-example">
+                        <pre>io.on('connection', (socket) => {
+    socket.join('room1');
+    
+    socket.on('message', (data) => {
+        io.to('room1').emit('message', data);
+    });
+});</pre>
+                    </div>
+                    
+                    <h3>실시간 푸시 알림 구현</h3>
+                    <p>Socket.IO를 사용하여 실시간으로 알림을 전송할 수 있습니다.</p>
+                `,
+                problem: "Socket.IO를 사용하여 클라이언트가 연결되면 'Connected' 메시지를 클라이언트에게 전송하는 코드를 작성하세요.",
+                solution: `const io = require('socket.io')(server);
+
+io.on('connection', (socket) => {
+    socket.emit('message', 'Connected');
+});`,
+                test: (code) => {
+                    try {
+                        const result = code.trim();
+                        return result.includes("io.on('connection'") && 
+                               result.includes("socket.emit");
+                    } catch (e) {
+                        return false;
+                    }
+                }
+            },
+            {
+                title: "CPU 부하 해소: Worker Threads 및 Cluster",
+                content: `
+                    <h3>CPU 집약적 작업의 문제점</h3>
+                    <p>Node.js는 단일 스레드이므로 CPU 집약적 작업이 메인 스레드를 블로킹합니다.</p>
+                    
+                    <h3>Worker Threads를 활용한 병렬 처리</h3>
+                    <div class="code-example">
+                        <pre>const { Worker } = require('worker_threads');
+
+const worker = new Worker('./worker.js');
+worker.postMessage({ data: 'heavy task' });</pre>
+                    </div>
+                    
+                    <h3>Cluster 모듈을 이용한 멀티 코어 활용</h3>
+                    <div class="code-example">
+                        <pre>const cluster = require('cluster');
+const numCPUs = require('os').cpus().length;
+
+if (cluster.isMaster) {
+    for (let i = 0; i < numCPUs; i++) {
+        cluster.fork();
+    }
+} else {
+    // 워커 프로세스
+}</pre>
+                    </div>
+                `,
+                problem: "cluster 모듈을 사용하여 CPU 코어 수만큼 워커 프로세스를 생성하는 코드를 작성하세요.",
+                solution: `const cluster = require('cluster');
+const numCPUs = require('os').cpus().length;
+
+if (cluster.isMaster) {
+    for (let i = 0; i < numCPUs; i++) {
+        cluster.fork();
+    }
+}`,
+                test: (code) => {
+                    try {
+                        const result = code.trim();
+                        return result.includes("cluster.isMaster") && 
+                               result.includes("cluster.fork");
+                    } catch (e) {
+                        return false;
+                    }
+                }
+            },
+            {
+                title: "에러 처리 및 로깅 전략",
+                content: `
+                    <h3>비동기 에러 핸들링 모범 사례</h3>
+                    <div class="code-example">
+                        <pre>async function handleError() {
+    try {
+        await asyncOperation();
+    } catch (error) {
+        console.error('에러 발생:', error);
+        // 에러 처리 로직
+    }
+}</pre>
+                    </div>
+                    
+                    <h3>Centralized Error Handling 미들웨어</h3>
+                    <div class="code-example">
+                        <pre>app.use((err, req, res, next) => {
+    console.error(err.stack);
+    res.status(500).send('Something broke!');
+});</pre>
+                    </div>
+                    
+                    <h3>Winston을 이용한 체계적인 로깅</h3>
+                    <div class="code-example">
+                        <pre>const winston = require('winston');
+
+const logger = winston.createLogger({
+    level: 'info',
+    format: winston.format.json(),
+    transports: [
+        new winston.transports.File({ filename: 'error.log' })
+    ]
+});</pre>
+                    </div>
+                `,
+                problem: "Express.js에서 에러 처리 미들웨어를 작성하세요. 에러가 발생하면 상태 코드 500과 'Something broke!' 메시지를 응답하세요.",
+                solution: `app.use((err, req, res, next) => {
+    console.error(err.stack);
+    res.status(500).send('Something broke!');
+});`,
+                test: (code) => {
+                    try {
+                        const result = code.trim();
+                        return result.includes("app.use") && 
+                               result.includes("err, req, res, next") && 
+                               result.includes("res.status(500)");
+                    } catch (e) {
+                        return false;
+                    }
+                }
+            },
+            {
+                title: "캐싱 (Caching) 및 성능 최적화 기법",
+                content: `
+                    <h3>Redis를 활용한 In-memory 캐싱 구현</h3>
+                    <div class="code-example">
+                        <pre>const redis = require('redis');
+const client = redis.createClient();
+
+await client.set('key', 'value');
+const value = await client.get('key');</pre>
+                    </div>
+                    
+                    <h3>HTTP 캐싱 헤더 (Etag, Cache-Control) 설정</h3>
+                    <div class="code-example">
+                        <pre>res.set({
+    'Cache-Control': 'public, max-age=3600',
+    'ETag': 'etag-value'
+});</pre>
+                    </div>
+                    
+                    <h3>코드 레벨 최적화 팁</h3>
+                    <ul style="margin-left: 20px; margin-top: 10px;">
+                        <li>불필요한 반복문 제거</li>
+                        <li>메모이제이션 활용</li>
+                        <li>지연 로딩(Lazy Loading) 적용</li>
+                    </ul>
+                `,
+                problem: "Express.js에서 응답 헤더에 'Cache-Control: public, max-age=3600'을 설정하는 코드를 작성하세요.",
+                solution: `res.set('Cache-Control', 'public, max-age=3600');`,
+                test: (code) => {
+                    try {
+                        const result = code.trim();
+                        return result.includes("res.set") && 
+                               result.includes("Cache-Control");
+                    } catch (e) {
+                        return false;
+                    }
+                }
+            },
+            {
+                title: "단위 및 통합 테스트 (Testing)",
+                content: `
+                    <h3>Jest/Mocha 프레임워크 사용법</h3>
+                    <div class="code-example">
+                        <pre>// Jest 예시
+describe('User API', () => {
+    test('should create a user', async () => {
+        const user = await createUser({ name: 'John' });
+        expect(user.name).toBe('John');
+    });
+});</pre>
+                    </div>
+                    
+                    <h3>Supertest를 이용한 HTTP 요청 테스트</h3>
+                    <div class="code-example">
+                        <pre>const request = require('supertest');
+const app = require('./app');
+
+test('GET /users', async () => {
+    const res = await request(app)
+        .get('/users')
+        .expect(200);
+});</pre>
+                    </div>
+                    
+                    <h3>TDD (Test-Driven Development) 기본 접근법</h3>
+                    <p>테스트를 먼저 작성하고, 그 테스트를 통과하는 코드를 작성하는 방법입니다.</p>
+                `,
+                problem: "Jest를 사용하여 'should return 200'이라는 이름으로 GET 요청 테스트를 작성하세요. '/api/test' 엔드포인트를 테스트하고 상태 코드 200을 기대하세요.",
+                solution: `const request = require('supertest');
+const app = require('./app');
+
+test('should return 200', async () => {
+    const res = await request(app)
+        .get('/api/test')
+        .expect(200);
+});`,
+                test: (code) => {
+                    try {
+                        const result = code.trim();
+                        return result.includes("test(") && 
+                               result.includes(".get('/api/test'") && 
+                               result.includes(".expect(200)");
+                    } catch (e) {
+                        return false;
+                    }
+                }
+            },
+            {
+                title: "배포 자동화 및 프로세스 관리",
+                content: `
+                    <h3>Docker를 이용한 Node.js 애플리케이션 컨테이너화</h3>
+                    <div class="code-example">
+                        <pre># Dockerfile
+FROM node:18
+WORKDIR /app
+COPY package*.json ./
+RUN npm install
+COPY . .
+EXPOSE 3000
+CMD ["node", "index.js"]</pre>
+                    </div>
+                    
+                    <h3>PM2를 이용한 프로세스 관리</h3>
+                    <div class="code-example">
+                        <pre># PM2 시작
+pm2 start app.js
+
+# PM2 모니터링
+pm2 monit
+
+# PM2 재시작
+pm2 restart app</pre>
+                    </div>
+                    
+                    <h3>무중단 배포 (Zero Downtime Deployment) 전략</h3>
+                    <p>PM2의 클러스터 모드를 사용하여 무중단 배포를 구현할 수 있습니다.</p>
+                `,
+                problem: "Node.js 애플리케이션을 실행하는 기본 Dockerfile을 작성하세요. (node:18 이미지 사용, index.js 실행)",
+                solution: `FROM node:18
+WORKDIR /app
+COPY package*.json ./
+RUN npm install
+COPY . .
+EXPOSE 3000
+CMD ["node", "index.js"]`,
+                test: (code) => {
+                    try {
+                        const result = code.trim();
+                        return result.includes("FROM node:18") && 
+                               result.includes("WORKDIR") && 
+                               result.includes("CMD");
+                    } catch (e) {
+                        return false;
+                    }
+                }
+            },
+            {
+                title: "실제 서비스 배포 및 모니터링",
+                content: `
+                    <h3>AWS/GCP/Azure 클라우드 환경에 배포하기</h3>
+                    <p><strong>AWS:</strong> EC2, Elastic Beanstalk, Lambda</p>
+                    <p><strong>GCP:</strong> Compute Engine, App Engine, Cloud Functions</p>
+                    <p><strong>Azure:</strong> Virtual Machines, App Service, Functions</p>
+                    
+                    <h3>Prometheus/Grafana를 활용한 서비스 모니터링 구축</h3>
+                    <p>Prometheus는 메트릭을 수집하고, Grafana는 이를 시각화합니다.</p>
+                    
+                    <div class="code-example">
+                        <pre>// Prometheus 메트릭 수집
+const prometheus = require('prom-client');
+
+const httpRequestDuration = new prometheus.Histogram({
+    name: 'http_request_duration_seconds',
+    help: 'Duration of HTTP requests in seconds'
+});</pre>
+                    </div>
+                `,
+                problem: "prom-client를 사용하여 HTTP 요청 지속 시간을 측정하는 히스토그램 메트릭을 생성하는 코드를 작성하세요. (이름: 'http_request_duration_seconds')",
+                solution: `const prometheus = require('prom-client');
+
+const httpRequestDuration = new prometheus.Histogram({
+    name: 'http_request_duration_seconds',
+    help: 'Duration of HTTP requests in seconds'
+});`,
+                test: (code) => {
+                    try {
+                        const result = code.trim();
+                        return result.includes("prometheus.Histogram") && 
+                               result.includes("http_request_duration_seconds");
+                    } catch (e) {
+                        return false;
+                    }
+                }
+            }
+        ];
+
+        // 메인 화면 표시
+        function showMainScreen() {
+            document.getElementById('mainScreen').style.display = 'block';
+            document.getElementById('lessonScreens').innerHTML = '';
+            window.scrollTo(0, 0);
+        }
+
+        // 강의 화면 표시
+        function showLesson(chapterNum) {
+            const lesson = lessons[chapterNum - 1];
+            if (!lesson) return;
+
+            document.getElementById('mainScreen').style.display = 'none';
+            
+            const lessonHTML = `
+                <div class="lesson-screen active">
+                    <div class="lesson-header">
+                        <h2>${lesson.title}</h2>
+                        <button class="back-button" onclick="showMainScreen()">← 목차로</button>
+                    </div>
+                    
+                    <div class="lesson-content">
+                        ${lesson.content}
+                    </div>
+                    
+                    <div class="practice-section">
+                        <h3>📝 실습 문제</h3>
+                        <div class="problem">
+                            <p>${lesson.problem}</p>
+                        </div>
+                        
+                        <textarea class="code-editor" id="codeEditor${chapterNum}" placeholder="여기에 코드를 작성하세요..."></textarea>
+                        
+                        <button class="run-button" onclick="runCode(${chapterNum})">코드 실행</button>
+                        
+                        <div class="output" id="output${chapterNum}">실행 결과가 여기에 표시됩니다...</div>
+                        
+                        <div class="success-message" id="success${chapterNum}">
+                            ✅ 정답입니다! 다음 장으로 넘어갈 수 있습니다.
+                        </div>
+                        
+                        <div class="error-message" id="error${chapterNum}">
+                            ❌ 아직 정답이 아닙니다. 다시 시도해보세요!
+                        </div>
+                        
+                        <button class="next-button" id="nextButton${chapterNum}" onclick="nextChapter(${chapterNum})">
+                            다음 장으로 →
+                        </button>
+                    </div>
+                </div>
+            `;
+            
+            document.getElementById('lessonScreens').innerHTML = lessonHTML;
+            window.scrollTo(0, 0);
+        }
+
+        // 코드 실행 (간단한 검증)
+        function runCode(chapterNum) {
+            const code = document.getElementById(`codeEditor${chapterNum}`).value;
+            const output = document.getElementById(`output${chapterNum}`);
+            const successMsg = document.getElementById(`success${chapterNum}`);
+            const errorMsg = document.getElementById(`error${chapterNum}`);
+            const nextBtn = document.getElementById(`nextButton${chapterNum}`);
+            const lesson = lessons[chapterNum - 1];
+
+            // 출력 초기화
+            output.textContent = '';
+            successMsg.classList.remove('show');
+            errorMsg.classList.remove('show');
+            nextBtn.classList.remove('show');
+
+            // 간단한 코드 실행 시뮬레이션
+            try {
+                // 실제 Node.js 실행은 불가능하므로, 간단한 검증만 수행
+                const lines = code.split('\n').filter(line => line.trim() !== '');
+                
+                if (lines.length === 0) {
+                    output.textContent = '코드를 입력해주세요.';
+                    return;
+                }
+
+                // 코드 검증
+                if (lesson.test(code)) {
+                    successMsg.classList.add('show');
+                    nextBtn.classList.add('show');
+                    output.textContent = '✅ 코드가 올바르게 작성되었습니다!';
+                } else {
+                    errorMsg.classList.add('show');
+                    output.textContent = '코드를 실행했습니다. 정답을 확인해주세요.';
+                }
+            } catch (e) {
+                errorMsg.classList.add('show');
+                output.textContent = '오류: ' + e.message;
+            }
+        }
+
+        // 다음 장으로 이동
+        function nextChapter(currentChapter) {
+            if (currentChapter < lessons.length) {
+                showLesson(currentChapter + 1);
+            } else {
+                alert('모든 강의를 완료했습니다! 🎉');
+                showMainScreen();
+            }
+        }
+    </script>
+</body>
+</html>
+

@@ -1,0 +1,3231 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CS리더스관리사 기초 강의</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #4ECDC4 0%, #44A08D 100%);
+            min-height: 100vh;
+            padding: 20px;
+            padding-left: 180px;
+            padding-right: 180px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        /* 좌우 고정 배너 */
+        .side-banner {
+            position: fixed;
+            top: 50%;
+            transform: translateY(-50%);
+            z-index: 1000;
+            width: 150px;
+            transition: opacity 0.3s ease;
+        }
+
+        .side-banner.left {
+            left: 10px;
+        }
+
+        .side-banner.right {
+            right: 10px;
+        }
+
+        .side-banner img {
+            width: 100%;
+            height: auto;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+            cursor: pointer;
+            transition: transform 0.3s ease;
+        }
+
+        .side-banner img:hover {
+            transform: scale(1.05);
+        }
+
+        /* 모바일에서는 배너 숨김 */
+        @media (max-width: 1400px) {
+            body {
+                padding-left: 20px;
+                padding-right: 20px;
+            }
+            .side-banner {
+                display: none;
+            }
+        }
+
+        /* 네비게이션 바 */
+        .navbar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            z-index: 2000;
+            padding: 15px 0;
+        }
+
+        .navbar-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 30px;
+        }
+
+        .navbar a {
+            text-decoration: none;
+            color: #333;
+            font-size: 16px;
+            font-weight: 500;
+            padding: 8px 15px;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+        }
+
+        .navbar a:hover {
+            background: #f0f0f0;
+            transform: translateY(-2px);
+        }
+
+        .navbar a.active {
+            background: #667eea;
+            color: white;
+        }
+
+        /* 메인 화면 */
+        .main-screen {
+            text-align: center;
+            padding: 100px 20px 50px;
+        }
+
+        .main-screen h1 {
+            font-size: 3em;
+            color: white;
+            margin-bottom: 20px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .main-screen p {
+            font-size: 1.3em;
+            color: rgba(255,255,255,0.9);
+            margin-bottom: 50px;
+        }
+
+        /* 챕터 그리드 */
+        .chapter-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 25px;
+            margin-top: 40px;
+        }
+
+        .chapter-box {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .chapter-box::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+            transition: left 0.5s;
+        }
+
+        .chapter-box:hover::before {
+            left: 100%;
+        }
+
+        .chapter-box:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.3);
+        }
+
+        .chapter-icon {
+            font-size: 3em;
+            margin-bottom: 15px;
+        }
+
+        .chapter-number {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background: #667eea;
+            color: white;
+            width: 35px;
+            height: 35px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 1.1em;
+        }
+
+        .chapter-box h2 {
+            color: #667eea;
+            font-size: 1.4em;
+            margin-bottom: 10px;
+        }
+
+        .chapter-box p {
+            color: #666;
+            font-size: 0.95em;
+            line-height: 1.5;
+        }
+
+        /* 레슨 화면 */
+        .lesson-screen {
+            display: none;
+            background: white;
+            border-radius: 15px;
+            padding: 40px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            margin-top: 20px;
+        }
+
+        .lesson-screen.active {
+            display: block;
+        }
+
+        .lesson-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 2px solid #eee;
+        }
+
+        .lesson-header h2 {
+            color: #667eea;
+            font-size: 2em;
+        }
+
+        .back-button {
+            background: #667eea;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1em;
+            transition: background 0.3s;
+        }
+
+        .back-button:hover {
+            background: #5568d3;
+        }
+
+        .lesson-content {
+            line-height: 1.8;
+            color: #333;
+            font-size: 1.1em;
+            margin-bottom: 40px;
+        }
+
+        .lesson-content h3 {
+            color: #764ba2;
+            margin-top: 30px;
+            margin-bottom: 15px;
+            font-size: 1.5em;
+        }
+
+        .lesson-content p {
+            margin-bottom: 15px;
+        }
+
+        .lesson-content code {
+            background: #f4f4f4;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-family: 'Courier New', monospace;
+            color: #e83e8c;
+        }
+
+        .code-example {
+            background: #2d2d2d;
+            color: #f8f8f2;
+            padding: 20px;
+            border-radius: 8px;
+            margin: 20px 0;
+            overflow-x: auto;
+            font-family: 'Courier New', monospace;
+        }
+
+        .code-example pre {
+            margin: 0;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+        }
+
+        /* 실습 영역 */
+        .practice-section {
+            background: #f8f9fa;
+            border-radius: 10px;
+            padding: 30px;
+            margin-top: 40px;
+            border-left: 5px solid #667eea;
+        }
+
+        .practice-section h3 {
+            color: #667eea;
+            margin-bottom: 20px;
+            font-size: 1.5em;
+        }
+
+        .problem {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+
+        .problem p {
+            color: #333;
+            font-size: 1.1em;
+            line-height: 1.6;
+        }
+        
+        .question-option {
+            display: block;
+            margin: 8px 0;
+            cursor: pointer;
+            padding: 12px;
+            border-radius: 5px;
+            background: #fff;
+            border: 2px solid #ddd;
+            transition: all 0.3s;
+        }
+        
+        .question-option:hover {
+            background: #f0f0f0;
+            border-color: #667eea;
+        }
+        
+        .question-option input[type="radio"] {
+            margin-right: 10px;
+            cursor: pointer;
+        }
+        
+        .question-option input[type="radio"]:checked + label {
+            font-weight: bold;
+            color: #667eea;
+        }
+        
+        .question-result {
+            margin-top: 10px;
+            padding: 12px;
+            border-radius: 5px;
+            display: none;
+        }
+        
+        .question-result.correct {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+        
+        .question-result.incorrect {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+
+        .code-editor {
+            width: 100%;
+            min-height: 150px;
+            padding: 15px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            font-family: 'Courier New', monospace;
+            font-size: 14px;
+            resize: vertical;
+            margin-bottom: 15px;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+        }
+
+        .code-editor:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        .run-button {
+            background: #28a745;
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1em;
+            margin-right: 10px;
+            transition: background 0.3s;
+        }
+
+        .run-button:hover {
+            background: #218838;
+        }
+
+        .output {
+            background: #2d2d2d;
+            color: #f8f8f2;
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 15px;
+            min-height: 50px;
+            font-family: 'Courier New', monospace;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+        }
+
+        .success-message {
+            background: #d4edda;
+            color: #155724;
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 15px;
+            display: none;
+        }
+
+        .success-message.show {
+            display: block;
+        }
+
+        .next-button {
+            background: #667eea;
+            color: white;
+            border: none;
+            padding: 15px 40px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1.1em;
+            margin-top: 20px;
+            display: none;
+            transition: background 0.3s;
+        }
+
+        .next-button.show {
+            display: inline-block;
+        }
+
+        .next-button:hover {
+            background: #5568d3;
+        }
+
+        .error-message {
+            background: #f8d7da;
+            color: #721c24;
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 15px;
+            display: none;
+        }
+
+        .error-message.show {
+            display: block;
+        }
+    </style>
+</head>
+<body>
+    <!-- 네비게이션 바 -->
+    <nav class="navbar">
+        <div class="navbar-content">
+            <a href="index.html">홈</a>
+            <a href="webdesign.html">웹디자인개발기능사</a>
+            <a href="cs.html" class="active">CS리더스관리사</a>
+            <a href="javascript.html">JavaScript</a>
+            <a href="node.html">Node.js</a>
+            <a href="python.html">Python</a>
+            <a href="kotlin.html">Kotlin</a>
+        </div>
+    </nav>
+
+    <!-- 좌측 배너 -->
+    <div class="side-banner left" id="leftBanner">
+        <img src="images/wecandeo.jpg" alt="WeCanDo 배너" onclick="window.open('https://www.wecandeo.com', '_blank')">
+    </div>
+
+    <!-- 우측 배너 -->
+    <div class="side-banner right" id="rightBanner">
+        <img src="images/malgnsoft.jpg" alt="MalgnSoft 배너" onclick="window.open('https://www.malgnsoft.com', '_blank')">
+    </div>
+
+    <!-- 메인 화면 -->
+    <div class="container">
+        <div class="main-screen" id="mainScreen">
+            <h1>💼 CS리더스관리사 기초 강의</h1>
+            <p>고객 서비스 전문가가 되기 위한 기초를 탄탄히 다지세요!</p>
+            
+            <div class="chapter-grid" id="chapterGrid">
+                <!-- 챕터 박스들은 JavaScript로 동적 생성 -->
+            </div>
+        </div>
+
+        <!-- 레슨 화면 -->
+        <div class="lesson-screen" id="lessonScreen">
+            <div class="lesson-header">
+                <h2 id="lessonTitle"></h2>
+                <button class="back-button" onclick="showMainScreen()">목록으로</button>
+            </div>
+            <div class="lesson-content" id="lessonContent"></div>
+            <div class="practice-section" id="practiceSection"></div>
+        </div>
+    </div>
+
+    <script>
+        // 챕터 데이터
+        const chapters = [
+            { number: 1, icon: "📚", title: "오리엔테이션", desc: "자격증 소개 및 학습 전략" },
+            { number: 2, icon: "📖", title: "CS 관리 개론", desc: "CS 관리의 개념과 프로세스" },
+            { number: 3, icon: "💼", title: "CS 경영", desc: "CS 경영의 기본 개념과 사례" },
+            { number: 4, icon: "🎯", title: "CS 의식", desc: "고객의 정의와 니즈 파악" },
+            { number: 5, icon: "🤝", title: "고객관계 관리 (CRM)", desc: "CRM 개념과 인간관계 개선" },
+            { number: 6, icon: "⭐", title: "서비스의 정의", desc: "서비스의 어원과 특징" },
+            { number: 7, icon: "👔", title: "서비스 리더십", desc: "리더십 핵심 요소와 역할" },
+            { number: 8, icon: "🔧", title: "서비스 기법", desc: "서비스 청사진과 MOT" },
+            { number: 9, icon: "🎨", title: "서비스 차별화", desc: "마케팅 전략과 서비스 회복" },
+            { number: 10, icon: "📊", title: "서비스 차별화 사례 연구", desc: "고객인지 프로그램과 사례" },
+            { number: 11, icon: "✅", title: "서비스 품질 관리", desc: "품질 개념과 향상 방안" },
+            { number: 12, icon: "📈", title: "CS 평가 조사", desc: "고객 만족도 측정과 평가" },
+            { number: 13, icon: "💡", title: "CS 컨설팅", desc: "품질관리 컨설팅과 트렌드" },
+            { number: 14, icon: "🚀", title: "CS 혁신 전략", desc: "고객 분석 및 경험 관리" },
+            { number: 15, icon: "📞", title: "전화 서비스", desc: "전화응대와 콜센터 운영" },
+            { number: 16, icon: "💬", title: "고객 상담", desc: "상황별 응대 기법과 파워 코칭" },
+            { number: 17, icon: "🙏", title: "예절과 에티켓", desc: "이미지 컨설팅과 인사 매너" },
+            { number: 18, icon: "🌐", title: "비즈니스 응대", desc: "비즈니스 매너와 다문화 이해" },
+            { number: 19, icon: "❤️", title: "고객 감동", desc: "고객 지원과 피해 구제" },
+            { number: 20, icon: "😊", title: "고객 만족", desc: "고객 사후관리와 데이터 관리" },
+            { number: 21, icon: "✨", title: "고품위 서비스", desc: "보고업무와 사무행정 실무" },
+            { number: 22, icon: "📢", title: "프리젠테이션", desc: "강의 기법과 프로그램 활용" },
+            { number: 23, icon: "💻", title: "인터넷 활용", desc: "e-비즈니스와 통신판매" },
+            { number: 24, icon: "🎓", title: "시험 대비 특강", desc: "핵심 요약과 모의고사" }
+        ];
+
+        // 챕터 그리드 생성
+        function createChapterGrid() {
+            const grid = document.getElementById('chapterGrid');
+            grid.innerHTML = chapters.map(ch => `
+                <div class="chapter-box" onclick="showLesson(${ch.number})">
+                    <div class="chapter-icon">${ch.icon}</div>
+                    <div class="chapter-number">${ch.number}</div>
+                    <h2>${ch.title}</h2>
+                    <p>${ch.desc}</p>
+                </div>
+            `).join('');
+        }
+
+        // 레슨 데이터
+        const lessons = [
+            {
+                title: "오리엔테이션",
+                content: `
+                    <h3>CS리더스관리사 자격증이란?</h3>
+                    <p>CS리더스관리사(Customer Service Leader Manager)는 고객 서비스 전문가로서 고객 만족을 극대화하고 
+                    조직의 서비스 품질을 향상시키는 역할을 수행하는 전문 인력을 양성하기 위한 자격증입니다. 
+                    고객 중심 경영 시대에 필수적인 CS 전문 지식과 실무 능력을 갖춘 인재를 인증하는 국가공인 자격증입니다.</p>
+                    
+                    <p>CS리더스관리사는 <strong>고객 서비스 전략 수립, 품질 관리, 고객 상담, 서비스 혁신</strong> 등 
+                    다양한 분야에서 전문성을 발휘할 수 있습니다. 고객 서비스가 경쟁력의 핵심이 되는 현대 기업 환경에서 
+                    매우 중요한 역할을 담당하며, 다양한 산업 분야에서 수요가 급증하고 있습니다.</p>
+                    
+                    <h3>자격증의 활용 방안</h3>
+                    <p><strong>1. 취업 및 이직:</strong></p>
+                    <ul style="margin-left: 20px; margin-top: 10px;">
+                        <li>고객 서비스 전문 기업 및 콜센터 채용 시 우대</li>
+                        <li>서비스 업계의 관리자 및 리더십 역할로의 승진 기회</li>
+                        <li>이직 시 전문성 입증으로 경쟁력 향상</li>
+                    </ul>
+                    
+                    <p><strong>2. 경력 발전:</strong></p>
+                    <ul style="margin-left: 20px; margin-top: 10px;">
+                        <li>CS 관리자, 서비스 리더, 고객 만족 담당자 등 전문 직무로의 진출</li>
+                        <li>서비스 품질 관리 및 개선 프로젝트 리더 역할 수행</li>
+                        <li>고객 서비스 교육 및 컨설팅 전문가로 활동</li>
+                    </ul>
+                    
+                    <p><strong>3. 실무 적용:</strong></p>
+                    <ul style="margin-left: 20px; margin-top: 10px;">
+                        <li>현재 업무에서 고객 서비스 품질 향상에 활용</li>
+                        <li>팀의 CS 역량 강화 및 교육 기획</li>
+                        <li>고객 만족도 제고를 통한 성과 창출</li>
+                    </ul>
+                    
+                    <h3>시험 안내</h3>
+                    <p><strong>시험 과목 (3과목):</strong></p>
+                    <ul style="margin-left: 20px; margin-top: 10px;">
+                        <li><strong>제1과목: CS개론</strong> - CS 관리, 경영, 의식, CRM, 서비스 정의, 서비스 리더십</li>
+                        <li><strong>제2과목: CS전략론</strong> - 서비스 기법, 차별화, 품질 관리, 평가 조사, 컨설팅, 혁신 전략</li>
+                        <li><strong>제3과목: 고객관리 실무론</strong> - 전화 서비스, 고객 상담, 예절, 비즈니스 응대, 고객 감동/만족, 고품위 서비스, 프리젠테이션, 인터넷 활용</li>
+                    </ul>
+                    
+                    <p><strong>시험 형식:</strong></p>
+                    <ul style="margin-left: 20px; margin-top: 10px;">
+                        <li>필기 시험: 객관식 100문제 (각 과목 30~35문제)</li>
+                        <li>시험 시간: 100분</li>
+                        <li>합격 기준: 100점 만점에 60점 이상 (과목별 40점 이상)</li>
+                    </ul>
+                    
+                    <h3>학습 전략</h3>
+                    <p><strong>1. 체계적인 학습 계획:</strong></p>
+                    <ul style="margin-left: 20px; margin-top: 10px;">
+                        <li>총 24개 강의를 순서대로 학습하며 기초 개념을 탄탄히 다집니다</li>
+                        <li>각 과목별 핵심 개념을 이해하고 실제 사례와 연결하여 학습합니다</li>
+                        <li>주 2~3회 강의 학습과 복습을 통해 꾸준히 실력을 향상시킵니다</li>
+                    </ul>
+                    
+                    <p><strong>2. 실무 중심 학습:</strong></p>
+                    <ul style="margin-left: 20px; margin-top: 10px;">
+                        <li>이론만이 아닌 실제 비즈니스 상황에 적용할 수 있는 실무 지식을 습득합니다</li>
+                        <li>각 강의의 사례 연구를 통해 이해도를 높입니다</li>
+                        <li>연습문제를 통해 핵심 개념을 확인하고 복습합니다</li>
+                    </ul>
+                    
+                    <p><strong>3. 반복 학습과 정리:</strong></p>
+                    <ul style="margin-left: 20px; margin-top: 10px;">
+                        <li>학습한 내용을 요약 정리하여 자신만의 노트를 만듭니다</li>
+                        <li>핵심 용어와 개념을 정기적으로 복습합니다</li>
+                        <li>기출문제를 풀어보며 출제 패턴을 파악합니다</li>
+                    </ul>
+                    
+                    <h3>학습 시 주의사항</h3>
+                    <ul style="margin-left: 20px; margin-top: 10px;">
+                        <li><strong>기초 개념 이해:</strong> 각 과목의 기본 개념을 명확히 이해하는 것이 가장 중요합니다</li>
+                        <li><strong>용어 정리:</strong> CS 전문 용어와 개념을 정확히 이해하고 구분할 수 있어야 합니다</li>
+                        <li><strong>사례 학습:</strong> 이론과 실제 사례를 연결하여 학습하면 이해도가 크게 향상됩니다</li>
+                        <li><strong>실무 연결:</strong> 학습한 내용을 자신의 업무나 경험과 연결하여 생각해봅니다</li>
+                        <li><strong>꾸준한 학습:</strong> 하루에 많은 양을 학습하기보다는 매일 조금씩 꾸준히 학습하는 것이 효과적입니다</li>
+                    </ul>
+                `,
+                questions: [] // 오리엔테이션은 문제 없음
+            },
+            {
+                title: "CS 관리 개론",
+                content: `
+                    <h3>CS 관리의 개념</h3>
+                    <p>CS(Customer Service) 관리란 고객 서비스를 체계적으로 기획, 실행, 평가, 개선하는 전 과정을 의미합니다. 
+                    기업이 고객에게 제공하는 모든 서비스 활동을 효율적으로 관리하여 고객 만족도를 향상시키고 
+                    기업의 경쟁력을 강화하는 것이 목표입니다.</p>
+                    
+                    <p>CS 관리는 단순한 고객 응대를 넘어서 <strong>고객 관계 관리, 서비스 품질 관리, 고객 만족도 향상, 
+                    서비스 혁신</strong> 등 전략적인 관점에서 접근해야 합니다. 고객 중심 경영 시대에 기업의 핵심 경쟁력이 
+                    되었으며, 체계적인 CS 관리 시스템 구축이 필수적입니다.</p>
+                    
+                    <h3>CS 관리의 역사</h3>
+                    <p><strong>1. 제조업 중심 시대 (1950~1970년대):</strong></p>
+                    <ul style="margin-left: 20px; margin-top: 10px;">
+                        <li>제품의 품질과 가격이 경쟁력의 핵심이었던 시기</li>
+                        <li>CS는 제품 판매 후 A/S 정도에 그침</li>
+                        <li>고객 서비스의 개념이 체계화되지 않음</li>
+                    </ul>
+                    
+                    <p><strong>2. 마케팅 시대 (1980~1990년대):</strong></p>
+                    <ul style="margin-left: 20px; margin-top: 10px;">
+                        <li>고객 만족 개념의 등장</li>
+                        <li>TQM(Total Quality Management) 등의 품질 관리 방법론 도입</li>
+                        <li>서비스 마케팅의 중요성 부각</li>
+                    </ul>
+                    
+                    <p><strong>3. 고객 중심 시대 (2000년대~현재):</strong></p>
+                    <ul style="margin-left: 20px; margin-top: 10px;">
+                        <li>CRM(Customer Relationship Management) 시스템의 도입</li>
+                        <li>고객 경험(CX) 관리의 중요성 강조</li>
+                        <li>데이터 기반 고객 분석 및 개인화 서비스</li>
+                        <li>디지털 전환을 통한 고객 접점 확대</li>
+                    </ul>
+                    
+                    <h3>CS 관리 프로세스 구조</h3>
+                    <p><strong>1. 기획 단계 (Plan):</strong></p>
+                    <ul style="margin-left: 20px; margin-top: 10px;">
+                        <li>고객 니즈 조사 및 분석</li>
+                        <li>서비스 목표 및 전략 수립</li>
+                        <li>서비스 표준 및 가이드라인 작성</li>
+                        <li>예산 및 인력 계획</li>
+                    </ul>
+                    
+                    <p><strong>2. 실행 단계 (Do):</strong></p>
+                    <ul style="margin-left: 20px; margin-top: 10px;">
+                        <li>서비스 교육 및 역량 강화</li>
+                        <li>서비스 프로세스 실행</li>
+                        <li>일상적인 CS 활동 수행</li>
+                        <li>서비스 품질 모니터링</li>
+                    </ul>
+                    
+                    <p><strong>3. 평가 단계 (Check):</strong></p>
+                    <ul style="margin-left: 20px; margin-top: 10px;">
+                        <li>고객 만족도 조사 및 측정</li>
+                        <li>서비스 품질 평가</li>
+                        <li>문제점 및 개선점 파악</li>
+                        <li>성과 분석 및 보고</li>
+                    </ul>
+                    
+                    <p><strong>4. 개선 단계 (Action):</strong></p>
+                    <ul style="margin-left: 20px; margin-top: 10px;">
+                        <li>개선 방안 도출 및 실행</li>
+                        <li>표준 프로세스 개선</li>
+                        <li>교육 프로그램 보완</li>
+                        <li>다시 기획 단계로 환류 (PDCA 사이클)</li>
+                    </ul>
+                    
+                    <h3>PDCA 사이클의 중요성</h3>
+                    <p>PDCA(Plan-Do-Check-Action) 사이클은 CS 관리의 핵심 프로세스입니다. 
+                    지속적인 개선을 위해 계획-실행-평가-개선의 과정을 반복하여 서비스 품질을 지속적으로 향상시킵니다.</p>
+                    
+                    <h3>CS 관리의 효과</h3>
+                    <ul style="margin-left: 20px; margin-top: 10px;">
+                        <li><strong>고객 만족도 향상:</strong> 체계적인 서비스 관리로 고객 만족도가 크게 향상됩니다</li>
+                        <li><strong>고객 유지율 증가:</strong> 만족한 고객은 재구매 및 추천 의향이 높아집니다</li>
+                        <li><strong>기업 이미지 개선:</strong> 우수한 CS는 기업 브랜드 가치를 높입니다</li>
+                        <li><strong>매출 증대:</strong> 고객 만족도 향상은 직접적으로 매출 증대로 연결됩니다</li>
+                        <li><strong>비용 절감:</strong> 체계적인 관리로 서비스 실패 비용을 줄일 수 있습니다</li>
+                    </ul>
+                `,
+                questions: [
+                    {
+                        question: "CS 관리의 PDCA 사이클에서 C는 무엇을 의미하는가?",
+                        options: ["Check (평가)", "Control (통제)", "Create (창조)", "Calculate (계산)"],
+                        correct: 0
+                    },
+                    {
+                        question: "CS 관리의 4단계 프로세스 순서로 올바른 것은?",
+                        options: ["기획-실행-평가-개선", "기획-평가-실행-개선", "실행-기획-평가-개선", "평가-기획-실행-개선"],
+                        correct: 0
+                    },
+                    {
+                        question: "PDCA 사이클에서 고객 피드백 수집은 어느 단계에서 주로 이루어지는가?",
+                        options: ["Plan (기획)", "Do (실행)", "Check (평가)", "Action (개선)"],
+                        correct: 2
+                    }
+                ]
+            },
+            {
+                title: "CS 경영",
+                content: `
+                    <h3>CS 경영의 기본 개념</h3>
+                    <p>CS 경영(Customer Service Management)은 고객 서비스를 기업 경영의 핵심 전략으로 활용하여 
+                    고객 만족을 극대화하고 기업 가치를 창출하는 경영 철학 및 방법론입니다. 
+                    단순한 고객 응대를 넘어서 고객과의 장기적인 관계를 구축하고 경쟁 우위를 확보하는 것이 목표입니다.</p>
+                    
+                    <p>CS 경영은 <strong>고객 중심 경영, 서비스 차별화, 고객 만족 경영, 관계 경영</strong> 등 
+                    다양한 경영 전략을 포괄합니다. 고객 서비스를 비용이 아닌 투자로 인식하고, 
+                    서비스 품질 향상을 통해 고객 유지율과 매출을 동시에 증대시키는 경영 방식을 의미합니다.</p>
+                    
+                    <h3>CS 경영의 핵심 요소</h3>
+                    <p><strong>1. 고객 중심 사고:</strong></p>
+                    <ul style="margin-left: 20px; margin-top: 10px;">
+                        <li>모든 경영 활동을 고객 관점에서 재설계</li>
+                        <li>고객 니즈를 우선시하는 조직 문화 구축</li>
+                        <li>고객 경험을 최우선 가치로 설정</li>
+                    </ul>
+                    
+                    <p><strong>2. 서비스 품질 관리:</strong></p>
+                    <ul style="margin-left: 20px; margin-top: 10px;">
+                        <li>일관된 서비스 표준 수립 및 실행</li>
+                        <li>지속적인 품질 모니터링 및 개선</li>
+                        <li>서비스 실패에 대한 즉각적인 대응</li>
+                    </ul>
+                    
+                    <p><strong>3. 고객 관계 관리:</strong></p>
+                    <ul style="margin-left: 20px; margin-top: 10px;">
+                        <li>고객 정보를 체계적으로 관리</li>
+                        <li>개인화된 서비스 제공</li>
+                        <li>장기적인 고객 관계 구축</li>
+                    </ul>
+                    
+                    <h3>마케팅 4P와 CS 경영</h3>
+                    <p>마케팅 4P는 제품(Product), 가격(Price), 유통(Place), 촉진(Promotion)으로 구성되며, 
+                    CS 경영에서는 특히 <strong>제품(서비스) 품질, 가격 정책, 고객 접점 관리, 고객 커뮤니케이션</strong>에 중점을 둡니다.</p>
+                    
+                    <p><strong>1. Product (제품/서비스):</strong></p>
+                    <ul style="margin-left: 20px; margin-top: 10px;">
+                        <li><strong>서비스 품질:</strong> 고객이 원하는 서비스 품질 제공</li>
+                        <li><strong>서비스 차별화:</strong> 경쟁사와 차별화된 서비스 개발</li>
+                        <li><strong>서비스 혁신:</strong> 새로운 서비스 개발 및 개선</li>
+                        <li><strong>브랜드:</strong> 서비스 브랜드 구축 및 관리</li>
+                        <li><strong>CS 경영 적용:</strong> 고객 니즈를 반영한 서비스 개발, 고객 피드백 기반 서비스 개선</li>
+                    </ul>
+                    
+                    <p><strong>2. Price (가격):</strong></p>
+                    <ul style="margin-left: 20px; margin-top: 10px;">
+                        <li><strong>가격 전략:</strong> 프리미엄 가격, 경쟁 가격, 침투 가격 등</li>
+                        <li><strong>가격 차별화:</strong> 고객 세분화에 따른 차등 가격</li>
+                        <li><strong>가격 할인:</strong> 프로모션, 멤버십 할인 등</li>
+                        <li><strong>CS 경영 적용:</strong> 고객 가치를 제공하는 공정한 가격, 만족도 대비 적정 가격 설정</li>
+                    </ul>
+                    
+                    <p><strong>3. Place (유통/채널):</strong></p>
+                    <ul style="margin-left: 20px; margin-top: 10px;">
+                        <li><strong>채널 선택:</strong> 온라인, 오프라인, 멀티채널</li>
+                        <li><strong>채널 관리:</strong> 각 채널의 특성에 맞는 서비스 제공</li>
+                        <li><strong>채널 통합:</strong> Omnichannel 전략으로 고객 경험 통합</li>
+                        <li><strong>CS 경영 적용:</strong> 고객 접점 관리, 편리한 접근성 제공, 모든 채널에서 일관된 서비스</li>
+                    </ul>
+                    
+                    <p><strong>4. Promotion (촉진/커뮤니케이션):</strong></p>
+                    <ul style="margin-left: 20px; margin-top: 10px;">
+                        <li><strong>광고:</strong> 대중매체, 디지털 광고 등</li>
+                        <li><strong>프로모션:</strong> 할인, 이벤트, 경품 등</li>
+                        <li><strong>PR (Public Relations):</strong> 언론 홍보, CSR 활동</li>
+                        <li><strong>인적 판매:</strong> 직원을 통한 직접 판매 및 서비스</li>
+                        <li><strong>CS 경영 적용:</strong> 고객과의 진정성 있는 커뮤니케이션, 구전 마케팅(고객 추천), 고객 경험 중심의 메시지</li>
+                    </ul>
+                    
+                    <p><strong>마케팅 4P의 한계와 4C:</strong></p>
+                    <ul style="margin-left: 20px; margin-top: 10px;">
+                        <li><strong>4P는 기업 중심:</strong> 기업의 관점에서 제품, 가격, 유통, 촉진을 결정</li>
+                        <li><strong>4C는 고객 중심:</strong> 고객의 관점에서 Customer Value, Cost, Convenience, Communication으로 재해석</li>
+                        <li><strong>CS 경영에서는 4C 관점:</strong> 고객 가치, 고객 비용, 편의성, 커뮤니케이션에 중점</li>
+                    </ul>
+                    
+                    <h3>CS 경영 사례 연구</h3>
+                    <p><strong>1. 스타벅스 (Starbucks):</strong></p>
+                    <ul style="margin-left: 20px; margin-top: 10px;">
+                        <li>고객 이름을 부르며 개인화된 서비스 제공</li>
+                        <li>고객과의 대화를 통한 친밀감 형성</li>
+                        <li>커피 이외의 경험 가치 제공</li>
+                        <li>고객 커뮤니티 형성으로 충성도 향상</li>
+                    </ul>
+                    
+                    <p><strong>2. 아마존 (Amazon):</strong></p>
+                    <ul style="margin-left: 20px; margin-top: 10px;">
+                        <li>무조건 반품 정책으로 고객 신뢰 확보</li>
+                        <li>빠른 배송 서비스로 고객 편의성 제공</li>
+                        <li>AI 기반 개인화 추천 서비스</li>
+                        <li>24시간 고객 지원 서비스</li>
+                    </ul>
+                    
+                    <p><strong>3. 디즈니 (Disney):</strong></p>
+                    <ul style="margin-left: 20px; margin-top: 10px;">
+                        <li>완벽한 서비스 스크립트와 표준화</li>
+                        <li>직원(캐스트 멤버)의 자긍심과 몰입도 향상</li>
+                        <li>고객 만족도 측정 및 개선 프로세스</li>
+                        <li>마법적인 경험(Magic Moment) 창출</li>
+                    </ul>
+                    
+                    <h3>CS 경영의 발전 가능성</h3>
+                    <p><strong>1. 디지털 전환:</strong></p>
+                    <ul style="margin-left: 20px; margin-top: 10px;">
+                        <li>AI 챗봇을 활용한 24시간 고객 지원</li>
+                        <li>빅데이터 분석을 통한 고객 인사이트 도출</li>
+                        <li>모바일 앱을 통한 셀프 서비스 제공</li>
+                    </ul>
+                    
+                    <p><strong>2. 개인화 서비스:</strong></p>
+                    <ul style="margin-left: 20px; margin-top: 10px;">
+                        <li>고객 데이터 분석을 통한 맞춤형 서비스</li>
+                        <li>1:1 마케팅 및 개인화된 상품 추천</li>
+                        <li>프리미엄 고객 대상 VIP 서비스</li>
+                    </ul>
+                    
+                    <p><strong>3. 고객 경험 혁신:</strong></p>
+                    <ul style="margin-left: 20px; margin-top: 10px;">
+                        <li>전체 고객 여정(Customer Journey) 최적화</li>
+                        <li>멀티채널 통합 서비스 제공</li>
+                        <li>실시간 피드백 및 개선 사이클 구축</li>
+                    </ul>
+                `,
+                questions: [
+                    {
+                        question: "마케팅 4P에 해당하지 않는 것은?",
+                        options: ["Product (제품)", "Price (가격)", "Place (유통)", "People (인력)"],
+                        correct: 3
+                    },
+                    {
+                        question: "CS 경영의 3가지 핵심 요소가 아닌 것은?",
+                        options: ["고객 중심 사고", "서비스 품질 관리", "고객 관계 관리", "원가 절감 중심"],
+                        correct: 3
+                    },
+                    {
+                        question: "마케팅 4C에서 Place에 해당하는 것은?",
+                        options: ["Customer Value (고객 가치)", "Cost (비용)", "Convenience (편의성)", "Communication (커뮤니케이션)"],
+                        correct: 2
+                    }
+                ]
+            },
+            {
+                title: "CS 의식",
+                content: `
+                    <h3>고객의 정의</h3>
+                    <p>고객(Customer)은 기업이 제공하는 제품이나 서비스를 구매하거나 사용하는 개인 또는 조직을 의미합니다. 
+                    고객은 기업의 수익을 창출하는 핵심 이해관계자이며, 기업의 존립과 성장을 좌우하는 가장 중요한 자산입니다.</p>
+                    
+                    <p>고객은 단순히 제품을 구매하는 사람을 넘어서, <strong>기업과의 관계를 형성하고 유지하는 파트너</strong>로 인식해야 합니다. 
+                    현대 경영에서는 고객을 비용이 아닌 투자 대상으로 보고, 고객 만족을 통해 장기적인 가치를 창출하는 것이 중요합니다.</p>
+                    
+                    <h3>고객의 범주</h3>
+                    <p><strong>1. 내부 고객 (Internal Customer):</strong></p>
+                    <ul style="margin-left: 20px; margin-top: 10px;">
+                        <li>기업 내부의 직원, 부서, 팀</li>
+                        <li>내부 고객 만족이 외부 고객 만족의 기반</li>
+                        <li>예: 상사에게 보고하는 부하 직원, 다음 공정으로 작업을 넘기는 전 공정 담당자</li>
+                    </ul>
+                    
+                    <p><strong>2. 외부 고객 (External Customer):</strong></p>
+                    <ul style="margin-left: 20px; margin-top: 10px;">
+                        <li>기업 외부의 실제 제품/서비스 구매자</li>
+                        <li>직접 고객: 실제 구매하는 고객</li>
+                        <li>간접 고객: 구매에 영향을 미치는 이해관계자</li>
+                        <li>예: 최종 소비자, 도매업자, 대리점, 소비자 단체</li>
+                    </ul>
+                    
+                    <p><strong>3. 잠재 고객 (Potential Customer):</strong></p>
+                    <ul style="margin-left: 20px; margin-top: 10px;">
+                        <li>아직 구매하지 않았지만 구매 가능성이 있는 고객</li>
+                        <li>마케팅 활동을 통해 실제 고객으로 전환 필요</li>
+                    </ul>
+                    
+                    <h3>고객의 특성</h3>
+                    <p><strong>1. 다양성:</strong></p>
+                    <ul style="margin-left: 20px; margin-top: 10px;">
+                        <li>고객은 다양한 배경, 니즈, 선호도를 가짐</li>
+                        <li>개인화된 서비스 제공이 필요</li>
+                    </ul>
+                    
+                    <p><strong>2. 변화성:</strong></p>
+                    <ul style="margin-left: 20px; margin-top: 10px;">
+                        <li>고객의 니즈와 선호도는 지속적으로 변화</li>
+                        <li>고객 트렌드 파악 및 적응이 필수</li>
+                    </ul>
+                    
+                    <p><strong>3. 선택권:</strong></p>
+                    <ul style="margin-left: 20px; margin-top: 10px;">
+                        <li>고객은 다양한 대안 중 선택할 수 있는 권리가 있음</li>
+                        <li>경쟁 기업과의 차별화가 중요</li>
+                    </ul>
+                    
+                    <h3>고객 니즈 파악</h3>
+                    <p><strong>1. 조사 방법:</strong></p>
+                    <ul style="margin-left: 20px; margin-top: 10px;">
+                        <li>설문 조사: 정량적 데이터 수집</li>
+                        <li>인터뷰: 정성적 인사이트 도출</li>
+                        <li>관찰 조사: 실제 행동 패턴 분석</li>
+                        <li>빅데이터 분석: 디지털 트레이스 분석</li>
+                    </ul>
+                    
+                    <p><strong>2. 니즈 분석:</strong></p>
+                    <ul style="margin-left: 20px; margin-top: 10px;">
+                        <li>명시적 니즈: 고객이 직접 표현한 요구</li>
+                        <li>잠재적 니즈: 고객이 인지하지 못한 실제 필요</li>
+                        <li>미래 니즈: 시장 변화에 따른 예상 요구</li>
+                    </ul>
+                `,
+                questions: [
+                    {
+                        question: "고객의 3가지 범주에 해당하지 않는 것은?",
+                        options: ["내부 고객", "외부 고객", "잠재 고객", "경쟁 고객"],
+                        correct: 3
+                    },
+                    {
+                        question: "내부 고객에 해당하는 것은?",
+                        options: ["최종 소비자", "도매업자", "기업 내부의 직원", "경쟁 기업"],
+                        correct: 2
+                    },
+                    {
+                        question: "고객의 특성에 해당하지 않는 것은?",
+                        options: ["다양성", "변화성", "선택권", "일관성"],
+                        correct: 3
+                    }
+                ]
+            },
+            {
+                title: "고객관계 관리 (CRM)",
+                content: `
+                    <h3>CRM의 개념 완벽 이해</h3>
+                    <p>CRM(Customer Relationship Management, 고객관계관리)은 고객과의 장기적인 관계를 구축하고 관리하여 
+                    고객 만족도를 향상시키고 기업 가치를 극대화하는 경영 전략 및 시스템입니다. 
+                    1990년대 후반 등장한 개념으로, 기업의 고객 관리 방식에 혁명을 가져왔습니다.</p>
+                    
+                    <p>CRM은 단순한 고객 데이터베이스가 아니라, <strong>고객과의 모든 접점(Customer Touch Point)을 통합 관리하고, 
+                    고객의 라이프사이클 전체를 관리하는 전략적 경영 도구</strong>입니다. 
+                    고객 획득(Acquisition), 유지(Retention), 확대(Expansion)의 전 과정을 지원하여 
+                    고객 평생 가치(LTV, Lifetime Value)를 극대화하는 것이 최종 목표입니다.</p>
+                    
+                    <p><strong>CRM의 핵심 철학:</strong></p>
+                    <ul style="margin-left: 20px; margin-top: 10px;">
+                        <li><strong>1:1 마케팅:</strong> 모든 고객을 개별적으로 관리하고 맞춤형 서비스 제공</li>
+                        <li><strong>고객 중심 경영:</strong> 고객이 기업의 중심이며, 모든 활동은 고객 가치 창출을 위해 존재</li>
+                        <li><strong>장기 관계 구축:</strong> 일회성 거래가 아닌 평생 고객으로의 관계 전환</li>
+                        <li><strong>데이터 기반 의사결정:</strong> 직관이 아닌 데이터를 바탕으로 고객 전략 수립</li>
+                    </ul>
+                    
+                    <h3>CRM이 왜 중요한가?</h3>
+                    <p><strong>1. 고객 획득 비용(CAC) 대비 효과:</strong></p>
+                    <ul style="margin-left: 20px; margin-top: 10px;">
+                        <li>신규 고객을 획득하는 비용은 기존 고객을 유지하는 비용보다 5~25배 비쌉니다</li>
+                        <li>CRM을 통해 기존 고객의 재구매율을 5%만 높여도 이익이 25~95% 증가합니다</li>
+                        <li>고객 유지율 5% 향상은 기업 가치를 25~100% 증가시킵니다</li>
+                    </ul>
+                    
+                    <p><strong>2. 경쟁 우위 확보:</strong></p>
+                    <ul style="margin-left: 20px; margin-top: 10px;">
+                        <li>개인화된 서비스로 차별화 가능</li>
+                        <li>고객 데이터 분석을 통한 시장 트렌드 조기 파악</li>
+                        <li>빠른 시장 대응 능력 향상</li>
+                    </ul>
+                    
+                    <p><strong>3. 고객 평생 가치(LTV) 극대화:</strong></p>
+                    <ul style="margin-left: 20px; margin-top: 10px;">
+                        <li>고객과의 관계가 길수록 고객당 매출이 증가합니다</li>
+                        <li>충성 고객은 신규 제품/서비스에도 먼저 반응합니다</li>
+                        <li>추천(Referral)을 통한 신규 고객 유입</li>
+                    </ul>
+                    
+                    <h3>CRM의 구성 요소 상세 분석</h3>
+                    
+                    <p><strong>1. 분석적 CRM (Analytical CRM) 완벽 이해:</strong></p>
+                    <p>분석적 CRM은 고객 데이터를 수집, 분석, 마이닝하여 인사이트를 도출하는 CRM의 뇌 역할을 합니다.</p>
+                    
+                    <p><strong>주요 기능:</strong></p>
+                    <ul style="margin-left: 20px; margin-top: 10px;">
+                        <li><strong>데이터 웨어하우스 구축:</strong> 다양한 소스에서 고객 데이터를 통합 저장</li>
+                        <li><strong>고객 세분화(Customer Segmentation):</strong> RFM 분석, 클러스터 분석 등을 통한 고객 그룹 분류
+                            <ul style="margin-left: 15px; margin-top: 5px;">
+                                <li>RFM 분석: Recency(최근성), Frequency(구매 빈도), Monetary(구매 금액)로 고객 분류</li>
+                                <li>VIP 고객, 충성 고객, 잠재 고객, 이탈 위험 고객 등으로 세분화</li>
+                            </ul>
+                        </li>
+                        <li><strong>고객 행동 예측 분석:</strong> 머신러닝을 활용한 이탈 예측, 구매 예측</li>
+                        <li><strong>생애 가치 계산:</strong> 고객별 LTV 계산 및 우선순위 결정</li>
+                        <li><strong>교차 판매/업셀 기회 발굴:</strong> 고객 구매 패턴 분석을 통한 추천</li>
+                    </ul>
+                    
+                    <p><strong>실무 적용 예시:</strong></p>
+                    <ul style="margin-left: 20px; margin-top: 10px;">
+                        <li>온라인 쇼핑몰이 고객의 과거 구매 이력을 분석하여 '이 제품도 함께 구매하셨나요?' 추천</li>
+                        <li>은행이 고객의 거래 패턴을 분석하여 맞춤형 금융 상품 제안</li>
+                        <li>통신사가 고객의 사용량 변화를 분석하여 이탈 위험 고객 사전 대응</li>
+                    </ul>
+                    
+                    <p><strong>2. 운영적 CRM (Operational CRM) 완벽 이해:</strong></p>
+                    <p>운영적 CRM은 고객과의 일상적인 접촉과 상호작용을 관리하는 CRM의 손발 역할을 합니다.</p>
+                    
+                    <p><strong>주요 모듈:</strong></p>
+                    <ul style="margin-left: 20px; margin-top: 10px;">
+                        <li><strong>영업 자동화(SFA, Sales Force Automation):</strong>
+                            <ul style="margin-left: 15px; margin-top: 5px;">
+                                <li>영업 기회 관리: 리드(Lead) 생성부터 계약 완료까지 전 과정 추적</li>
+                                <li>영업 파이프라인 관리: 각 단계별 성공 확률 및 예상 매출 계산</li>
+                                <li>영업 활동 관리: 미팅, 통화, 이메일 등 모든 활동 기록</li>
+                                <li>영업 예측: 과거 데이터 기반 매출 예측</li>
+                            </ul>
+                        </li>
+                        <li><strong>마케팅 자동화:</strong>
+                            <ul style="margin-left: 15px; margin-top: 5px;">
+                                <li>캠페인 관리: 이메일, SMS, 푸시 등 다양한 채널 통합 관리</li>
+                                <li>개인화된 메시지 발송: 고객 세분화에 따른 맞춤 메시지</li>
+                                <li>캠페인 성과 측정: 오픈율, 클릭률, 전환율 등 실시간 모니터링</li>
+                                <li>A/B 테스트를 통한 최적 메시지 찾기</li>
+                            </ul>
+                        </li>
+                        <li><strong>고객 지원(Customer Service):</strong>
+                            <ul style="margin-left: 15px; margin-top: 5px;">
+                                <li>고객 문의 관리: 티켓(Ticket) 시스템을 통한 체계적 처리</li>
+                                <li>지식 베이스(Knowledge Base): FAQ, 매뉴얼 등을 통한 셀프 서비스 지원</li>
+                                <li>다중 채널 통합: 전화, 이메일, 채팅, SNS 등 모든 채널 통합 관리</li>
+                                <li>고객 이력 관리: 과거 상담 내역을 통한 일관된 서비스 제공</li>
+                            </ul>
+                        </li>
+                    </ul>
+                    
+                    <p><strong>실무 적용 예시:</strong></p>
+                    <ul style="margin-left: 20px; margin-top: 10px;">
+                        <li>콜센터 상담원이 고객을 식별하면 화면에 즉시 고객의 전체 이력 표시</li>
+                        <li>온라인 쇼핑몰에서 장바구니에 담긴 상품을 안 산 고객에게 할인 쿠폰 자동 발송</li>
+                        <li>생일 고객에게 맞춤형 할인 쿠폰 자동 발송</li>
+                    </ul>
+                    
+                    <p><strong>3. 협업적 CRM (Collaborative CRM) 완벽 이해:</strong></p>
+                    <p>협업적 CRM은 고객과의 다양한 채널을 통합하고, 내부 및 외부 파트너와 협업하는 CRM의 신경망 역할을 합니다.</p>
+                    
+                    <p><strong>주요 기능:</strong></p>
+                    <ul style="margin-left: 20px; margin-top: 10px;">
+                        <li><strong>채널 통합(Omnichannel):</strong>
+                            <ul style="margin-left: 15px; margin-top: 5px;">
+                                <li>고객이 어떤 채널을 사용하든 일관된 경험 제공</li>
+                                <li>예: 온라인에서 장바구니에 담은 상품을 오프라인 매장에서 확인 가능</li>
+                                <li>채널 간 연속성: 한 채널에서 시작한 작업을 다른 채널에서 계속</li>
+                            </ul>
+                        </li>
+                        <li><strong>내부 부서 간 협업:</strong>
+                            <ul style="margin-left: 15px; margin-top: 5px;">
+                                <li>영업, 마케팅, 고객지원 부서 간 고객 정보 실시간 공유</li>
+                                <li>고객 정보 일원화로 혼선 방지</li>
+                                <li>협업 워크플로우를 통한 효율적인 업무 처리</li>
+                            </ul>
+                        </li>
+                        <li><strong>파트너사와의 협업:</strong>
+                            <ul style="margin-left: 15px; margin-top: 5px;">
+                                <li>대리점, 딜러, 파트너와의 고객 정보 공유 (권한 관리 필요)</li>
+                                <li>통합된 고객 서비스 제공</li>
+                            </ul>
+                        </li>
+                        <li><strong>소셜 CRM:</strong>
+                            <ul style="margin-left: 15px; margin-top: 5px;">
+                                <li>SNS에서의 고객 대화 모니터링</li>
+                                <li>소셜 미디어를 통한 고객 지원</li>
+                                <li>소셜 데이터 분석을 통한 고객 인사이트 도출</li>
+                            </ul>
+                        </li>
+                    </ul>
+                    
+                    <h3>인간관계 개선 기술 상세</h3>
+                    
+                    <p><strong>1. 공감적 경청(Empathetic Listening) 완벽 이해:</strong></p>
+                    <p>공감적 경청은 고객의 말뿐만 아니라 감정까지 이해하고 공감하는 능동적인 경청 기법입니다.</p>
+                    
+                    <p><strong>공감적 경청의 단계:</strong></p>
+                    <ul style="margin-left: 20px; margin-top: 10px;">
+                        <li><strong>1단계: 주의 깊게 듣기</strong>
+                            <ul style="margin-left: 15px; margin-top: 5px;">
+                                <li>고객의 말에 100% 집중 (스마트폰, 다른 업무 방해 요소 제거)</li>
+                                <li>고객의 말을 중간에 끊지 않기</li>
+                                <li>고객의 어조, 속도, 음성 톤까지 주의 깊게 관찰</li>
+                            </ul>
+                        </li>
+                        <li><strong>2단계: 감정 읽기</strong>
+                            <ul style="margin-left: 15px; margin-top: 5px;">
+                                <li>고객의 감정 상태 파악 (화남, 답답함, 걱정, 실망 등)</li>
+                                <li>언어적/비언어적 단서 활용</li>
+                                <li>예: "정말 답답하시겠어요" - 고객의 답답함을 인정</li>
+                            </ul>
+                        </li>
+                        <li><strong>3단계: 반영 및 확인</strong>
+                            <ul style="margin-left: 15px; margin-top: 5px;">
+                                <li>고객의 말을 다시 정리하여 확인: "정리해드리면, ... 이렇게 이해한 게 맞나요?"</li>
+                                <li>고객의 감정을 언어로 표현: "정말 불편하셨을 것 같아요"</li>
+                                <li>고객이 자신의 문제를 정확히 이해받았다고 느끼게 함</li>
+                            </ul>
+                        </li>
+                        <li><strong>4단계: 공감 표현</strong>
+                            <ul style="margin-left: 15px; margin-top: 5px;">
+                                <li>고객의 입장에서 상황 이해한다는 것을 표현</li>
+                                <li>예: "제가 같은 상황이라면 정말 화가 나셨을 것 같아요"</li>
+                                <li>단, 공감은 하되 고객의 잘못된 행동까지 동조하지 않기</li>
+                            </ul>
+                        </li>
+                    </ul>
+                    
+                    <p><strong>공감적 경청의 효과:</strong></p>
+                    <ul style="margin-left: 20px; margin-top: 10px;">
+                        <li>고객의 감정이 완화되어 논리적 대화 가능</li>
+                        <li>고객이 자신의 문제를 정확히 전달할 수 있음</li>
+                        <li>신뢰 관계 구축으로 협력적 해결 가능</li>
+                        <li>고객 만족도 및 재방문 의향 증가</li>
+                    </ul>
+                    
+                    <p><strong>2. 효과적 커뮤니케이션 완벽 이해:</strong></p>
+                    
+                    <p><strong>명확하고 정확한 정보 전달:</strong></p>
+                    <ul style="margin-left: 20px; margin-top: 10px;">
+                        <li><strong>구체적인 표현:</strong> "곧 처리해드리겠습니다"보다 "오늘 오후 3시까지 처리해드리겠습니다"</li>
+                        <li><strong>전문 용어 최소화:</strong> 일반인도 이해할 수 있는 쉬운 언어 사용</li>
+                        <li><strong>단계별 설명:</strong> 복잡한 내용은 단계를 나누어 설명</li>
+                        <li><strong>예시 활용:</strong> 추상적인 개념은 구체적인 예시로 설명</li>
+                        <li><strong>확인 질문:</strong> "이해되셨나요?", "추가로 궁금한 점이 있으신가요?"</li>
+                    </ul>
+                    
+                    <p><strong>긍정적인 언어 사용:</strong></p>
+                    <ul style="margin-left: 20px; margin-top: 10px;">
+                        <li><strong>부정어 피하기:</strong> "안 됩니다" → "이 방법으로는 어렵지만, 이렇게 해보시면 됩니다"</li>
+                        <li><strong>문제보다 해결책 제시:</strong> "이런 문제가 있네요"보다 "이렇게 해결하시면 됩니다"</li>
+                        <li><strong>긍정적 표현:</strong> "불편하시겠지만" → "죄송하지만", "어렵지만" → "다소 시간이 걸리지만"</li>
+                        <li><strong>고객 존중 표현:</strong> "고객님께서는", "고객님의 의견대로"</li>
+                    </ul>
+                    
+                    <h3>교류분석(TA, Transactional Analysis) 기초</h3>
+                    <p>교류분석은 사람 간의 상호작용을 분석하는 심리학 이론으로, CS에서 고객과의 효과적인 소통을 위해 활용됩니다.</p>
+                    
+                    <p><strong>자아 상태 3가지:</strong></p>
+                    <ul style="margin-left: 20px; margin-top: 10px;">
+                        <li><strong>부모 자아(Parent Ego):</strong> 가르치고, 비판하고, 보호하는 상태
+                            <ul style="margin-left: 15px; margin-top: 5px;">
+                                <li>예: "그건 잘못된 선택입니다", "제가 도와드리겠습니다"</li>
+                                <li>CS에서: 적절한 보호와 안내는 좋지만, 비판적 태도는 피해야 함</li>
+                            </ul>
+                        </li>
+                        <li><strong>성인 자아(Adult Ego):</strong> 논리적이고 객관적으로 판단하는 상태
+                            <ul style="margin-left: 15px; margin-top: 5px;">
+                                <li>예: "이 제품의 특징은 A, B, C입니다. 어떤 게 고객님께 맞으실까요?"</li>
+                                <li>CS에서: 가장 이상적인 자아 상태, 사실과 데이터 기반 소통</li>
+                            </ul>
+                        </li>
+                        <li><strong>아동 자아(Child Ego):</strong> 감정적이고 즉각적으로 반응하는 상태
+                            <ul style="margin-left: 15px; margin-top: 5px;">
+                                <li>예: "정말 좋아요!", "화나요!"</li>
+                                <li>고객이 감정적으로 흥분했을 때 이 상태에 있을 수 있음</li>
+                            </ul>
+                        </li>
+                    </ul>
+                    
+                    <p><strong>CS에서의 교류분석 활용:</strong></p>
+                    <ul style="margin-left: 20px; margin-top: 10px;">
+                        <li><strong>고객이 화가 난 경우(아동 자아):</strong> 성인 자아로 응대하여 감정을 진정시키고 논리적 해결로 유도</li>
+                        <li><strong>고객이 지시하려 할 때(부모 자아):</strong> 존중하되 성인 자아로 전문성을 보여 신뢰 구축</li>
+                        <li><strong>일반 상담(성인 자아):</strong> 성인 자아로 논리적이고 효율적인 커뮤니케이션</li>
+                    </ul>
+                    
+                    <h3>CRM 성공 사례 및 교훈</h3>
+                    
+                    <p><strong>성공 사례 - 아마존(Amazon):</strong></p>
+                    <ul style="margin-left: 20px; margin-top: 10px;">
+                        <li><strong>개인화 추천 시스템:</strong> 고객의 구매 이력, 조회 이력, 검색어 등을 분석하여 맞춤 상품 추천</li>
+                        <li><strong>원클릭 주문:</strong> 고객의 배송 정보, 결제 정보를 저장하여 간편한 구매 경험 제공</li>
+                        <li><strong>프라임 멤버십:</strong> 충성 고객에게 특별한 혜택 제공으로 고객 유지율 극대화</li>
+                        <li><strong>결과:</strong> 고객당 평균 구매 금액 지속 증가, 재구매율 60% 이상</li>
+                    </ul>
+                    
+                    <p><strong>성공 요인 상세 분석:</strong></p>
+                    <ul style="margin-left: 20px; margin-top: 10px;">
+                        <li><strong>고객 중심 문화 구축:</strong>
+                            <ul style="margin-left: 15px; margin-top: 5px;">
+                                <li>모든 의사결정의 첫 번째 기준이 "고객에게 도움이 되는가?"</li>
+                                <li>직원 교육 및 평가에 고객 만족 중심 지표 반영</li>
+                                <li>고객 피드백을 즉시 제품/서비스 개선에 반영</li>
+                            </ul>
+                        </li>
+                        <li><strong>데이터 품질 관리:</strong>
+                            <ul style="margin-left: 15px; margin-top: 5px;">
+                                <li>고객 데이터의 정확성, 완전성, 최신성 유지</li>
+                                <li>중복 데이터 제거, 오류 데이터 정정</li>
+                                <li>데이터 보안 및 개인정보 보호 강화</li>
+                            </ul>
+                        </li>
+                        <li><strong>직원 교육 및 참여:</strong>
+                            <ul style="margin-left: 15px; margin-top: 5px;">
+                                <li>CRM 시스템 사용법 교육</li>
+                                <li>고객 중심 마인드 함양 교육</li>
+                                <li>CRM 활용 우수 사례 공유 및 보상</li>
+                            </ul>
+                        </li>
+                        <li><strong>지속적인 개선:</strong>
+                            <ul style="margin-left: 15px; margin-top: 5px;">
+                                <li>정기적인 CRM 효과 측정 및 분석</li>
+                                <li>고객 피드백을 통한 시스템 개선</li>
+                                <li>신기술 도입을 통한 CRM 고도화</li>
+                            </ul>
+                        </li>
+                    </ul>
+                    
+                    <p><strong>실패 원인 및 대응 방안:</strong></p>
+                    <ul style="margin-left: 20px; margin-top: 10px;">
+                        <li><strong>부족한 조직 차원의 지원:</strong>
+                            <ul style="margin-left: 15px; margin-top: 5px;">
+                                <li>문제: 최고 경영진의 관심 부족, 예산 부족, 우선순위 낮음</li>
+                                <li>해결: CRM의 비즈니스 가치를 정량적으로 제시, 경영진 설득</li>
+                            </ul>
+                        </li>
+                        <li><strong>데이터 품질 문제:</strong>
+                            <ul style="margin-left: 15px; margin-top: 5px;">
+                                <li>문제: 부정확한 데이터, 중복 데이터, 오래된 데이터</li>
+                                <li>해결: 데이터 입력 표준화, 정기적 데이터 정제, 자동화된 데이터 검증</li>
+                            </ul>
+                        </li>
+                        <li><strong>직원 저항:</strong>
+                            <ul style="margin-left: 15px; margin-top: 5px;">
+                                <li>문제: 기존 업무 방식에 익숙, 추가 업무 부담 느낌, 시스템 복잡성</li>
+                                <li>해결: 직원 참여형 설계, 충분한 교육, 사용 편의성 향상, 인센티브 제공</li>
+                            </ul>
+                        </li>
+                        <li><strong>불충분한 고객 활용:</strong>
+                            <ul style="margin-left: 15px; margin-top: 5px;">
+                                <li>문제: 데이터는 수집했지만 활용하지 못함, 분석 결과가 의사결정에 반영되지 않음</li>
+                                <li>해결: 명확한 활용 목표 설정, 실무진 교육, 분석 결과를 실행 계획으로 전환</li>
+                            </ul>
+                        </li>
+                    </ul>
+                    
+                    <h3>CRM 도입 시 주의사항</h3>
+                    <ul style="margin-left: 20px; margin-top: 10px;">
+                        <li><strong>점진적 도입:</strong> 모든 기능을 한 번에 도입하기보다 단계적으로 확장</li>
+                        <li><strong>사용자 중심 설계:</strong> 직원이 실제로 사용하기 편한 시스템 설계</li>
+                        <li><strong>기존 시스템과의 통합:</strong> 기존 ERP, 회계 시스템 등과의 연동 고려</li>
+                        <li><strong>개인정보 보호:</strong> GDPR, 개인정보보호법 등 법규 준수</li>
+                        <li><strong>ROI 측정:</strong> 투자 대비 효과를 정기적으로 측정하고 보고</li>
+                    </ul>
+                `,
+                questions: [
+                    {
+                        question: "CRM의 3가지 구성 요소가 아닌 것은?",
+                        options: ["분석적 CRM", "운영적 CRM", "협업적 CRM", "전략적 CRM"],
+                        correct: 3
+                    },
+                    {
+                        question: "고객 데이터 분석과 세분화를 담당하는 CRM 구성 요소는?",
+                        options: ["분석적 CRM", "운영적 CRM", "협업적 CRM", "전술적 CRM"],
+                        correct: 0
+                    },
+                    {
+                        question: "CRM에서 고객 접점 관리와 프로세스 자동화를 담당하는 것은?",
+                        options: ["분석적 CRM", "운영적 CRM", "협업적 CRM", "전략적 CRM"],
+                        correct: 1
+                    }
+                ]
+            },
+            {
+                title: "서비스의 정의",
+                content: `
+                    <h3>서비스의 어원과 정의 완벽 이해</h3>
+                    <p>서비스(Service)는 라틴어 'servitium'에서 유래하였으며, 원래 '노예 상태', '봉사', '수고', '도움'을 의미합니다. 
+                    현대 경영학에서는 서비스를 <strong>무형의 활동이나 행위로서 고객에게 효용 가치나 편익을 제공하는 것</strong>으로 정의합니다.</p>
+                    
+                    <p>경제학자들은 서비스를 다음과 같이 정의합니다:</p>
+                    <ul style="margin-left: 20px; margin-top: 10px;">
+                        <li><strong>벨(Bell, 1973):</strong> "제품의 생산, 판매와 함께 또는 그것을 대신하여 제공되는 모든 활동"</li>
+                        <li><strong>코틀러(Kotler, 1984):</strong> "한 사람이 다른 사람에게 제공할 수 있는 본질적으로 무형이며 그 결과로 소유권을 발생시키지 않는 행위나 활동"</li>
+                        <li><strong>그로너스(Grönroos, 1990):</strong> "제공자가 고객에게 무형의 행위를 수행하는 과정의 집합"</li>
+                    </ul>
+                    
+                    <p><strong>서비스의 핵심 특징:</strong> 제품(Tangible Goods)과 달리 서비스는 <strong>무형성, 비분리성, 변동성, 소멸성</strong>이라는 
+                    4가지 특성을 가지며, 이는 서비스 관리의 어려움과 동시에 차별화의 기회가 됩니다.</p>
+                    
+                    <h3>서비스의 3단계 완벽 이해</h3>
+                    <p>서비스는 크게 3단계로 구분할 수 있습니다:</p>
+                    
+                    <p><strong>1. 코어 서비스 (Core Service):</strong></p>
+                    <p>고객이 서비스를 구매하는 핵심 이유가 되는 기본 서비스입니다. 서비스의 본질적 가치를 제공합니다.</p>
+                    <ul style="margin-left: 20px; margin-top: 10px;">
+                        <li><strong>예시 - 호텔:</strong> 숙박 서비스 (방 제공)</li>
+                        <li><strong>예시 - 은행:</strong> 자금 예금/대출 서비스</li>
+                        <li><strong>예시 - 병원:</strong> 진단 및 치료 서비스</li>
+                        <li><strong>예시 - 항공사:</strong> 출발지에서 목적지로의 운송</li>
+                    </ul>
+                    <p><strong>특징:</strong> 코어 서비스는 경쟁자들과 거의 동일하며, 이것만으로는 차별화가 어렵습니다.</p>
+                    
+                    <p><strong>2. 서비스 요소 (Service Elements):</strong></p>
+                    <p>코어 서비스에 부가되어 제공되는 보조적 서비스입니다. 서비스의 품질과 경쟁력을 결정합니다.</p>
+                    <ul style="margin-left: 20px; margin-top: 10px;">
+                        <li><strong>예시 - 호텔:</strong>
+                            <ul style="margin-left: 15px; margin-top: 5px;">
+                                <li>체크인/체크아웃 서비스</li>
+                                <li>룸 서비스, 레스토랑, 라운지</li>
+                                <li>컨시어지 서비스, 웰컴 드링크</li>
+                                <li>조식 서비스, Wi-Fi</li>
+                            </ul>
+                        </li>
+                        <li><strong>예시 - 은행:</strong>
+                            <ul style="margin-left: 15px; margin-top: 5px;">
+                                <li>온라인 뱅킹, 모바일 앱</li>
+                                <li>ATM 서비스, 상담 서비스</li>
+                                <li>다양한 금융 상품 정보 제공</li>
+                            </ul>
+                        </li>
+                    </ul>
+                    <p><strong>특징:</strong> 서비스 요소가 서비스 전체 만족도에 큰 영향을 미칩니다. 
+                    같은 코어 서비스라도 서비스 요소의 차이가 고객 선택의 핵심 요인이 됩니다.</p>
+                    
+                    <p><strong>3. 서비스 시스템 (Service System):</strong></p>
+                    <p>서비스를 제공하기 위한 전반적인 시스템과 인프라입니다.</p>
+                    <ul style="margin-left: 20px; margin-top: 10px;">
+                        <li><strong>물리적 환경:</strong> 시설, 장비, 분위기</li>
+                        <li><strong>인적 자원:</strong> 직원, 교육, 서비스 문화</li>
+                        <li><strong>프로세스:</strong> 서비스 제공 절차, 표준화</li>
+                        <li><strong>기술:</strong> IT 시스템, 자동화</li>
+                    </ul>
+                    <p><strong>특징:</strong> 서비스 시스템이 잘 구축되어 있어야 일관되고 높은 품질의 서비스를 제공할 수 있습니다.</p>
+                    
+                    <h3>서비스의 특성 상세 분석</h3>
+                    
+                    <p><strong>1. 무형성 (Intangibility) 완벽 이해:</strong></p>
+                    <p>서비스는 만져볼 수 없고, 보이지 않으며, 물리적 형태가 없는 무형의 상품입니다.</p>
+                    
+                    <p><strong>무형성의 의미:</strong></p>
+                    <ul style="margin-left: 20px; margin-top: 10px;">
+                        <li><strong>물리적 존재 부재:</strong> 제품처럼 보관하거나 재고를 쌓을 수 없음</li>
+                        <li><strong>구매 전 평가 어려움:</strong> 서비스를 구매하기 전에 직접 체험하기 어려움</li>
+                        <li><strong>표준화 어려움:</strong> 시각적 기준이 없어 품질을 객관적으로 측정하기 어려움</li>
+                    </ul>
+                    
+                    <p><strong>무형성으로 인한 문제점:</strong></p>
+                    <ul style="margin-left: 20px; margin-top: 10px;">
+                        <li><strong>구매 위험:</strong> 고객이 서비스 품질을 미리 알 수 없어 구매를 주저함</li>
+                        <li><strong>마케팅 어려움:</strong> 제품처럼 사진이나 영상으로 완벽히 표현하기 어려움</li>
+                        <li><strong>가격 책정 어려움:</strong> 물리적 비용 계산이 어려워 가격 정책 수립이 복잡</li>
+                    </ul>
+                    
+                    <p><strong>무형성 극복 전략:</strong></p>
+                    <ul style="margin-left: 20px; margin-top: 10px;">
+                        <li><strong>유형적 증거 제공:</strong>
+                            <ul style="margin-left: 15px; margin-top: 5px;">
+                                <li>물리적 환경: 깨끗한 시설, 세련된 인테리어</li>
+                                <li>직원 외모: 정장, 명찰, 전문적 이미지</li>
+                                <li>증명서, 자격증, 표창장 등 신뢰할 수 있는 유형적 증거</li>
+                                <li>예: 병원의 깨끗한 환경, 의사의 자격증 벽면 게시</li>
+                            </ul>
+                        </li>
+                        <li><strong>브랜드와 신뢰 구축:</strong>
+                            <ul style="margin-left: 15px; margin-top: 5px;">
+                                <li>강력한 브랜드를 통한 품질 보장</li>
+                                <li>고객 추천 및 후기를 통한 구전 마케팅</li>
+                                <li>인증 기관의 인증 (예: 병원 인증, 교육기관 인증)</li>
+                            </ul>
+                        </li>
+                        <li><strong>서비스 보증 및 환불 정책:</strong>
+                            <ul style="margin-left: 15px; margin-top: 5px;">
+                                <li>만족 보장 정책</li>
+                                <li>무조건 환불 정책 (예: 아마존의 무조건 반품)</li>
+                                <li>위험 부담을 고객이 아닌 기업이 지는 전략</li>
+                            </ul>
+                        </li>
+                        <li><strong>체험 제공:</strong>
+                            <ul style="margin-left: 15px; margin-top: 5px;">
+                                <li>무료 체험, 샘플 서비스</li>
+                                <li>교육 서비스의 무료 강의 체험</li>
+                                <li>미용실의 무료 컨설팅</li>
+                            </ul>
+                        </li>
+                    </ul>
+                    
+                    <p><strong>2. 비분리성 (Inseparability) 완벽 이해:</strong></p>
+                    <p>비분리성은 서비스의 생산과 소비가 동시에 일어나며, 서비스 제공자와 고객이 물리적으로 함께 있어야 한다는 특성입니다.</p>
+                    
+                    <p><strong>비분리성의 의미:</strong></p>
+                    <ul style="margin-left: 20px; margin-top: 10px;">
+                        <li><strong>생산과 소비의 동시성:</strong> 제품은 먼저 생산되고 나중에 소비되지만, 서비스는 생산되면서 동시에 소비됨</li>
+                        <li><strong>고객 참여 필수:</strong> 고객이 서비스 생산 과정에 참여해야 함 (예: 병원 진료 시 환자의 협조 필요)</li>
+                        <li><strong>다른 고객의 영향:</strong> 같은 장소의 다른 고객이 서비스 경험에 영향을 미칠 수 있음 (예: 식당에서 시끄러운 다른 손님)</li>
+                    </ul>
+                    
+                    <p><strong>비분리성으로 인한 문제점:</strong></p>
+                    <ul style="margin-left: 20px; margin-top: 10px;">
+                        <li><strong>서비스 제공자의 한계:</strong> 한 직원이 동시에 여러 고객을 상대하기 어려움 (병목 현상)</li>
+                        <li><strong>품질 변동:</strong> 고객의 참여도와 협조 정도에 따라 서비스 품질이 달라짐</li>
+                        <li><strong>확장 어려움:</strong> 물리적 거리 제약으로 서비스 확장에 제한</li>
+                        <li><strong>다른 고객의 영향:</strong> 다른 고객의 행동이 본인의 서비스 경험에 부정적 영향을 미칠 수 있음</li>
+                    </ul>
+                    
+                    <p><strong>비분리성 극복 전략:</strong></p>
+                    <ul style="margin-left: 20px; margin-top: 10px;">
+                        <li><strong>셀프 서비스 도입:</strong>
+                            <ul style="margin-left: 15px; margin-top: 5px;">
+                                <li>고객이 직접 서비스를 생산하도록 함</li>
+                                <li>예: ATM, 셀프 체크인, 온라인 주문</li>
+                                <li>장점: 비용 절감, 24시간 서비스 가능, 대기 시간 감소</li>
+                                <li>단점: 일부 고객은 대인 서비스를 선호</li>
+                            </ul>
+                        </li>
+                        <li><strong>서비스 제공자 교육 및 표준화:</strong>
+                            <ul style="margin-left: 15px; margin-top: 5px;">
+                                <li>직원 교육을 통한 일관된 서비스 품질 유지</li>
+                                <li>서비스 스크립트 작성 및 표준화</li>
+                                <li>예: 콜센터 상담원의 표준 응답 매뉴얼</li>
+                            </ul>
+                        </li>
+                        <li><strong>물리적 환경 관리:</strong>
+                            <ul style="margin-left: 15px; margin-top: 5px;">
+                                <li>고객 간 간섭 최소화를 위한 공간 설계</li>
+                                <li>예: 카페의 좌석 배치, 병원의 대기실 분리</li>
+                            </ul>
+                        </li>
+                        <li><strong>기술을 통한 분리:</strong>
+                            <ul style="margin-left: 15px; margin-top: 5px;">
+                                <li>디지털 플랫폼을 통한 비대면 서비스</li>
+                                <li>예: 온라인 교육, 원격 진료, 비대면 상담</li>
+                            </ul>
+                        </li>
+                    </ul>
+                    
+                    <p><strong>3. 변동성 (Variability) 완벽 이해:</strong></p>
+                    <p>변동성은 서비스 품질이 제공자, 고객, 시간, 장소 등에 따라 달라질 수 있다는 특성입니다.</p>
+                    
+                    <p><strong>변동성의 원인:</strong></p>
+                    <ul style="margin-left: 20px; margin-top: 10px;">
+                        <li><strong>서비스 제공자:</strong>
+                            <ul style="margin-left: 15px; margin-top: 5px;">
+                                <li>직원마다 능력, 경험, 태도가 다름</li>
+                                <li>같은 직원도 기분, 컨디션에 따라 서비스 품질이 달라짐</li>
+                                <li>예: 같은 미용실의 다른 디자이너, 같은 병원의 다른 의사</li>
+                            </ul>
+                        </li>
+                        <li><strong>고객:</strong>
+                            <ul style="margin-left: 15px; margin-top: 5px;">
+                                <li>고객의 협조 정도, 기대치, 성격에 따라 서비스 경험이 달라짐</li>
+                                <li>예: 수업에 적극 참여하는 학생 vs 소극적인 학생</li>
+                            </ul>
+                        </li>
+                        <li><strong>상황:</strong>
+                            <ul style="margin-left: 15px; margin-top: 5px;">
+                                <li>바쁜 시간대 vs 한가한 시간대</li>
+                                <li>날씨, 분위기 등 환경적 요인</li>
+                                <li>예: 평일 점심시간의 식당 vs 평일 저녁 시간의 식당</li>
+                            </ul>
+                        </li>
+                    </ul>
+                    
+                    <p><strong>변동성으로 인한 문제점:</strong></p>
+                    <ul style="margin-left: 20px; margin-top: 10px;">
+                        <li>고객이 매번 다른 경험을 하게 되어 일관성 부족</li>
+                        <li>서비스 품질 예측이 어려워 고객의 신뢰도 저하</li>
+                        <li>나쁜 경험 후 고객 이탈 가능성 증가</li>
+                    </ul>
+                    
+                    <p><strong>변동성 극복 전략:</strong></p>
+                    <ul style="margin-left: 20px; margin-top: 10px;">
+                        <li><strong>직원 선택 및 교육:</strong>
+                            <ul style="margin-left: 15px; margin-top: 5px;">
+                                <li>서비스 마인드가 있는 직원 채용</li>
+                                <li>체계적인 교육 프로그램 운영</li>
+                                <li>정기적인 재교육 및 보수 교육</li>
+                            </ul>
+                        </li>
+                        <li><strong>서비스 표준화:</strong>
+                            <ul style="margin-left: 15px; margin-top: 5px;">
+                                <li>서비스 프로세스 표준화 (예: 매뉴얼, 체크리스트)</li>
+                                <li>서비스 스크립트 작성</li>
+                                <li>예: 디즈니의 완벽한 서비스 스크립트</li>
+                            </ul>
+                        </li>
+                        <li><strong>자동화 및 기술 활용:</strong>
+                            <ul style="margin-left: 15px; margin-top: 5px;">
+                                <li>인간의 변동성을 줄이기 위한 자동화</li>
+                                <li>예: 키오스크, 자동 응답 시스템</li>
+                            </ul>
+                        </li>
+                        <li><strong>품질 모니터링:</strong>
+                            <ul style="margin-left: 15px; margin-top: 5px;">
+                                <li>서비스 품질을 지속적으로 모니터링</li>
+                                <li>비밀 고객(Mystery Shopper) 활용</li>
+                                <li>고객 피드백 시스템 구축</li>
+                            </ul>
+                        </li>
+                    </ul>
+                    
+                    <p><strong>4. 소멸성 (Perishability) 완벽 이해:</strong></p>
+                    <p>소멸성은 서비스를 저장하거나 재고로 보관할 수 없다는 특성입니다.</p>
+                    
+                    <p><strong>소멸성의 의미:</strong></p>
+                    <ul style="margin-left: 20px; margin-top: 10px;">
+                        <li><strong>비저장성:</strong> 서비스는 제공된 시간에 소비되고 사라짐</li>
+                        <li><strong>시간적 제약:</strong> 특정 시간에 제공되지 않은 서비스는 그대로 소멸</li>
+                        <li><strong>예시:</strong>
+                            <ul style="margin-left: 15px; margin-top: 5px;">
+                                <li>비행기 빈 좌석: 이륙 후 영원히 사라짐</li>
+                                <li>호텔 빈 방: 그 날 밤이 지나면 수익 기회 상실</li>
+                                <li>병원 예약 취소: 그 시간대의 의료 서비스 제공 기회 상실</li>
+                            </ul>
+                        </li>
+                    </ul>
+                    
+                    <p><strong>소멸성으로 인한 문제점:</strong></p>
+                    <ul style="margin-left: 20px; margin-top: 10px;">
+                        <li><strong>수요 예측 어려움:</strong> 수요가 예상보다 적으면 손실, 많으면 기회 손실</li>
+                        <li><strong>수익 최적화 어려움:</strong> 수요 변동에 따라 수익이 크게 달라짐</li>
+                        <li><strong>용량 관리 중요:</strong> 서비스 용량(인력, 시설)을 적절히 유지해야 함</li>
+                    </ul>
+                    
+                    <p><strong>소멸성 극복 전략:</strong></p>
+                    <ul style="margin-left: 20px; margin-top: 10px;">
+                        <li><strong>수요 관리:</strong>
+                            <ul style="margin-left: 15px; margin-top: 5px;">
+                                <li><strong>가격 차별화:</strong> 시간대별, 요일별 가격 차등</li>
+                                <li>예: 평일 오전 할인, 성수기/비수기 요금 차등</li>
+                                <li><strong>예약 시스템:</strong> 수요를 미리 파악하고 조절</li>
+                                <li><strong>프로모션:</strong> 한가한 시간대 수요 유도</li>
+                            </ul>
+                        </li>
+                        <li><strong>용량 관리:</strong>
+                            <ul style="margin-left: 15px; margin-top: 5px;">
+                                <li><strong>유연한 인력 활용:</strong> 파트타임, 아르바이트 활용</li>
+                                <li><strong>피크 시간 대응:</strong> 바쁜 시간대 추가 인력 배치</li>
+                                <li><strong>시설 활용:</strong> 여러 용도로 활용 가능한 시설 설계</li>
+                            </ul>
+                        </li>
+                        <li><strong>대기 관리:</strong>
+                            <ul style="margin-left: 15px; margin-top: 5px;">
+                                <li>대기 고객에게 즐거운 경험 제공</li>
+                                <li>예: 식당 대기 시 무료 음료 제공, 예상 대기 시간 안내</li>
+                            </ul>
+                        </li>
+                    </ul>
+                    
+                    <h3>산업별 서비스 특성</h3>
+                    <p><strong>1. 금융 서비스:</strong></p>
+                    <ul style="margin-left: 20px; margin-top: 10px;">
+                        <li><strong>특성:</strong> 신뢰성이 가장 중요, 무형성이 높음</li>
+                        <li><strong>핵심:</strong> 보안, 전문성, 신뢰, 정확성</li>
+                        <li><strong>예시:</strong> 은행의 계좌 관리, 보험 상품, 증권 거래</li>
+                    </ul>
+                    
+                    <p><strong>2. 호텔/레스토랑 서비스:</strong></p>
+                    <ul style="margin-left: 20px; margin-top: 10px;">
+                        <li><strong>특성:</strong> 고도의 인간 상호작용, 물리적 환경 중요</li>
+                        <li><strong>핵심:</strong> 접객, 분위기, 음식 품질, 서비스 속도</li>
+                        <li><strong>예시:</strong> 호텔 숙박, 식당 외식, 카페</li>
+                    </ul>
+                    
+                    <p><strong>3. 교육 서비스:</strong></p>
+                    <ul style="margin-left: 20px; margin-top: 10px;">
+                        <li><strong>특성:</strong> 장기적 결과, 고객(학생) 참여 필수</li>
+                        <li><strong>핵심:</strong> 강의 품질, 학습 환경, 개인화된 지도</li>
+                        <li><strong>예시:</strong> 학교, 학원, 온라인 교육, 세미나</li>
+                    </ul>
+                    
+                    <p><strong>4. 의료 서비스:</strong></p>
+                    <ul style="margin-left: 20px; margin-top: 10px;">
+                        <li><strong>특성:</strong> 전문성, 신뢰성, 생명과 직결</li>
+                        <li><strong>핵심:</strong> 의료진 전문성, 시설, 치료 결과, 친절함</li>
+                        <li><strong>예시:</strong> 병원 진료, 약국, 건강 검진</li>
+                    </ul>
+                    
+                    <p><strong>5. 물류 서비스:</strong></p>
+                    <ul style="margin-left: 20px; margin-top: 10px;">
+                        <li><strong>특성:</strong> 속도, 정확성, 추적 가능성</li>
+                        <li><strong>핵심:</strong> 빠른 배송, 안전한 운송, 실시간 추적</li>
+                        <li><strong>예시:</strong> 택배, 화물 운송, 배송 서비스</li>
+                    </ul>
+                    
+                    <p><strong>6. IT 서비스:</strong></p>
+                    <ul style="margin-left: 20px; margin-top: 10px;">
+                        <li><strong>특성:</strong> 기술 중심, 자동화 가능성 높음</li>
+                        <li><strong>핵심:</strong> 안정성, 사용 편의성, 지속적인 업데이트</li>
+                        <li><strong>예시:</strong> 소프트웨어, 클라우드 서비스, SaaS</li>
+                    </ul>
+                `,
+                questions: [
+                    {
+                        question: "서비스의 4가지 특성에 해당하지 않는 것은?",
+                        options: ["무형성", "비분리성", "변동성", "유형성"],
+                        correct: 3
+                    },
+                    {
+                        question: "서비스를 저장하거나 재고로 보관할 수 없는 특성을 무엇이라고 하는가?",
+                        options: ["무형성", "비분리성", "변동성", "소멸성"],
+                        correct: 3
+                    },
+                    {
+                        question: "서비스의 생산과 소비가 동시에 일어나는 특성을 무엇이라고 하는가?",
+                        options: ["무형성", "비분리성", "변동성", "소멸성"],
+                        correct: 1
+                    }
+                ]
+            },
+            {
+                title: "서비스 리더십",
+                content: `
+                    <h3>서비스 리더십이란? 완벽 이해</h3>
+                    <p>서비스 리더십은 서비스 조직에서 고객 만족과 서비스 품질 향상을 위해 
+                    조직 구성원들을 이끌고 동기를 부여하는 리더십 능력입니다. 
+                    전통적인 리더십과 달리, 서비스 리더십은 <strong>고객 중심 사고</strong>를 바탕으로 하며, 
+                    고객 만족을 통한 기업 성장을 목표로 합니다.</p>
+                    
+                    <p>서비스 리더십의 핵심은 <strong>고객 중심 문화를 조성하고 서비스 품질을 지속적으로 개선하는 것</strong>입니다. 
+                    서비스 리더는 단순히 조직을 관리하는 것이 아니라, 고객 경험을 설계하고 
+                    구성원들이 우수한 서비스를 제공할 수 있도록 지원하고 동기를 부여합니다.</p>
+                    
+                    <h3>서비스 리더십이 왜 중요한가?</h3>
+                    <p><strong>1. 서비스 품질의 핵심 결정 요인:</strong></p>
+                    <ul style="margin-left: 20px; margin-top: 10px;">
+                        <li>직원의 서비스 태도와 능력은 리더십의 영향을 직접적으로 받습니다</li>
+                        <li>우수한 서비스 리더는 조직 전체의 서비스 품질을 향상시킵니다</li>
+                        <li>연구 결과: 리더십 스타일이 고객 만족도에 40% 이상 영향을 미칩니다</li>
+                    </ul>
+                    
+                    <p><strong>2. 조직 문화 형성:</strong></p>
+                    <ul style="margin-left: 20px; margin-top: 10px;">
+                        <li>서비스 리더의 가치관과 행동이 조직 문화를 결정합니다</li>
+                        <li>고객 중심 문화는 리더의 일관된 행동을 통해 형성됩니다</li>
+                        <li>예: 리더가 고객 불만을 직접 처리하면 직원들도 고객을 중요하게 생각</li>
+                    </ul>
+                    
+                    <p><strong>3. 직원 만족과 유지:</strong></p>
+                    <ul style="margin-left: 20px; margin-top: 10px;">
+                        <li>좋은 리더십은 직원 만족도를 높이고 이직률을 낮춥니다</li>
+                        <li>직원 만족도는 고객 만족도로 직접 연결됩니다</li>
+                        <li>서비스 수익 체인: 내부 서비스 품질 → 직원 만족 → 외부 서비스 가치 → 고객 만족 → 수익</li>
+                    </ul>
+                    
+                    <h3>서비스 리더십의 핵심 요소 상세 분석</h3>
+                    
+                    <p><strong>1. 고객 중심 사고 완벽 이해:</strong></p>
+                    <p>고객 중심 사고는 모든 결정과 행동의 첫 번째 기준이 "고객에게 도움이 되는가?"인 사고방식입니다.</p>
+                    
+                    <p><strong>고객 중심 사고의 의미:</strong></p>
+                    <ul style="margin-left: 20px; margin-top: 10px;">
+                        <li><strong>고객 관점에서 판단:</strong> 내부 편의가 아닌 고객의 편의를 우선시</li>
+                        <li><strong>고객 니즈 우선:</strong> 수익보다 고객 만족을 우선시 (장기적으로 수익으로 연결)</li>
+                        <li><strong>고객 경험 설계:</strong> 고객의 전체 여정(Customer Journey)을 설계하고 최적화</li>
+                    </ul>
+                    
+                    <p><strong>고객 중심 사고 실천 방법:</strong></p>
+                    <ul style="margin-left: 20px; margin-top: 10px;">
+                        <li><strong>고객 피드백 중심 의사결정:</strong>
+                            <ul style="margin-left: 15px; margin-top: 5px;">
+                                <li>모든 중요한 결정 전에 고객 의견 수렴</li>
+                                <li>고객 만족도 조사 결과를 경영 의사결정에 반영</li>
+                                <li>예: 신규 서비스 도입 시 고객 설문조사 실시</li>
+                            </ul>
+                        </li>
+                        <li><strong>고객 접점 직접 경험:</strong>
+                            <ul style="margin-left: 15px; margin-top: 5px;">
+                                <li>정기적으로 고객 접점에 직접 나가 고객 의견 듣기</li>
+                                <li>미스터리 쇼퍼 역할 수행하여 실제 서비스 경험</li>
+                                <li>예: 스타벅스 CEO가 매장에서 직접 고객 응대</li>
+                            </ul>
+                        </li>
+                        <li><strong>내부 프로세스를 고객 관점에서 재설계:</strong>
+                            <ul style="margin-left: 15px; margin-top: 5px;">
+                                <li>고객의 불편함을 최소화하는 프로세스로 개선</li>
+                                <li>예: 환불 프로세스를 복잡하게 만든 내부 규정을 고객 관점에서 단순화</li>
+                            </ul>
+                        </li>
+                    </ul>
+                    
+                    <p><strong>2. 서비스 비전 제시 완벽 이해:</strong></p>
+                    <p>서비스 비전은 조직이 추구하는 서비스의 이상적 모습을 그린 것입니다. 
+                    명확하고 공감할 수 있는 비전은 구성원들을 하나로 모으고 동기를 부여합니다.</p>
+                    
+                    <p><strong>효과적인 서비스 비전의 조건:</strong></p>
+                    <ul style="margin-left: 20px; margin-top: 10px;">
+                        <li><strong>명확성:</strong> 누구나 이해할 수 있는 명확한 표현</li>
+                        <li><strong>구체성:</strong> 추상적이지 않고 실현 가능한 구체적 목표</li>
+                        <li><strong>감동성:</strong> 구성원들이 공감하고 자부심을 느낄 수 있는 비전</li>
+                        <li><strong>지속성:</strong> 단기적이 아닌 장기적 관점</li>
+                    </ul>
+                    
+                    <p><strong>서비스 비전 수립 방법:</strong></p>
+                    <ul style="margin-left: 20px; margin-top: 10px;">
+                        <li><strong>1단계: 현재 상태 진단</strong>
+                            <ul style="margin-left: 15px; margin-top: 5px;">
+                                <li>현재 서비스 품질 평가</li>
+                                <li>고객 만족도 분석</li>
+                                <li>경쟁사 벤치마킹</li>
+                            </ul>
+                        </li>
+                        <li><strong>2단계: 이상적 서비스 모습 구상</strong>
+                            <ul style="margin-left: 15px; margin-top: 5px;">
+                                <li>5년 후 이상적 서비스 모습 상상</li>
+                                <li>고객이 느끼고 싶은 경험 정의</li>
+                                <li>예: "고객이 우리 서비스를 받고 행복해하는 회사"</li>
+                            </ul>
+                        </li>
+                        <li><strong>3단계: 구체적 목표 설정</strong>
+                            <ul style="margin-left: 15px; margin-top: 5px;">
+                                <li>비전 달성을 위한 구체적 목표 수립</li>
+                                <li>예: "고객 만족도 95% 이상", "NPS(Net Promoter Score) 70 이상"</li>
+                            </ul>
+                        </li>
+                        <li><strong>4단계: 구성원들과 공유 및 공감대 형성</strong>
+                            <ul style="margin-left: 15px; margin-top: 5px;">
+                                <li>비전을 효과적으로 전달</li>
+                                <li>구성원들의 의견 수렴 및 참여 유도</li>
+                                <li>지속적으로 비전을 상기시키고 실천하도록 동기 부여</li>
+                            </ul>
+                        </li>
+                    </ul>
+                    
+                    <p><strong>서비스 비전 사례:</strong></p>
+                    <ul style="margin-left: 20px; margin-top: 10px;">
+                        <li><strong>디즈니: "사람들에게 행복을 주는 마법을 만든다"</strong>
+                            <ul style="margin-left: 15px; margin-top: 5px;">
+                                <li>모든 직원이 "캐스트 멤버"로 불리며 공연자로 인식</li>
+                                <li>고객은 "게스트"로 대우받으며 특별한 경험 제공</li>
+                            </ul>
+                        </li>
+                        <li><strong>스타벅스: "고객과 지역 사회에 영감을 주는 제3의 공간"</strong>
+                            <ul style="margin-left: 15px; margin-top: 5px;">
+                                <li>커피 판매가 아닌 경험 제공에 중점</li>
+                                <li>직원(파트너)도 행복해야 고객도 행복하다는 철학</li>
+                            </ul>
+                        </li>
+                    </ul>
+                    
+                    <p><strong>3. 구성원 역량 강화 완벽 이해:</strong></p>
+                    <p>구성원 역량 강화는 서비스 품질의 핵심입니다. 
+                    리더는 구성원들이 우수한 서비스를 제공할 수 있도록 지속적으로 교육하고 지원해야 합니다.</p>
+                    
+                    <p><strong>구성원 역량 강화 전략:</strong></p>
+                    <ul style="margin-left: 20px; margin-top: 10px;">
+                        <li><strong>체계적인 교육 프로그램:</strong>
+                            <ul style="margin-left: 15px; margin-top: 5px;">
+                                <li><strong>신규 직원 교육:</strong> 서비스 철학, 표준 프로세스, 실전 훈련</li>
+                                <li><strong>정기 재교육:</strong> 최신 서비스 트렌드, 개선된 프로세스</li>
+                                <li><strong>특화 교육:</strong> 상황별 대응법, 고급 상담 기법, 클레임 처리</li>
+                                <li>예: 디즈니의 "디즈니 유니버시티", 스타벅스의 "파트너 교육 프로그램"</li>
+                            </ul>
+                        </li>
+                        <li><strong>권한 위임 및 자율성 부여:</strong>
+                            <ul style="margin-left: 15px; margin-top: 5px;">
+                                <li><strong>의사결정 권한 부여:</strong> 고객 불만 해결을 위한 일정 금액 내 자율 판단 권한</li>
+                                <li><strong>자율성 존중:</strong> 서비스 표준은 지키되 개인의 창의성 발휘 허용</li>
+                                <li>예: 리츠칼튼 호텔의 직원에게 고객 문제 해결을 위한 2,000달러까지 자율 권한 부여</li>
+                                <li><strong>효과:</strong> 직원의 몰입도 향상, 고객 만족도 증가, 빠른 문제 해결</li>
+                            </ul>
+                        </li>
+                        <li><strong>멘토링 및 코칭:</strong>
+                            <ul style="margin-left: 15px; margin-top: 5px;">
+                                <li>경험이 많은 직원이 신입을 지도하는 멘토링 시스템</li>
+                                <li>리더가 직접 직원을 코칭하여 역량 향상 지원</li>
+                                <li>예: 상담 실무, 역할극을 통한 실전 훈련</li>
+                            </ul>
+                        </li>
+                        <li><strong>피드백 및 인정:</strong>
+                            <ul style="margin-left: 15px; margin-top: 5px;">
+                                <li>정기적인 성과 피드백 제공</li>
+                                <li>우수 사례 공유 및 인정 (예: 서비스 헤로 인증)</li>
+                                <li>고객 만족 사례 공유를 통한 긍정적 강화</li>
+                            </ul>
+                        </li>
+                    </ul>
+                    
+                    <h3>서비스 리더십 유형 상세 분석</h3>
+                    
+                    <p><strong>1. 변혁적 리더십 (Transformational Leadership) 완벽 이해:</strong></p>
+                    <p>변혁적 리더십은 리더가 비전을 제시하고 구성원들을 감화시켜 조직을 변화시키는 리더십입니다.</p>
+                    
+                    <p><strong>변혁적 리더십의 특징:</strong></p>
+                    <ul style="margin-left: 20px; margin-top: 10px;">
+                        <li><strong>비전 제시 (Idealized Influence):</strong> 매력적인 비전을 제시하여 구성원들을 감화</li>
+                        <li><strong>영감적 동기 부여 (Inspirational Motivation):</strong> 구성원들의 내재적 동기를 자극</li>
+                        <li><strong>지적 자극 (Intellectual Stimulation):</strong> 구성원들로 하여금 창의적으로 사고하도록 유도</li>
+                        <li><strong>개별적 배려 (Individualized Consideration):</strong> 각 구성원의 개별적 니즈를 고려</li>
+                    </ul>
+                    
+                    <p><strong>서비스 조직에서의 변혁적 리더십 적용:</strong></p>
+                    <ul style="margin-left: 20px; margin-top: 10px;">
+                        <li>고객 중심의 명확한 비전 제시</li>
+                        <li>"우리는 고객의 행복을 만드는 사람들이다"와 같은 영감적 메시지 전달</li>
+                        <li>구성원들로 하여금 서비스 개선 아이디어를 제시하도록 장려</li>
+                        <li>각 직원의 강점을 파악하고 그에 맞는 역할 부여</li>
+                    </ul>
+                    
+                    <p><strong>2. 서번트 리더십 (Servant Leadership) 완벽 이해:</strong></p>
+                    <p>서번트 리더십은 리더가 구성원들을 지원하고 성장시킴으로써 결과적으로 조직 목표를 달성하는 리더십입니다. 
+                    "리더가 먼저 섬긴다"는 철학을 바탕으로 합니다.</p>
+                    
+                    <p><strong>서번트 리더십의 핵심 원칙:</strong></p>
+                    <ul style="margin-left: 20px; margin-top: 10px;">
+                        <li><strong>경청 (Listening):</strong> 구성원들의 의견을 진심으로 듣기</li>
+                        <li><strong>공감 (Empathy):</strong> 구성원들의 입장을 이해하고 공감하기</li>
+                        <li><strong>치유 (Healing):</strong> 구성원들의 상처와 어려움을 치유하기</li>
+                        <li><strong>인식 (Awareness):</strong> 상황을 정확히 파악하고 판단하기</li>
+                        <li><strong>설득 (Persuasion):</strong> 강제가 아닌 설득으로 구성원들을 이끌기</li>
+                        <li><strong>개념화 (Conceptualization):</strong> 미래를 내다보고 큰 그림을 그리기</li>
+                        <li><strong>예언 능력 (Foresight):</strong> 결과를 예측하고 대비하기</li>
+                        <li><strong>섬김 (Stewardship):</strong> 조직의 이익을 위해 봉사하기</li>
+                        <li><strong>성장 약속 (Commitment to Growth):</strong> 구성원들의 성장을 약속하고 지원하기</li>
+                        <li><strong>공동체 구축 (Building Community):</strong> 협력적이고 공동체적인 문화 구축</li>
+                    </ul>
+                    
+                    <p><strong>서비스 조직에서의 서번트 리더십 적용:</strong></p>
+                    <ul style="margin-left: 20px; margin-top: 10px;">
+                        <li>직원의 어려움을 듣고 지원 (예: 고객 응대 시 스트레스 해소 프로그램)</li>
+                        <li>직원의 성장을 위해 교육 기회 제공</li>
+                        <li>직원이 고객에게 최선의 서비스를 제공할 수 있도록 지원 (예: 필요한 도구 제공)</li>
+                        <li>직원이 고객을 잘 섬길 수 있도록 리더가 먼저 직원을 섬김</li>
+                    </ul>
+                    
+                    <p><strong>3. 전략적 리더십 (Strategic Leadership) 완벽 이해:</strong></p>
+                    <p>전략적 리더십은 장기적 관점에서 서비스 전략을 수립하고 실행하는 리더십입니다.</p>
+                    
+                    <p><strong>전략적 리더십의 핵심:</strong></p>
+                    <ul style="margin-left: 20px; margin-top: 10px;">
+                        <li><strong>환경 분석:</strong> 시장 환경, 경쟁 상황, 고객 트렌드 분석</li>
+                        <li><strong>전략 수립:</strong> 장기적 목표와 실행 전략 수립</li>
+                        <li><strong>리소스 배분:</strong> 전략 목표 달성을 위한 인력, 예산 배분</li>
+                        <li><strong>실행 관리:</strong> 전략 실행 과정 모니터링 및 조정</li>
+                    </ul>
+                    
+                    <h3>서비스 리더십의 역할 상세 분석</h3>
+                    
+                    <p><strong>1. 서비스 문화 조성:</strong></p>
+                    <p>서비스 리더의 가장 중요한 역할은 고객 중심의 서비스 문화를 조성하는 것입니다.</p>
+                    
+                    <p><strong>서비스 문화 조성 방법:</strong></p>
+                    <ul style="margin-left: 20px; margin-top: 10px;">
+                        <li><strong>가치관 명확화:</strong> 조직의 핵심 가치를 명확히 정의하고 전달</li>
+                        <li><strong>일관된 행동:</strong> 리더가 먼저 고객 중심 행동 실천 (예: 직접 고객 응대)</li>
+                        <li><strong>성공 사례 공유:</strong> 우수한 서비스 사례를 공유하고 인정</li>
+                        <li><strong>상징적 행동:</strong> 고객 만족을 우선시하는 상징적 행동 (예: 고객 불만 해결 시 특별 보상)</li>
+                    </ul>
+                    
+                    <p><strong>2. 서비스 표준 수립 및 실행:</strong></p>
+                    <p>일관된 고품질 서비스를 제공하기 위해 서비스 표준을 수립하고 실행해야 합니다.</p>
+                    
+                    <p><strong>서비스 표준 수립 프로세스:</strong></p>
+                    <ul style="margin-left: 20px; margin-top: 10px;">
+                        <li><strong>고객 기대 파악:</strong> 고객이 기대하는 서비스 수준 조사</li>
+                        <li><strong>경쟁사 벤치마킹:</strong> 우수한 경쟁사의 서비스 표준 분석</li>
+                        <li><strong>표준 수립:</strong> 구체적이고 측정 가능한 서비스 표준 설정</li>
+                        <li><strong>교육 및 훈련:</strong> 모든 직원이 표준을 이해하고 실행할 수 있도록 교육</li>
+                        <li><strong>모니터링 및 개선:</strong> 표준 준수 여부를 지속적으로 모니터링하고 개선</li>
+                    </ul>
+                    
+                    <p><strong>3. 품질 모니터링 및 개선:</strong></p>
+                    <p>서비스 품질을 지속적으로 모니터링하고 개선하는 것이 리더의 핵심 역할입니다.</p>
+                    
+                    <p><strong>품질 모니터링 방법:</strong></p>
+                    <ul style="margin-left: 20px; margin-top: 10px;">
+                        <li><strong>고객 만족도 조사:</strong> 정기적인 고객 만족도 측정</li>
+                        <li><strong>서비스 품질 지표 설정:</strong> 응답 시간, 해결률, 정확도 등 측정 가능한 지표 설정</li>
+                        <li><strong>비밀 고객 (Mystery Shopper):</strong> 실제 서비스 품질 평가</li>
+                        <li><strong>직원 피드백:</strong> 직원들이 느끼는 서비스 품질 이슈 파악</li>
+                    </ul>
+                    
+                    <p><strong>4. 구성원 동기 부여:</strong></p>
+                    <p>서비스 품질의 핵심은 직원입니다. 직원의 동기와 만족도를 높이는 것이 리더의 중요한 역할입니다.</p>
+                    
+                    <p><strong>구성원 동기 부여 방법:</strong></p>
+                    <ul style="margin-left: 20px; margin-top: 10px;">
+                        <li><strong>의미 부여:</strong> 직원의 업무에 의미를 부여 (예: "우리는 고객의 행복을 만든다")</li>
+                        <li><strong>인정 및 보상:</strong> 우수한 서비스를 제공한 직원을 인정하고 보상</li>
+                        <li><strong>성장 기회 제공:</strong> 교육, 승진, 새로운 역할 부여 등 성장 기회 제공</li>
+                        <li><strong>자율성 부여:</strong> 일정 범위 내 자율적 판단 권한 부여</li>
+                        <li><strong>피드백 제공:</strong> 정기적인 성과 피드백 및 지도</li>
+                    </ul>
+                    
+                    <h3>경쟁 전략과 서비스 리더십</h3>
+                    <p>서비스 리더십은 기업의 경쟁 우위를 확보하는 핵심 요소입니다. 
+                    마이클 포터의 경쟁 전략 이론에 따르면, 서비스 차별화를 통해 경쟁 우위를 확보할 수 있으며, 
+                    이는 서비스 리더십에 의해 가능합니다.</p>
+                    
+                    <p><strong>서비스 리더십과 경쟁 우위:</strong></p>
+                    <ul style="margin-left: 20px; margin-top: 10px;">
+                        <li><strong>차별화 전략:</strong> 우수한 서비스 리더십은 경쟁사와 차별화된 서비스 제공</li>
+                        <li><strong>고객 유지:</strong> 뛰어난 서비스로 고객 유지율 향상</li>
+                        <li><strong>추천 효과:</strong> 만족한 고객의 추천을 통한 신규 고객 유입</li>
+                        <li><strong>프리미엄 가격:</strong> 우수한 서비스로 프리미엄 가격 설정 가능</li>
+                    </ul>
+                `,
+                questions: [
+                    {
+                        question: "서비스 리더십의 3가지 핵심 요소가 아닌 것은?",
+                        options: ["고객 중심 사고", "서비스 비전 제시", "구성원 역량 강화", "원가 절감 중심"],
+                        correct: 3
+                    },
+                    {
+                        question: "서비스 리더십에서 모든 결정의 첫 번째 기준이 되는 것은?",
+                        options: ["수익 극대화", "고객 중심 사고", "원가 절감", "직원 관리"],
+                        correct: 1
+                    },
+                    {
+                        question: "서번트 리더십의 핵심 철학은?",
+                        options: ["리더가 먼저 섬긴다", "리더가 먼저 명령한다", "리더가 먼저 이익을 본다", "리더가 먼저 결정한다"],
+                        correct: 0
+                    }
+                ]
+            },
+            {
+                title: "서비스 기법",
+                content: `
+                    <h3>서비스 청사진 (Service Blueprint)</h3>
+                    <p>서비스 청사진은 서비스 제공 과정을 시각적으로 표현한 도구입니다. 
+                    고객이 서비스를 경험하는 전체 과정을 단계별로 도식화하여 
+                    서비스 프로세스를 설계하고 개선하는 데 사용됩니다.</p>
+                    
+                    <h3>서비스 청사진의 구성 요소</h3>
+                    <ul style="margin-left: 20px; margin-top: 10px;">
+                        <li><strong>고객 행동:</strong> 고객이 수행하는 행동</li>
+                        <li><strong>온라인 접촉:</strong> 고객이 직접 접촉하는 직원</li>
+                        <li><strong>백스테이지:</strong> 고객이 보지 못하는 후방 활동</li>
+                        <li><strong>지원 프로세스:</strong> 서비스를 지원하는 내부 시스템</li>
+                    </ul>
+                    
+                    <h3>서비스 모니터링</h3>
+                    <p>서비스 모니터링은 서비스 품질을 지속적으로 관찰하고 측정하는 활동입니다. 
+                    실시간으로 서비스 품질을 확인하고 문제점을 조기에 발견하여 개선합니다.</p>
+                    
+                    <h3>MOT (Moment of Truth) 사이클 차트</h3>
+                    <p>MOT는 고객이 서비스 제공 조직과 접촉하는 모든 순간을 의미합니다. 
+                    이 순간들이 고객 만족도를 결정하며, 각 MOT를 관리하는 것이 중요합니다.</p>
+                    
+                    <p><strong>MOT 관리 단계:</strong></p>
+                    <ul style="margin-left: 20px; margin-top: 10px;">
+                        <li>MOT 식별: 고객 접점 파악</li>
+                        <li>MOT 설계: 최적의 경험 설계</li>
+                        <li>MOT 실행: 표준 준수 및 실행</li>
+                        <li>MOT 평가: 만족도 측정</li>
+                        <li>MOT 개선: 지속적 개선</li>
+                    </ul>
+                `,
+                questions: [
+                    {
+                        question: "서비스 청사진의 4가지 구성 요소에 해당하지 않는 것은?",
+                        options: ["고객 행동", "온라인 접촉", "백스테이지", "마케팅 전략"],
+                        correct: 3
+                    },
+                    {
+                        question: "서비스 청사진에서 고객이 보지 못하는 후방 활동을 무엇이라고 하는가?",
+                        options: ["고객 행동", "온라인 접촉", "백스테이지", "지원 프로세스"],
+                        correct: 2
+                    },
+                    {
+                        question: "MOT (Moment of Truth) 사이클 차트에서 MOT 관리 단계가 아닌 것은?",
+                        options: ["MOT 식별", "MOT 설계", "MOT 실행", "MOT 비용 산정"],
+                        correct: 3
+                    }
+                ]
+            },
+            {
+                title: "서비스 차별화",
+                content: `
+                    <h3>서비스 차별화란?</h3>
+                    <p>서비스 차별화는 경쟁 기업과 구별되는 고유한 서비스 특징을 개발하여 
+                    고객에게 특별한 가치를 제공하는 전략입니다. 
+                    표준화된 서비스에서 벗어나 고객에게 특별한 경험을 제공하여 경쟁 우위를 확보합니다.</p>
+                    
+                    <h3>마케팅 전략과 서비스 차별화</h3>
+                    <p><strong>1. 타겟 고객 세분화:</strong></p>
+                    <ul style="margin-left: 20px; margin-top: 10px;">
+                        <li>고객 그룹별 맞춤형 서비스 개발</li>
+                        <li>프리미엄 서비스 vs 대중 서비스</li>
+                    </ul>
+                    
+                    <p><strong>2. 포지셔닝 전략:</strong></p>
+                    <ul style="margin-left: 20px; margin-top: 10px;">
+                        <li>시장에서의 독특한 위치 확보</li>
+                        <li>고객 인식 형성</li>
+                    </ul>
+                    
+                    <h3>서비스 패러독스</h3>
+                    <p>서비스 패러독스는 서비스의 품질 향상을 추구하면서도 
+                    일관성과 효율성을 유지해야 하는 모순된 상황을 의미합니다.</p>
+                    
+                    <h3>서비스 회복 (Service Recovery)</h3>
+                    <p>서비스 회복은 서비스 실패 발생 시 고객 만족을 회복하기 위한 조치입니다.</p>
+                    
+                    <p><strong>서비스 회복 전략:</strong></p>
+                    <ul style="margin-left: 20px; margin-top: 10px;">
+                        <li><strong>즉각적 대응:</strong> 신속한 문제 인식 및 대응</li>
+                        <li><strong>사과 및 공감:</strong> 진정성 있는 사과</li>
+                        <li><strong>보상 제공:</strong> 적절한 보상으로 불만 해소</li>
+                        <li><strong>근본 원인 해결:</strong> 재발 방지 조치</li>
+                    </ul>
+                    
+                    <h3>After-Sales Service (사후 관리)</h3>
+                    <p>After-Sales Service는 제품 판매 후 제공하는 서비스로, 
+                    고객 만족도와 재구매율을 높이는 핵심 요소입니다.</p>
+                    
+                    <p><strong>사후 관리 유형:</strong></p>
+                    <ul style="margin-left: 20px; margin-top: 10px;">
+                        <li>A/S 및 수리 서비스</li>
+                        <li>고객 상담 및 지원</li>
+                        <li>관련 정보 제공</li>
+                        <li>고객 만족도 조사</li>
+                    </ul>
+                `,
+                questions: [
+                    {
+                        question: "서비스 회복의 4가지 전략에 해당하지 않는 것은?",
+                        options: ["즉각적 대응", "사과 및 공감", "보상 제공", "고객 비난"],
+                        correct: 3
+                    },
+                    {
+                        question: "서비스 실패 발생 시 가장 먼저 해야 할 것은?",
+                        options: ["즉각적 대응", "사과 및 공감", "보상 제공", "근본 원인 해결"],
+                        correct: 0
+                    },
+                    {
+                        question: "서비스 회복에서 재발 방지를 위한 전략은?",
+                        options: ["즉각적 대응", "사과 및 공감", "보상 제공", "근본 원인 해결"],
+                        correct: 3
+                    }
+                ]
+            },
+            {
+                title: "서비스 차별화 사례 연구",
+                content: `
+                    <h3>고객인지 프로그램</h3>
+                    <p>고객인지 프로그램은 고객을 체계적으로 관리하고 우대하는 프로그램입니다. 
+                    VIP 고객 관리, 멤버십 프로그램, 로열티 프로그램 등이 이에 해당합니다.</p>
+                    
+                    <h3>서비스 수익 체인</h3>
+                    <p>서비스 수익 체인은 내부 서비스 품질 → 직원 만족 → 직원 유지 → 외부 서비스 가치 → 
+                    고객 만족 → 고객 유지 → 수익성 증가라는 인과관계를 설명하는 모델입니다.</p>
+                    
+                    <h3>제품 차별화</h3>
+                    <p>제품 차별화는 제품 자체의 특징을 통해 경쟁 우위를 확보하는 전략입니다.</p>
+                    
+                    <h3>산업별 사례</h3>
+                    <p><strong>1. 항공업:</strong> 마일리지 프로그램, 라운지 서비스</p>
+                    <p><strong>2. 호텔업:</strong> VIP 회원 프로그램, 개인화 서비스</p>
+                    <p><strong>3. 금융업:</strong> 프리미엄 뱅킹, 맞춤형 상품</p>
+                    <p><strong>4. 온라인 쇼핑:</strong> 개인화 추천, 빠른 배송</p>
+                `,
+                questions: [
+                    {
+                        question: "서비스 수익 체인의 핵심 인과관계 순서로 올바른 것은?",
+                        options: ["내부 서비스 품질 → 직원 만족 → 고객 만족 → 수익성 증가", "직원 만족 → 내부 서비스 품질 → 고객 만족 → 수익성 증가", "고객 만족 → 내부 서비스 품질 → 직원 만족 → 수익성 증가", "수익성 증가 → 내부 서비스 품질 → 직원 만족 → 고객 만족"],
+                        correct: 0
+                    },
+                    {
+                        question: "서비스 수익 체인에서 내부 서비스 품질 다음 단계는?",
+                        options: ["고객 만족", "직원 만족", "수익성 증가", "서비스 개선"],
+                        correct: 1
+                    },
+                    {
+                        question: "고객인지 프로그램에 해당하지 않는 것은?",
+                        options: ["VIP 고객 관리", "멤버십 프로그램", "로열티 프로그램", "경쟁사 분석"],
+                        correct: 3
+                    }
+                ]
+            },
+            {
+                title: "서비스 품질 관리",
+                content: `
+                    <h3>서비스 품질 개념</h3>
+                    <p>서비스 품질은 고객이 기대하는 수준과 실제 경험한 수준의 차이로 평가됩니다. 
+                    SERVQUAL 모델에 따르면 서비스 품질은 5가지 차원으로 구성됩니다.</p>
+                    
+                    <h3>서비스 품질의 결정 요인 (SERVQUAL 5차원)</h3>
+                    <p><strong>1. 유형성 (Tangibles):</strong></p>
+                    <ul style="margin-left: 20px; margin-top: 10px;">
+                        <li>시설, 장비, 직원 외모 등 물리적 요소</li>
+                    </ul>
+                    
+                    <p><strong>2. 신뢰성 (Reliability):</strong></p>
+                    <ul style="margin-left: 20px; margin-top: 10px;">
+                        <li>약속한 서비스를 정확하고 일관되게 제공</li>
+                    </ul>
+                    
+                    <p><strong>3. 반응성 (Responsiveness):</strong></p>
+                    <ul style="margin-left: 20px; margin-top: 10px;">
+                        <li>고객의 요청에 빠르게 대응</li>
+                    </ul>
+                    
+                    <p><strong>4. 확신성 (Assurance):</strong></p>
+                    <ul style="margin-left: 20px; margin-top: 10px;">
+                        <li>직원의 지식, 예의, 안전감 제공</li>
+                    </ul>
+                    
+                    <p><strong>5. 공감성 (Empathy):</strong></p>
+                    <ul style="margin-left: 20px; margin-top: 10px;">
+                        <li>고객을 이해하고 개인화된 관심 제공</li>
+                    </ul>
+                    
+                    <h3>서비스 품질 향상 방안</h3>
+                    <ul style="margin-left: 20px; margin-top: 10px;">
+                        <li>고객 기대 관리</li>
+                        <li>서비스 표준화 및 프로세스 개선</li>
+                        <li>직원 교육 및 역량 강화</li>
+                        <li>고객 피드백 시스템 구축</li>
+                        <li>지속적인 모니터링 및 개선</li>
+                    </ul>
+                    
+                    <h3>조직문화 관리</h3>
+                    <p>고객 중심 조직문화는 서비스 품질의 핵심입니다. 
+                    모든 구성원이 고객 만족을 최우선 가치로 인식하고 행동하도록 문화를 조성해야 합니다.</p>
+                `,
+                questions: [
+                    {
+                        question: "SERVQUAL 모델의 5가지 서비스 품질 차원에 해당하지 않는 것은?",
+                        options: ["유형성", "신뢰성", "반응성", "경제성"],
+                        correct: 3
+                    },
+                    {
+                        question: "SERVQUAL 모델에서 약속한 서비스를 정확하고 일관되게 제공하는 차원은?",
+                        options: ["유형성", "신뢰성", "반응성", "확신성"],
+                        correct: 1
+                    },
+                    {
+                        question: "SERVQUAL 모델에서 고객의 요청에 빠르게 대응하는 차원은?",
+                        options: ["유형성", "신뢰성", "반응성", "확신성"],
+                        correct: 2
+                    }
+                ]
+            },
+            {
+                title: "CS 평가 조사",
+                content: `
+                    <h3>고객 만족도 측정</h3>
+                    <p>고객 만족도 측정은 고객이 서비스를 경험한 후 느끼는 만족 정도를 정량적으로 평가하는 것입니다. 
+                    정기적인 만족도 조사를 통해 서비스 품질을 파악하고 개선점을 도출합니다.</p>
+                    
+                    <h3>고객 만족도 측정 방법</h3>
+                    <p><strong>1. 설문 조사:</strong></p>
+                    <ul style="margin-left: 20px; margin-top: 10px;">
+                        <li>온라인/오프라인 설문</li>
+                        <li>NPS (Net Promoter Score)</li>
+                        <li>CSAT (Customer Satisfaction Score)</li>
+                    </ul>
+                    
+                    <p><strong>2. 인터뷰:</strong></p>
+                    <ul style="margin-left: 20px; margin-top: 10px;">
+                        <li>심층 인터뷰</li>
+                        <li>포커스 그룹</li>
+                    </ul>
+                    
+                    <p><strong>3. 관찰 조사:</strong></p>
+                    <ul style="margin-left: 20px; margin-top: 10px;">
+                        <li>미스터리 쇼퍼</li>
+                        <li>행동 관찰</li>
+                    </ul>
+                    
+                    <h3>평가 시스템 구축</h3>
+                    <p>효과적인 고객 만족도 평가 시스템을 구축하기 위해서는:</p>
+                    <ul style="margin-left: 20px; margin-top: 10px;">
+                        <li>명확한 평가 지표 설정</li>
+                        <li>정기적인 조사 일정 수립</li>
+                        <li>다양한 조사 방법 활용</li>
+                        <li>결과 분석 및 리포팅 시스템</li>
+                    </ul>
+                    
+                    <h3>결과 활용</h3>
+                    <p>조사 결과는 다음과 같이 활용됩니다:</p>
+                    <ul style="margin-left: 20px; margin-top: 10px;">
+                        <li>서비스 품질 개선</li>
+                        <li>직원 교육 및 평가</li>
+                        <li>경영 의사결정</li>
+                        <li>고객 이탈 예방</li>
+                    </ul>
+                `,
+                questions: [
+                    {
+                        question: "고객 만족도 측정 방법이 아닌 것은?",
+                        options: ["설문 조사", "인터뷰", "관찰 조사", "직관적 추정"],
+                        correct: 3
+                    },
+                    {
+                        question: "고객 만족도를 정량적으로 측정하는 방법은?",
+                        options: ["설문 조사", "인터뷰", "관찰 조사", "경험적 판단"],
+                        correct: 0
+                    },
+                    {
+                        question: "비밀 고객(Mystery Shopper)은 어떤 측정 방법에 속하는가?",
+                        options: ["설문 조사", "인터뷰", "관찰 조사", "정량 조사"],
+                        correct: 2
+                    }
+                ]
+            },
+            {
+                title: "CS 컨설팅",
+                content: `
+                    <h3>품질관리 컨설팅</h3>
+                    <p>CS 품질관리 컨설팅은 기업의 고객 서비스 품질을 진단하고 개선 방안을 제시하는 전문 서비스입니다. 
+                    외부 전문가의 객관적 관점으로 문제점을 파악하고 체계적인 개선 계획을 수립합니다.</p>
+                    
+                    <h3>CS 트렌드</h3>
+                    <p><strong>1. 디지털 전환:</strong></p>
+                    <ul style="margin-left: 20px; margin-top: 10px;">
+                        <li>AI 챗봇, 자동화 시스템</li>
+                        <li>모바일 셀프 서비스</li>
+                    </ul>
+                    
+                    <p><strong>2. 개인화:</strong></p>
+                    <ul style="margin-left: 20px; margin-top: 10px;">
+                        <li>빅데이터 기반 맞춤형 서비스</li>
+                        <li>1:1 마케팅</li>
+                    </ul>
+                    
+                    <p><strong>3. 프로액티브 서비스:</strong></p>
+                    <ul style="margin-left: 20px; margin-top: 10px;">
+                        <li>고객이 요청하기 전에 문제 해결</li>
+                        <li>예측 분석 활용</li>
+                    </ul>
+                    
+                    <h3>CS 플래닝 (기획)</h3>
+                    <p>CS 전략 수립을 위한 체계적인 기획 과정입니다:</p>
+                    <ul style="margin-left: 20px; margin-top: 10px;">
+                        <li>현황 분석 및 진단</li>
+                        <li>목표 설정</li>
+                        <li>실행 계획 수립</li>
+                        <li>성과 측정 지표 설정</li>
+                    </ul>
+                    
+                    <h3>벤치마킹</h3>
+                    <p>벤치마킹은 우수 기업의 사례를 분석하여 
+                    본인의 서비스에 적용하는 전략입니다. 
+                    경쟁사나 우수 기업의 모범 사례를 학습하여 서비스 품질을 향상시킵니다.</p>
+                `,
+                questions: [
+                    {
+                        question: "CS 컨설팅에서 CS 플래닝의 4가지 단계 순서로 올바른 것은?",
+                        options: ["현황 분석 및 진단 → 목표 설정 → 실행 계획 수립 → 성과 측정 지표 설정", "목표 설정 → 현황 분석 및 진단 → 실행 계획 수립 → 성과 측정 지표 설정", "실행 계획 수립 → 현황 분석 및 진단 → 목표 설정 → 성과 측정 지표 설정", "성과 측정 지표 설정 → 현황 분석 및 진단 → 목표 설정 → 실행 계획 수립"],
+                        correct: 0
+                    },
+                    {
+                        question: "CS 플래닝에서 가장 먼저 해야 할 단계는?",
+                        options: ["현황 분석 및 진단", "목표 설정", "실행 계획 수립", "성과 측정 지표 설정"],
+                        correct: 0
+                    },
+                    {
+                        question: "벤치마킹과 가장 관련이 있는 CS 컨설팅 활동은?",
+                        options: ["현황 분석 및 진단", "목표 설정", "CS 트렌드", "CS 플래닝"],
+                        correct: 0
+                    }
+                ]
+            },
+            {
+                title: "CS 혁신 전략",
+                content: `
+                    <h3>고객 분석 및 기획</h3>
+                    <p>고객 분석은 고객 데이터를 수집하고 분석하여 
+                    고객의 행동 패턴, 선호도, 니즈를 파악하는 과정입니다. 
+                    이를 바탕으로 효과적인 서비스 전략을 수립합니다.</p>
+                    
+                    <h3>고객 경험 관리 (CXM)</h3>
+                    <p>고객 경험 관리는 고객이 기업과 상호작용하는 모든 접점에서의 
+                    경험을 설계하고 관리하는 것입니다. 
+                    전체 고객 여정(Customer Journey)을 최적화하여 만족도를 극대화합니다.</p>
+                    
+                    <h3>서비스 유통</h3>
+                    <p>서비스 유통은 서비스를 고객에게 전달하는 채널을 관리하는 것입니다. 
+                    오프라인, 온라인, 모바일 등 다양한 채널을 통합하여 
+                    고객에게 편리하고 일관된 서비스를 제공합니다.</p>
+                    
+                    <h3>마케팅 성과관리</h3>
+                    <p>마케팅 성과관리는 마케팅 활동의 효과를 측정하고 개선하는 과정입니다. 
+                    ROI, 고객 획득 비용, 고객 평생 가치 등 다양한 지표를 활용하여 
+                    마케팅 성과를 평가하고 최적화합니다.</p>
+                `,
+                questions: [
+                    {
+                        question: "고객 경험 관리에서 고객이 기업과 상호작용하는 전체 과정을 무엇이라고 하는가?",
+                        options: ["Customer Journey (고객 여정)", "Customer Value (고객 가치)", "Customer Service (고객 서비스)", "Customer Relationship (고객 관계)"],
+                        correct: 0
+                    },
+                    {
+                        question: "CS 혁신 전략에서 고객 분석 및 기획의 목적은?",
+                        options: ["고객 니즈 파악", "원가 절감", "직원 관리", "시설 관리"],
+                        correct: 0
+                    },
+                    {
+                        question: "마케팅 성과관리에서 측정하는 지표가 아닌 것은?",
+                        options: ["ROI", "고객 획득 비용", "고객 평생 가치", "직원 급여"],
+                        correct: 3
+                    }
+                ]
+            },
+            {
+                title: "전화 서비스",
+                content: `
+                    <h3>상황별 전화응대</h3>
+                    <p>전화 응대는 목소리만으로 고객과 소통하기 때문에 
+                    특히 신중하고 정확한 커뮤니케이션이 중요합니다.</p>
+                    
+                    <p><strong>1. 인사 및 인적 확인:</strong></p>
+                    <ul style="margin-left: 20px; margin-top: 10px;">
+                        <li>밝고 명확한 목소리로 인사</li>
+                        <li>회사명과 본인 이름 소개</li>
+                        <li>고객 정보 확인</li>
+                    </ul>
+                    
+                    <p><strong>2. 요청 사항 파악:</strong></p>
+                    <ul style="margin-left: 20px; margin-top: 10px;">
+                        <li>경청하며 정확히 이해</li>
+                        <li>확인 질문으로 오해 방지</li>
+                    </ul>
+                    
+                    <p><strong>3. 해결 방안 제시:</strong></p>
+                    <ul style="margin-left: 20px; margin-top: 10px;">
+                        <li>명확하고 구체적인 설명</li>
+                        <li>고객 이해도 확인</li>
+                    </ul>
+                    
+                    <h3>경어 사용법</h3>
+                    <p>전화 응대 시 올바른 경어 사용은 매우 중요합니다:</p>
+                    <ul style="margin-left: 20px; margin-top: 10px;">
+                        <li>존댓말 사용 (하십시오체)</li>
+                        <li>고객을 높여 부르기</li>
+                        <li>회사명을 낮춰 부르기</li>
+                    </ul>
+                    
+                    <h3>콜센터 운영</h3>
+                    <p><strong>1. 조직 구조:</strong></p>
+                    <ul style="margin-left: 20px; margin-top: 10px;">
+                        <li>상담원, 팀장, 품질 관리자</li>
+                        <li>계층별 역할 분담</li>
+                    </ul>
+                    
+                    <p><strong>2. 교육 및 훈련:</strong></p>
+                    <ul style="margin-left: 20px; margin-top: 10px;">
+                        <li>신규 상담원 교육</li>
+                        <li>정기 역량 강화 교육</li>
+                    </ul>
+                    
+                    <h3>매뉴얼 작성</h3>
+                    <p>효과적인 콜센터 매뉴얼은:</p>
+                    <ul style="margin-left: 20px; margin-top: 10px;">
+                        <li>상황별 표준 응답 스크립트</li>
+                        <li>FAQ 및 문제 해결 가이드</li>
+                        <li>고객 정보 조회 방법</li>
+                    </ul>
+                    
+                    <h3>TMR (Total Management Report) 성과관리</h3>
+                    <p>TMR은 콜센터의 전체 운영 현황을 종합적으로 관리하는 시스템입니다. 
+                    상담 건수, 평균 통화 시간, 만족도 등을 측정하여 
+                    성과를 평가하고 개선합니다.</p>
+                `,
+                questions: [
+                    {
+                        question: "전화 응대 시 3가지 주요 단계 순서로 올바른 것은?",
+                        options: ["인사 및 인적 확인 → 요청 사항 파악 → 해결 방안 제시", "요청 사항 파악 → 인사 및 인적 확인 → 해결 방안 제시", "해결 방안 제시 → 인사 및 인적 확인 → 요청 사항 파악", "인적 확인 → 해결 방안 제시 → 요청 사항 파악"],
+                        correct: 0
+                    },
+                    {
+                        question: "전화 응대 시 가장 먼저 해야 할 것은?",
+                        options: ["인사 및 인적 확인", "요청 사항 파악", "해결 방안 제시", "고객 비난"],
+                        correct: 0
+                    },
+                    {
+                        question: "TMR (Total Management Report) 성과관리에서 측정하지 않는 것은?",
+                        options: ["상담 건수", "평균 통화 시간", "만족도", "직원 급여"],
+                        correct: 3
+                    }
+                ]
+            },
+            {
+                title: "고객 상담",
+                content: `
+                    <h3>상황별 응대 기법</h3>
+                    <p><strong>1. 일반 상담:</strong></p>
+                    <ul style="margin-left: 20px; margin-top: 10px;">
+                        <li>친절하고 정확한 정보 제공</li>
+                        <li>고객 이해도 확인</li>
+                    </ul>
+                    
+                    <p><strong>2. 불만 상담:</strong></p>
+                    <ul style="margin-left: 20px; margin-top: 10px;">
+                        <li>감정적으로 대응하지 않기</li>
+                        <li>공감하며 경청하기</li>
+                        <li>빠른 해결 방안 제시</li>
+                    </ul>
+                    
+                    <h3>접객·안내·환송</h3>
+                    <p><strong>1. 접객:</strong></p>
+                    <ul style="margin-left: 20px; margin-top: 10px;">
+                        <li>밝은 인사와 미소</li>
+                        <li>적절한 거리 유지</li>
+                    </ul>
+                    
+                    <p><strong>2. 안내:</strong></p>
+                    <ul style="margin-left: 20px; margin-top: 10px;">
+                        <li>명확한 방향 제시</li>
+                        <li>필요 시 직접 안내</li>
+                    </ul>
+                    
+                    <p><strong>3. 환송:</strong></p>
+                    <ul style="margin-left: 20px; margin-top: 10px;">
+                        <li>감사 인사</li>
+                        <li>재방문 유도</li>
+                    </ul>
+                    
+                    <h3>클레임·컴플레인 응대</h3>
+                    <p><strong>클레임 응대 원칙:</strong></p>
+                    <ul style="margin-left: 20px; margin-top: 10px;">
+                        <li>즉각적 대응</li>
+                        <li>진정성 있는 사과</li>
+                        <li>구체적인 해결 방안</li>
+                        <li>후속 조치 확인</li>
+                    </ul>
+                    
+                    <h3>파워 코칭</h3>
+                    <p>파워 코칭은 고객 상담원의 역량을 강화하기 위한 교육 기법입니다. 
+                    실무 중심의 훈련을 통해 효과적인 상담 스킬을 향상시킵니다.</p>
+                `,
+                questions: [
+                    {
+                        question: "클레임 응대 시 4가지 원칙에 해당하지 않는 것은?",
+                        options: ["즉각적 대응", "진정성 있는 사과", "고객 비난", "구체적인 해결 방안"],
+                        correct: 2
+                    },
+                    {
+                        question: "클레임 응대에서 가장 먼저 해야 할 것은?",
+                        options: ["즉각적 대응", "진정성 있는 사과", "구체적인 해결 방안", "후속 조치 확인"],
+                        correct: 0
+                    },
+                    {
+                        question: "고객 상담에서 파워 코칭의 목적은?",
+                        options: ["고객 상담원의 역량 강화", "고객 비난", "서비스 비용 절감", "직원 감축"],
+                        correct: 0
+                    }
+                ]
+            },
+            {
+                title: "예절과 에티켓",
+                content: `
+                    <h3>이미지 컨설팅</h3>
+                    <p>이미지 컨설팅은 개인이나 조직의 외적 이미지를 개선하여 
+                    긍정적인 인상을 주는 것을 목표로 합니다. 
+                    서비스 직원의 외모와 매너는 기업 이미지에 직접적인 영향을 미칩니다.</p>
+                    
+                    <h3>인사 매너</h3>
+                    <p><strong>1. 기본 인사:</strong></p>
+                    <ul style="margin-left: 20px; margin-top: 10px;">
+                        <li>밝고 명확한 목소리</li>
+                        <li>적절한 거리와 눈맞춤</li>
+                        <li>미소와 함께</li>
+                    </ul>
+                    
+                    <p><strong>2. 상황별 인사:</strong></p>
+                    <ul style="margin-left: 20px; margin-top: 10px;">
+                        <li>시간대별 인사 (안녕하세요, 안녕히 가세요)</li>
+                        <li>상황별 인사 (어서 오세요, 감사합니다)</li>
+                    </ul>
+                    
+                    <h3>전통 예절 완벽 이해</h3>
+                    <p>한국의 전통 예절을 이해하고 상황에 맞게 적용하는 것이 중요합니다. 
+                    전통 예절은 우리의 문화적 정체성을 나타내며, 고객 응대 시에도 적절히 활용할 수 있습니다.</p>
+                    
+                    <p><strong>전통 예절의 기본 원칙:</strong></p>
+                    <ul style="margin-left: 20px; margin-top: 10px;">
+                        <li><strong>경어 사용:</strong> 상대방을 높이고 자신을 낮추는 언어 사용</li>
+                        <li><strong>계층에 따른 예절:</strong> 연령, 지위에 따라 다른 예절 적용</li>
+                        <li><strong>상황별 예절:</strong> 상황과 장소에 맞는 예절</li>
+                    </ul>
+                    
+                    <h3>인사 예절</h3>
+                    <p><strong>1. 절의 종류:</strong></p>
+                    <ul style="margin-left: 20px; margin-top: 10px;">
+                        <li><strong>큰절 (대절):</strong> 조상님께 드리는 절, 결혼식 등 매우 정중한 상황
+                            <ul style="margin-left: 15px; margin-top: 5px;">
+                                <li>두 손을 모아 가슴 앞에 올린 후</li>
+                                <li>무릎을 굽혀 상체를 90도로 숙이고</li>
+                                <li>바닥에 손을 댄 후</li>
+                                <li>이마가 손등에 닿을 정도로 깊이 숙임</li>
+                            </ul>
+                        </li>
+                        <li><strong>평절 (보통절):</strong> 어른께 드리는 일반적인 절
+                            <ul style="margin-left: 15px; margin-top: 5px;">
+                                <li>두 손을 모아 가슴 앞에 올린 후</li>
+                                <li>무릎을 굽혀 상체를 30~45도로 숙이고</li>
+                                <li>바닥에 손을 댄 후</li>
+                                <li>손등 위로 이마가 닿을 정도로 숙임</li>
+                            </ul>
+                        </li>
+                        <li><strong>반절 (작은절):</strong> 동년배나 나이가 적은 사람에게 하는 절
+                            <ul style="margin-left: 15px; margin-top: 5px;">
+                                <li>두 손을 모아 가슴 앞에 올린 후</li>
+                                <li>가볍게 허리를 숙여 인사</li>
+                            </ul>
+                        </li>
+                    </ul>
+                    
+                    <p><strong>2. 남자의 평절 자세:</strong></p>
+                    <ul style="margin-left: 20px; margin-top: 10px;">
+                        <li><strong>준비 자세:</strong>
+                            <ul style="margin-left: 15px; margin-top: 5px;">
+                                <li>두 발을 모으고 서서</li>
+                                <li>두 손을 앞으로 모아 가슴 앞에 올림</li>
+                                <li>오른손이 위, 왼손이 아래 (남자)</li>
+                            </ul>
+                        </li>
+                        <li><strong>절하는 동작:</strong>
+                            <ul style="margin-left: 15px; margin-top: 5px;">
+                                <li>무릎을 굽혀 앉으면서</li>
+                                <li>상체를 30~45도로 숙이고</li>
+                                <li>양손을 앞으로 뻗어 바닥에 댐</li>
+                                <li>왼손을 먼저, 오른손을 나중에 (남자)</li>
+                                <li>이마가 손등 위에 닿을 정도로 숙임</li>
+                                <li>2~3초 정도 유지 후 일어남</li>
+                            </ul>
+                        </li>
+                        <li><strong>주의사항:</strong>
+                            <ul style="margin-left: 15px; margin-top: 5px;">
+                                <li>손가락을 벌리지 않고 모아서</li>
+                                <li>무릎을 떼지 않고 무릎을 꿇고</li>
+                                <li>손이 무릎 앞에 위치하도록</li>
+                                <li>눈을 뜨고 절하지 않음 (공손함 표현)</li>
+                            </ul>
+                        </li>
+                    </ul>
+                    
+                    <p><strong>3. 여자의 평절 자세:</strong></p>
+                    <ul style="margin-left: 20px; margin-top: 10px;">
+                        <li><strong>준비 자세:</strong>
+                            <ul style="margin-left: 15px; margin-top: 5px;">
+                                <li>두 발을 모으고 서서</li>
+                                <li>두 손을 앞으로 모아 가슴 앞에 올림</li>
+                                <li>왼손이 위, 오른손이 아래 (여자)</li>
+                            </ul>
+                        </li>
+                        <li><strong>절하는 동작:</strong>
+                            <ul style="margin-left: 15px; margin-top: 5px;">
+                                <li>무릎을 굽혀 앉으면서</li>
+                                <li>상체를 30~45도로 숙이고</li>
+                                <li>양손을 앞으로 뻗어 바닥에 댐</li>
+                                <li>오른손을 먼저, 왼손을 나중에 (여자)</li>
+                                <li>이마가 손등 위에 닿을 정도로 숙임</li>
+                                <li>2~3초 정도 유지 후 일어남</li>
+                            </ul>
+                        </li>
+                        <li><strong>차이점:</strong> 여자는 왼손이 위, 오른손을 먼저 바닥에 댐</li>
+                    </ul>
+                    
+                    <p><strong>4. 현대적 인사 매너:</strong></p>
+                    <ul style="margin-left: 20px; margin-top: 10px;">
+                        <li><strong>경어 사용:</strong> 상대방을 높이는 언어 사용</li>
+                        <li><strong>계층에 따른 예절:</strong> 연령, 지위에 따라 다른 예절 적용</li>
+                        <li><strong>상황별 예절:</strong> 상황과 장소에 맞는 예절</li>
+                    </ul>
+                    
+                    <h3>식사 예절</h3>
+                    <p><strong>1. 기본 식사 예절:</strong></p>
+                    <ul style="margin-left: 20px; margin-top: 10px;">
+                        <li><strong>자리 배치:</strong> 어른이 상좌(안쪽)에 앉고, 어린이가 하좌(바깥쪽)에 앉음</li>
+                        <li><strong>앉는 자세:</strong> 바르게 앉고, 팔꿈치를 식탁에 올리지 않음</li>
+                        <li><strong>수저 사용:</strong> 젓가락과 숟가락을 함께 사용할 때는 먼저 수저를 듦</li>
+                        <li><strong>음식 먹는 순서:</strong> 국물 있는 음식부터, 국물 없는 음식 나중에</li>
+                    </ul>
+                    
+                    <p><strong>2. 젓가락 사용 예절:</strong></p>
+                    <ul style="margin-left: 20px; margin-top: 10px;">
+                        <li>젓가락으로 음식을 찍지 않음</li>
+                        <li>젓가락을 입에 물지 않음</li>
+                        <li>젓가락으로 음식을 가리지 않음</li>
+                        <li>젓가락을 그릇에 세워두지 않음</li>
+                    </ul>
+                    
+                    <h3>선물 전달 예절</h3>
+                    <p><strong>1. 선물 전달 방법:</strong></p>
+                    <ul style="margin-left: 20px; margin-top: 10px;">
+                        <li><strong>두 손으로 전달:</strong> 공손함 표현</li>
+                        <li><strong>선물 포장:</strong> 깔끔하게 포장</li>
+                        <li><strong>선물 비용 공개 금지:</strong> 가격을 말하지 않음</li>
+                        <li><strong>선물 받은 후:</strong> 즉시 열어보지 않고, 감사 인사 후 나중에 확인</li>
+                    </ul>
+                    
+                    <p><strong>2. 금기 사항:</strong></li>
+                    <ul style="margin-left: 20px; margin-top: 10px;">
+                        <li>신발, 시계 등 특정 선물은 피함 (돌아가신다는 의미)</li>
+                        <li>빨간색 이름으로 편지 쓰기 (사람 이름은 검은색)</li>
+                        <li>4개 단위 선물 피하기 (사는 죽음의 의미)</li>
+                    </ul>
+                    
+                    <h3>서비스 매너</h3>
+                    <ul style="margin-left: 20px; margin-top: 10px;">
+                        <li>고객을 우대하는 자세</li>
+                        <li>공손하고 친절한 태도</li>
+                        <li>전문가적인 모습</li>
+                    </ul>
+                `,
+                questions: [
+                    {
+                        question: "남자의 평절 자세에서 손의 위치는?",
+                        options: ["오른손이 위, 왼손이 아래", "왼손이 위, 오른손이 아래", "양손을 동시에", "손을 사용하지 않음"],
+                        correct: 0
+                    },
+                    {
+                        question: "남자의 평절에서 바닥에 손을 대는 순서는?",
+                        options: ["왼손 먼저, 오른손 나중에", "오른손 먼저, 왼손 나중에", "양손을 동시에", "순서 없음"],
+                        correct: 0
+                    },
+                    {
+                        question: "여자의 평절 자세에서 손의 위치는?",
+                        options: ["오른손이 위, 왼손이 아래", "왼손이 위, 오른손이 아래", "양손을 동시에", "손을 사용하지 않음"],
+                        correct: 1
+                    }
+                ]
+            },
+            {
+                title: "비즈니스 응대",
+                content: `
+                    <h3>비즈니스 매너</h3>
+                    <p>비즈니스 매너는 업무 환경에서 지켜야 할 예절과 규범입니다. 
+                    전문성과 신뢰를 구축하기 위한 필수 요소입니다.</p>
+                    
+                    <p><strong>1. 명함 교환:</strong></p>
+                    <ul style="margin-left: 20px; margin-top: 10px;">
+                        <li>두 손으로 전달</li>
+                        <li>명함을 받은 후 확인</li>
+                    </ul>
+                    
+                    <p><strong>2. 회의 매너:</strong></p>
+                    <ul style="margin-left: 20px; margin-top: 10px;">
+                        <li>시간 준수</li>
+                        <li>준비된 자료</li>
+                        <li>적극적인 참여</li>
+                    </ul>
+                    
+                    <h3>다문화 이해</h3>
+                    <p>글로벌 비즈니스 환경에서 문화적 차이를 이해하고 존중하는 것이 중요합니다:</p>
+                    <ul style="margin-left: 20px; margin-top: 10px;">
+                        <li>문화적 배경 이해</li>
+                        <li>상황별 적절한 대응</li>
+                        <li>문화적 편견 극복</li>
+                    </ul>
+                    
+                    <h3>국제 비즈니스 매너</h3>
+                    <p><strong>1. 국가별 특성 이해:</strong></p>
+                    <ul style="margin-left: 20px; margin-top: 10px;">
+                        <li>미국: 직접적이고 솔직한 커뮤니케이션</li>
+                        <li>일본: 간접적이고 존중하는 태도</li>
+                        <li>중국: 관계(관시) 중시</li>
+                    </ul>
+                    
+                    <h3>컨벤션 기획</h3>
+                    <p>컨벤션 기획은 대규모 비즈니스 행사를 기획하고 운영하는 것입니다. 
+                    체계적인 계획과 세심한 준비가 필요합니다.</p>
+                `,
+                questions: [
+                    {
+                        question: "명함 교환 시 올바른 매너는?",
+                        options: ["두 손으로 전달하고 받은 후 확인", "한 손으로 전달하고 바로 집어넣기", "바닥에 던져주기", "명함을 찢어주기"],
+                        correct: 0
+                    },
+                    {
+                        question: "비즈니스 매너에서 명함을 받은 후 해야 할 것은?",
+                        options: ["즉시 확인하고 집어넣기", "바로 찢어버리기", "바닥에 던지기", "무시하기"],
+                        correct: 0
+                    },
+                    {
+                        question: "국제 비즈니스 매너에서 미국의 특징은?",
+                        options: ["직접적이고 솔직한 커뮤니케이션", "간접적이고 존중하는 태도", "관계 중시", "형식적 예절"],
+                        correct: 0
+                    }
+                ]
+            },
+            {
+                title: "고객 감동",
+                content: `
+                    <h3>소비자 기본법에 따른 고객 지원</h3>
+                    <p>소비자 기본법은 소비자의 권익을 보호하고 소비자와 사업자 간의 공정한 거래를 
+                    보장하기 위한 법률입니다. 이를 준수하며 고객을 지원하는 것이 기업의 의무입니다.</p>
+                    
+                    <h3>정보 제공</h3>
+                    <p>고객에게 정확하고 충분한 정보를 제공하는 것이 중요합니다:</p>
+                    <ul style="margin-left: 20px; margin-top: 10px;">
+                        <li>제품/서비스 정보</li>
+                        <li>계약 조건 명확화</li>
+                        <li>이용 약관 공지</li>
+                    </ul>
+                    
+                    <h3>피해 구제</h3>
+                    <p>고객 피해 발생 시 적절한 구제 조치를 취해야 합니다:</p>
+                    <ul style="margin-left: 20px; margin-top: 10px;">
+                        <li>신속한 피해 확인</li>
+                        <li>공정한 보상</li>
+                        <li>재발 방지 조치</li>
+                    </ul>
+                    
+                    <h3>고객 감동 사례</h3>
+                    <p>고객의 기대를 뛰어넘는 서비스를 제공하여 감동을 주는 것이 
+                    장기적인 고객 관계 구축의 핵심입니다.</p>
+                `,
+                questions: [
+                    {
+                        question: "피해 구제 시 3가지 주요 조치에 해당하지 않는 것은?",
+                        options: ["신속한 피해 확인", "공정한 보상", "피해 부정", "재발 방지 조치"],
+                        correct: 2
+                    },
+                    {
+                        question: "피해 구제에서 가장 먼저 해야 할 것은?",
+                        options: ["신속한 피해 확인", "공정한 보상", "재발 방지 조치", "고객 비난"],
+                        correct: 0
+                    },
+                    {
+                        question: "소비자 기본법에 따른 고객 지원의 핵심은?",
+                        options: ["고객 권익 보호", "기업 이익 최대화", "직원 보호", "경쟁자 약화"],
+                        correct: 0
+                    }
+                ]
+            },
+            {
+                title: "고객 만족",
+                content: `
+                    <h3>고객 사후관리</h3>
+                    <p>고객 사후관리는 제품/서비스 구매 후 지속적으로 고객과 관계를 유지하고 
+                    추가 가치를 제공하는 활동입니다.</p>
+                    
+                    <p><strong>1. 구매 후 확인:</strong></p>
+                    <ul style="margin-left: 20px; margin-top: 10px;">
+                        <li>만족도 확인 연락</li>
+                        <li>문제점 파악</li>
+                    </ul>
+                    
+                    <p><strong>2. 지속적 관계 유지:</strong></p>
+                    <ul style="margin-left: 20px; margin-top: 10px;">
+                        <li>정기적인 정보 제공</li>
+                        <li>특별 혜택 제공</li>
+                        <li>이벤트 초대</li>
+                    </ul>
+                    
+                    <h3>개인정보 데이터 관리</h3>
+                    <p>고객의 개인정보를 안전하게 관리하는 것은 법적 의무이자 신뢰 구축의 기반입니다:</p>
+                    <ul style="margin-left: 20px; margin-top: 10px;">
+                        <li>개인정보보호법 준수</li>
+                        <li>암호화 및 보안 관리</li>
+                        <li>접근 권한 관리</li>
+                        <li>데이터 유지 기간 관리</li>
+                    </ul>
+                    
+                    <h3>고객 만족 관리</h3>
+                    <p>지속적인 고객 만족 관리를 통해 고객 유지율을 높이고 
+                    장기적인 관계를 구축합니다.</p>
+                `,
+                questions: [
+                    {
+                        question: "개인정보 데이터 관리 시 4가지 주요 사항에 해당하지 않는 것은?",
+                        options: ["개인정보보호법 준수", "암호화 및 보안 관리", "접근 권한 관리", "개인정보 공개"],
+                        correct: 3
+                    },
+                    {
+                        question: "개인정보 데이터 관리에서 가장 중요한 법적 의무는?",
+                        options: ["개인정보보호법 준수", "암호화 및 보안 관리", "접근 권한 관리", "데이터 유지 기간 관리"],
+                        correct: 0
+                    },
+                    {
+                        question: "고객 사후관리의 목적은?",
+                        options: ["고객 관계 유지 및 추가 가치 제공", "고객 비난", "서비스 비용 절감", "직원 관리"],
+                        correct: 0
+                    }
+                ]
+            },
+            {
+                title: "고품위 서비스",
+                content: `
+                    <h3>보고업무·회의·의전 실무</h3>
+                    <p><strong>1. 보고 업무:</strong></p>
+                    <ul style="margin-left: 20px; margin-top: 10px;">
+                        <li>명확하고 간결한 보고</li>
+                        <li>시의성 있는 정보 전달</li>
+                        <li>데이터 기반 근거 제시</li>
+                    </ul>
+                    
+                    <p><strong>2. 회의 운영:</strong></p>
+                    <ul style="margin-left: 20px; margin-top: 10px;">
+                        <li>효과적인 회의 준비</li>
+                        <li>명확한 의사결정</li>
+                        <li>실행 계획 수립</li>
+                    </ul>
+                    
+                    <p><strong>3. 의전 실무:</strong></p>
+                    <ul style="margin-left: 20px; margin-top: 10px;">
+                        <li>VIP 고객 응대</li>
+                        <li>공식 행사 진행</li>
+                        <li>예절 및 매너</li>
+                    </ul>
+                    
+                    <h3>사무행정 실무</h3>
+                    <p><strong>1. 문서 관리:</strong></p>
+                    <ul style="margin-left: 20px; margin-top: 10px;">
+                        <li>체계적인 문서 보관</li>
+                        <li>빠른 검색 및 접근</li>
+                    </ul>
+                    
+                    <p><strong>2. 일정 관리:</strong></p>
+                    <ul style="margin-left: 20px; margin-top: 10px;">
+                        <li>효율적인 일정 조율</li>
+                        <li>우선순위 관리</li>
+                    </ul>
+                    
+                    <p><strong>3. 커뮤니케이션:</strong></p>
+                    <ul style="margin-left: 20px; margin-top: 10px;">
+                        <li>명확한 정보 전달</li>
+                        <li>적절한 채널 선택</li>
+                    </ul>
+                `,
+                questions: [
+                    {
+                        question: "보고 업무 시 3가지 주요 사항에 해당하지 않는 것은?",
+                        options: ["명확하고 간결한 보고", "시의성 있는 정보 전달", "불확실한 정보 제공", "데이터 기반 근거 제시"],
+                        correct: 2
+                    },
+                    {
+                        question: "보고 업무에서 가장 중요한 것은?",
+                        options: ["명확하고 간결한 보고", "시의성 있는 정보 전달", "데이터 기반 근거 제시", "긴 보고서 작성"],
+                        correct: 0
+                    },
+                    {
+                        question: "고품위 서비스에서 VIP 고객 응대는 어디에 속하는가?",
+                        options: ["의전 실무", "보고 업무", "회의 운영", "사무행정"],
+                        correct: 0
+                    }
+                ]
+            },
+            {
+                title: "프리젠테이션",
+                content: `
+                    <h3>강의 기법</h3>
+                    <p>효과적인 강의를 위해서는:</p>
+                    <ul style="margin-left: 20px; margin-top: 10px;">
+                        <li><strong>준비:</strong> 충분한 사전 준비 및 리허설</li>
+                        <li><strong>구조:</strong> 명확한 시작-본론-결론 구조</li>
+                        <li><strong>시각적 자료:</strong> 이해하기 쉬운 슬라이드</li>
+                        <li><strong>상호작용:</strong> 청중 참여 유도</li>
+                    </ul>
+                    
+                    <h3>프리젠테이션 스킬</h3>
+                    <p><strong>1. 커뮤니케이션:</strong></p>
+                    <ul style="margin-left: 20px; margin-top: 10px;">
+                        <li>명확하고 간결한 설명</li>
+                        <li>적절한 속도와 톤</li>
+                        <li>눈맞춤과 제스처</li>
+                    </ul>
+                    
+                    <p><strong>2. 시각적 효과:</strong></p>
+                    <ul style="margin-left: 20px; margin-top: 10px;">
+                        <li>적절한 색상과 레이아웃</li>
+                        <li>그래프와 차트 활용</li>
+                        <li>애니메이션 효과</li>
+                    </ul>
+                    
+                    <h3>프리젠테이션 프로그램 활용</h3>
+                    <p><strong>1. PowerPoint:</strong></p>
+                    <ul style="margin-left: 20px; margin-top: 10px;">
+                        <li>슬라이드 디자인</li>
+                        <li>애니메이션 효과</li>
+                        <li>템플릿 활용</li>
+                    </ul>
+                    
+                    <p><strong>2. Prezi:</strong></p>
+                    <ul style="margin-left: 20px; margin-top: 10px;">
+                        <li>동적 프레젠테이션</li>
+                        <li>줌 효과</li>
+                    </ul>
+                    
+                    <p><strong>3. Google Slides:</strong></p>
+                    <ul style="margin-left: 20px; margin-top: 10px;">
+                        <li>협업 기능</li>
+                        <li>클라우드 저장</li>
+                    </ul>
+                `,
+                questions: [
+                    {
+                        question: "효과적인 강의를 위한 4가지 주요 사항에 해당하지 않는 것은?",
+                        options: ["준비", "구조", "시각적 자료", "무계획성"],
+                        correct: 3
+                    },
+                    {
+                        question: "프리젠테이션에서 가장 중요한 커뮤니케이션 요소는?",
+                        options: ["명확하고 간결한 설명", "복잡한 설명", "빠른 속도", "조용한 목소리"],
+                        correct: 0
+                    },
+                    {
+                        question: "프리젠테이션 프로그램이 아닌 것은?",
+                        options: ["PowerPoint", "Prezi", "Google Slides", "Word"],
+                        correct: 3
+                    }
+                ]
+            },
+            {
+                title: "인터넷 활용",
+                content: `
+                    <h3>e-비즈니스</h3>
+                    <p>e-비즈니스(Electronic Business)는 인터넷과 정보통신 기술을 활용하여 
+                    기업의 모든 경영 활동을 전자화하는 것을 의미합니다.</p>
+                    
+                    <p><strong>1. B2C (Business to Consumer):</strong></p>
+                    <ul style="margin-left: 20px; margin-top: 10px;">
+                        <li>기업과 개인 소비자 간 전자상거래</li>
+                        <li>온라인 쇼핑몰</li>
+                    </ul>
+                    
+                    <p><strong>2. B2B (Business to Business):</strong></p>
+                    <ul style="margin-left: 20px; margin-top: 10px;">
+                        <li>기업 간 전자상거래</li>
+                        <li>전자 조달 시스템</li>
+                    </ul>
+                    
+                    <p><strong>3. C2C (Consumer to Consumer):</strong></p>
+                    <ul style="margin-left: 20px; margin-top: 10px;">
+                        <li>개인 간 전자상거래</li>
+                        <li>중고 거래 플랫폼</li>
+                    </ul>
+                    
+                    <h3>통신판매</h3>
+                    <p>통신판매는 전화, 인터넷, TV 등을 통한 원격 판매입니다.</p>
+                    
+                    <p><strong>통신판매 시 주의사항:</strong></p>
+                    <ul style="margin-left: 20px; margin-top: 10px;">
+                        <li>법적 규제 준수</li>
+                        <li>정확한 상품 정보 제공</li>
+                        <li>환불 및 교환 정책 명시</li>
+                        <li>개인정보 보호</li>
+                    </ul>
+                    
+                    <h3>온라인 CS</h3>
+                    <p>인터넷을 활용한 고객 서비스:</p>
+                    <ul style="margin-left: 20px; margin-top: 10px;">
+                        <li>온라인 상담 (챗봇, 실시간 상담)</li>
+                        <li>SNS 고객 지원</li>
+                        <li>FAQ 및 셀프 서비스</li>
+                    </ul>
+                `,
+                questions: [
+                    {
+                        question: "e-비즈니스의 3가지 유형에 해당하지 않는 것은?",
+                        options: ["B2C (Business to Consumer)", "B2B (Business to Business)", "C2C (Consumer to Consumer)", "B2G (Business to Government)"],
+                        correct: 3
+                    },
+                    {
+                        question: "온라인 쇼핑몰은 어떤 e-비즈니스 유형에 해당하는가?",
+                        options: ["B2C", "B2B", "C2C", "B2G"],
+                        correct: 0
+                    },
+                    {
+                        question: "중고 거래 플랫폼은 어떤 e-비즈니스 유형에 해당하는가?",
+                        options: ["B2C", "B2B", "C2C", "B2G"],
+                        correct: 2
+                    }
+                ]
+            },
+            {
+                title: "시험 대비 특강",
+                content: `
+                    <h3>핵심 요약 정리</h3>
+                    <p><strong>제1과목: CS개론</strong></p>
+                    <ul style="margin-left: 20px; margin-top: 10px;">
+                        <li>CS 관리의 PDCA 사이클</li>
+                        <li>CS 경영의 핵심 요소</li>
+                        <li>고객의 범주와 특성</li>
+                        <li>CRM의 구성 요소</li>
+                        <li>서비스의 4가지 특성</li>
+                        <li>서비스 리더십</li>
+                    </ul>
+                    
+                    <p><strong>제2과목: CS전략론</strong></p>
+                    <ul style="margin-left: 20px; margin-top: 10px;">
+                        <li>서비스 청사진과 MOT</li>
+                        <li>서비스 차별화 전략</li>
+                        <li>SERVQUAL 5차원</li>
+                        <li>고객 만족도 측정</li>
+                        <li>CS 컨설팅 및 벤치마킹</li>
+                        <li>고객 경험 관리</li>
+                    </ul>
+                    
+                    <p><strong>제3과목: 고객관리 실무론</strong></p>
+                    <ul style="margin-left: 20px; margin-top: 10px;">
+                        <li>전화 응대 기법</li>
+                        <li>고객 상담 및 클레임 처리</li>
+                        <li>예절과 매너</li>
+                        <li>비즈니스 응대</li>
+                        <li>고객 감동 및 만족 관리</li>
+                        <li>프리젠테이션 및 인터넷 활용</li>
+                    </ul>
+                    
+                    <h3>기출문제 풀이</h3>
+                    <p>기출문제를 풀어보며 출제 패턴을 파악하고 
+                    자신의 취약 부분을 확인하여 집중적으로 학습합니다.</p>
+                    
+                    <h3>모의고사</h3>
+                    <p>실제 시험과 유사한 환경에서 모의고사를 풀어보며 
+                    시간 관리와 실전 감각을 익힙니다.</p>
+                    
+                    <h3>시험 당일 주의사항</h3>
+                    <ul style="margin-left: 20px; margin-top: 10px;">
+                        <li><strong>준비물:</strong> 신분증, 수험표, 필기도구</li>
+                        <li><strong>시간 관리:</strong> 각 과목별 시간 배분</li>
+                        <li><strong>체력 관리:</strong> 충분한 수면과 식사</li>
+                        <li><strong>마음가짐:</strong> 긴장하지 않고 평소 실력 발휘</li>
+                    </ul>
+                    
+                    <h3>최종 점검 사항</h3>
+                    <ul style="margin-left: 20px; margin-top: 10px;">
+                        <li>핵심 용어 정리</li>
+                        <li>과목별 중요 개념 재확인</li>
+                        <li>기출문제 유형 숙지</li>
+                        <li>시험 전날 충분한 휴식</li>
+                    </ul>
+                    
+                    <p style="color: #667eea; font-size: 1.2em; font-weight: bold; margin-top: 30px;">
+                    모든 강의를 완주하신 것을 축하합니다! 시험에서 좋은 결과를 얻으시길 기원합니다! 🎉
+                    </p>
+                `,
+                questions: [
+                    {
+                        question: "시험 당일 준비물에 해당하지 않는 것은?",
+                        options: ["신분증", "수험표", "필기도구", "노트북"],
+                        correct: 3
+                    },
+                    {
+                        question: "CS리더스관리사 시험 과목은 몇 개인가?",
+                        options: ["2과목", "3과목", "4과목", "5과목"],
+                        correct: 1
+                    },
+                    {
+                        question: "CS리더스관리사 시험 합격 기준은?",
+                        options: ["100점 만점에 60점 이상", "100점 만점에 70점 이상", "100점 만점에 80점 이상", "100점 만점에 90점 이상"],
+                        correct: 0
+                    }
+                ]
+            }
+        ];
+
+        // 초기화
+        window.onload = function() {
+            createChapterGrid();
+        };
+
+        // 메인 화면 표시
+        function showMainScreen() {
+            window.scrollTo(0, 0);
+            document.getElementById('mainScreen').style.display = 'block';
+            document.getElementById('lessonScreen').classList.remove('active');
+        }
+
+        // 레슨 표시
+        function showLesson(chapterNum) {
+            window.scrollTo(0, 0);
+            const lesson = lessons[chapterNum - 1];
+            if (!lesson) {
+                alert('강의 준비 중입니다.');
+                return;
+            }
+
+            document.getElementById('mainScreen').style.display = 'none';
+            document.getElementById('lessonScreen').classList.add('active');
+            
+            document.getElementById('lessonTitle').textContent = lesson.title;
+            document.getElementById('lessonContent').innerHTML = lesson.content;
+            
+            // 연습문제 섹션
+            const practiceSection = document.getElementById('practiceSection');
+            
+            // 오리엔테이션(1장)은 문제 없이 다음 장 버튼만
+            if (chapterNum === 1) {
+                practiceSection.innerHTML = `
+                    <h3>📝 학습 완료</h3>
+                    <p>강의를 모두 학습하셨습니다. 다음 장으로 넘어가세요.</p>
+                    <button class="next-button" onclick="nextChapter(${chapterNum})">다음 강의로 →</button>
+                `;
+            } else if (!lesson.questions || lesson.questions.length === 0) {
+                // 문제가 없는 경우 (일부 강의에 문제가 추가되지 않은 경우)
+                practiceSection.innerHTML = `
+                    <h3>📝 학습 완료</h3>
+                    <p>강의를 모두 학습하셨습니다. 다음 장으로 넘어가세요.</p>
+                    ${chapterNum < lessons.length ? `<button class="next-button" onclick="nextChapter(${chapterNum})">다음 강의로 →</button>` : ''}
+                `;
+            } else {
+                // 객관식 문제 표시 (3개)
+                let questionsHTML = '<h3>📝 객관식 문제</h3>';
+                lesson.questions.forEach((q, qIndex) => {
+                    questionsHTML += `
+                        <div class="problem" style="margin-bottom: 25px; border-left: 4px solid #667eea; padding-left: 15px;">
+                            <p style="font-weight: bold; margin-bottom: 15px; font-size: 1.1em; color: #333;">문제 ${qIndex + 1}. ${q.question}</p>
+                            <div style="margin-left: 10px;">
+                                ${q.options.map((option, optIndex) => `
+                                    <label class="question-option" style="display: block; margin: 10px 0; cursor: pointer; padding: 12px; border-radius: 5px; background: #fff; border: 2px solid #ddd; transition: all 0.3s;">
+                                        <input type="radio" name="question${chapterNum}_${qIndex}" value="${optIndex}" style="margin-right: 10px; cursor: pointer;">
+                                        <span style="font-weight: 500;">${String.fromCharCode(65 + optIndex)}. ${option}</span>
+                                    </label>
+                                `).join('')}
+                            </div>
+                            <div class="question-result" id="result${chapterNum}_${qIndex}" style="margin-top: 10px; padding: 12px; border-radius: 5px; display: none; font-weight: bold;"></div>
+                        </div>
+                    `;
+                });
+                questionsHTML += `
+                    <button class="run-button" onclick="checkAnswers(${chapterNum})" style="margin-top: 20px;">답안 제출</button>
+                    <div class="output" id="output${chapterNum}" style="margin-top: 15px;"></div>
+                    ${chapterNum < lessons.length ? `<button class="next-button" id="nextButton${chapterNum}" onclick="nextChapter(${chapterNum})" style="display: none; margin-top: 20px;">다음 강의로 →</button>` : ''}
+                `;
+                practiceSection.innerHTML = questionsHTML;
+            }
+        }
+
+        // 객관식 답안 확인
+        function checkAnswers(chapterNum) {
+            const lesson = lessons[chapterNum - 1];
+            if (!lesson.questions || lesson.questions.length === 0) return;
+            
+            const output = document.getElementById('output' + chapterNum);
+            const nextBtn = document.getElementById('nextButton' + chapterNum);
+            let correctCount = 0;
+            let totalCount = lesson.questions.length;
+            let allAnswered = true;
+            
+            // 각 문제별 정답 확인
+            lesson.questions.forEach((q, index) => {
+                const selected = document.querySelector(`input[name="question${chapterNum}_${index}"]:checked`);
+                const resultDiv = document.getElementById('result' + chapterNum + '_' + index);
+                
+                if (!selected) {
+                    allAnswered = false;
+                    resultDiv.style.display = 'block';
+                    resultDiv.style.background = '#fff3cd';
+                    resultDiv.style.color = '#856404';
+                    resultDiv.className = 'question-result';
+                    resultDiv.innerHTML = '⚠️ 답을 선택해주세요.';
+                    return;
+                }
+                
+                const selectedIndex = parseInt(selected.value);
+                const selectedOption = document.querySelector(`input[name="question${chapterNum}_${index}"][value="${selectedIndex}"]`);
+                const selectedLabel = selectedOption.closest('label');
+                
+                if (selectedIndex === q.correct) {
+                    correctCount++;
+                    resultDiv.style.display = 'block';
+                    resultDiv.style.background = '#d4edda';
+                    resultDiv.style.color = '#155724';
+                    resultDiv.className = 'question-result correct';
+                    resultDiv.innerHTML = '✅ 정답입니다!';
+                    if (selectedLabel) {
+                        selectedLabel.style.background = '#d4edda';
+                        selectedLabel.style.borderColor = '#28a745';
+                    }
+                } else {
+                    resultDiv.style.display = 'block';
+                    resultDiv.style.background = '#f8d7da';
+                    resultDiv.style.color = '#721c24';
+                    resultDiv.className = 'question-result incorrect';
+                    resultDiv.innerHTML = `❌ 오답입니다. 정답은 ${String.fromCharCode(65 + q.correct)}. ${q.options[q.correct]} 입니다.`;
+                    if (selectedLabel) {
+                        selectedLabel.style.background = '#f8d7da';
+                        selectedLabel.style.borderColor = '#dc3545';
+                    }
+                    // 정답 표시
+                    const correctOption = document.querySelector(`input[name="question${chapterNum}_${index}"][value="${q.correct}"]`);
+                    if (correctOption) {
+                        const correctLabel = correctOption.closest('label');
+                        if (correctLabel) {
+                            correctLabel.style.background = '#d4edda';
+                            correctLabel.style.borderColor = '#28a745';
+                        }
+                    }
+                }
+            });
+            
+            // 결과 출력
+            output.innerHTML = '';
+            if (!allAnswered) {
+                output.innerHTML = `<div style="background: #fff3cd; color: #856404; padding: 15px; border-radius: 8px; margin-top: 15px;">
+                    ⚠️ 모든 문제에 답을 선택해주세요.
+                </div>`;
+            } else if (correctCount === totalCount) {
+                output.innerHTML = `<div style="background: #d4edda; color: #155724; padding: 15px; border-radius: 8px; margin-top: 15px;">
+                    <strong>🎉 완벽합니다!</strong><br>
+                    ${totalCount}문제 모두 정답입니다! 다음 강의로 넘어갈 수 있습니다.
+                </div>`;
+                if (nextBtn) nextBtn.style.display = 'inline-block';
+            } else {
+                output.innerHTML = `<div style="background: #fff3cd; color: #856404; padding: 15px; border-radius: 8px; margin-top: 15px;">
+                    정답: ${correctCount} / ${totalCount} 문제<br>
+                    다시 한번 강의 내용을 확인해보세요.
+                </div>`;
+            }
+            
+            // 스크롤을 결과로 이동
+            output.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        }
+
+        // 다음 장으로 이동
+        function nextChapter(currentChapter) {
+            if (currentChapter < lessons.length) {
+                showLesson(currentChapter + 1);
+            } else {
+                alert('모든 강의를 완료했습니다! 🎉');
+                showMainScreen();
+            }
+        }
+    </script>
+</body>
+</html>
+

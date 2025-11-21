@@ -1,0 +1,2145 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JavaScript 기초 강의</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            min-height: 100vh;
+            padding: 20px;
+            padding-left: 180px;
+            padding-right: 180px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        /* 좌우 고정 배너 */
+        .side-banner {
+            position: fixed;
+            top: 50%;
+            transform: translateY(-50%);
+            z-index: 1000;
+            width: 150px;
+            transition: opacity 0.3s ease;
+        }
+
+        .side-banner.left {
+            left: 10px;
+        }
+
+        .side-banner.right {
+            right: 10px;
+        }
+
+        .side-banner img {
+            width: 100%;
+            height: auto;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+            cursor: pointer;
+            transition: transform 0.3s ease;
+        }
+
+        .side-banner img:hover {
+            transform: scale(1.05);
+        }
+
+        /* 모바일에서는 배너 숨김 */
+        @media (max-width: 1400px) {
+            body {
+                padding-left: 20px;
+                padding-right: 20px;
+            }
+            .side-banner {
+                display: none;
+            }
+        }
+
+        /* 네비게이션 바 */
+        .navbar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            z-index: 2000;
+            padding: 15px 0;
+        }
+
+        .navbar-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 30px;
+        }
+
+        .navbar a {
+            text-decoration: none;
+            color: #333;
+            font-size: 16px;
+            font-weight: 500;
+            padding: 8px 15px;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+        }
+
+        .navbar a:hover {
+            background: #f5576c;
+            color: white;
+        }
+
+        .navbar a.active {
+            background: #f5576c;
+            color: white;
+        }
+
+        body {
+            padding-top: 70px;
+        }
+
+        /* 메인 화면 스타일 */
+        .main-screen {
+            text-align: center;
+            padding: 40px 20px;
+        }
+
+        .main-screen h1 {
+            color: white;
+            font-size: 3em;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .main-screen p {
+            color: rgba(255,255,255,0.9);
+            font-size: 1.2em;
+            margin-bottom: 50px;
+        }
+
+        .chapter-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 25px;
+            margin-top: 40px;
+        }
+
+        .chapter-box {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: 3px solid transparent;
+            text-align: center;
+        }
+
+        .chapter-box:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 40px rgba(0,0,0,0.3);
+            border-color: #f5576c;
+        }
+
+        .chapter-box h2 {
+            color: #f5576c;
+            font-size: 1.8em;
+            margin-bottom: 10px;
+        }
+
+        .chapter-box p {
+            color: #666;
+            font-size: 1em;
+            line-height: 1.6;
+        }
+
+        .chapter-icon {
+            font-size: 4em;
+            margin-bottom: 10px;
+            display: block;
+            transition: transform 0.3s ease;
+            filter: drop-shadow(0 2px 4px rgba(0,0,0,0.1));
+        }
+
+        .chapter-box:hover .chapter-icon {
+            transform: scale(1.15) rotate(5deg);
+        }
+
+        .chapter-number {
+            display: inline-block;
+            background: #f5576c;
+            color: white;
+            width: 35px;
+            height: 35px;
+            border-radius: 50%;
+            line-height: 35px;
+            font-weight: bold;
+            font-size: 0.9em;
+            margin-bottom: 15px;
+            margin-top: 5px;
+        }
+
+        /* 학습 화면 스타일 */
+        .lesson-screen {
+            display: none;
+            background: white;
+            border-radius: 15px;
+            padding: 40px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            margin-top: 20px;
+        }
+
+        .lesson-screen.active {
+            display: block;
+        }
+
+        .lesson-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 2px solid #eee;
+        }
+
+        .lesson-header h2 {
+            color: #f5576c;
+            font-size: 2em;
+        }
+
+        .back-button {
+            background: #f5576c;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1em;
+            transition: background 0.3s;
+        }
+
+        .back-button:hover {
+            background: #e4465a;
+        }
+
+        .lesson-content {
+            line-height: 1.8;
+            color: #333;
+            font-size: 1.1em;
+            margin-bottom: 40px;
+        }
+
+        .lesson-content h3 {
+            color: #f093fb;
+            margin-top: 30px;
+            margin-bottom: 15px;
+            font-size: 1.5em;
+        }
+
+        .lesson-content p {
+            margin-bottom: 15px;
+        }
+
+        .lesson-content code {
+            background: #f4f4f4;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-family: 'Courier New', monospace;
+            color: #e83e8c;
+        }
+
+        .code-example {
+            background: #2d2d2d;
+            color: #f8f8f2;
+            padding: 20px;
+            border-radius: 8px;
+            margin: 20px 0;
+            overflow-x: auto;
+            font-family: 'Courier New', monospace;
+        }
+
+        .code-example pre {
+            margin: 0;
+        }
+
+        /* 실습 영역 */
+        .practice-section {
+            background: #f8f9fa;
+            border-radius: 10px;
+            padding: 30px;
+            margin-top: 40px;
+            border-left: 5px solid #f5576c;
+        }
+
+        .practice-section h3 {
+            color: #f5576c;
+            margin-bottom: 20px;
+            font-size: 1.5em;
+        }
+
+        .problem {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+
+        .problem p {
+            color: #333;
+            font-size: 1.1em;
+            line-height: 1.6;
+        }
+
+        .code-editor {
+            width: 100%;
+            min-height: 200px;
+            padding: 15px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            font-family: 'Courier New', monospace;
+            font-size: 14px;
+            resize: vertical;
+            margin-bottom: 15px;
+        }
+
+        .code-editor:focus {
+            outline: none;
+            border-color: #f5576c;
+        }
+
+        .run-button {
+            background: #28a745;
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1em;
+            margin-right: 10px;
+            transition: background 0.3s;
+        }
+
+        .run-button:hover {
+            background: #218838;
+        }
+
+        .output {
+            background: #2d2d2d;
+            color: #f8f8f2;
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 15px;
+            min-height: 50px;
+            font-family: 'Courier New', monospace;
+            white-space: pre-wrap;
+        }
+
+        .success-message {
+            background: #d4edda;
+            color: #155724;
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 15px;
+            display: none;
+        }
+
+        .success-message.show {
+            display: block;
+        }
+
+        .next-button {
+            background: #f5576c;
+            color: white;
+            border: none;
+            padding: 15px 40px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1.1em;
+            margin-top: 20px;
+            display: none;
+            transition: background 0.3s;
+        }
+
+        .next-button.show {
+            display: inline-block;
+        }
+
+        .next-button:hover {
+            background: #e4465a;
+        }
+
+        .error-message {
+            background: #f8d7da;
+            color: #721c24;
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 15px;
+            display: none;
+        }
+
+        .error-message.show {
+            display: block;
+        }
+    </style>
+</head>
+<body>
+    <!-- 네비게이션 바 -->
+    <nav class="navbar">
+        <div class="navbar-content">
+            <a href="index.html">홈</a>
+            <a href="webdesign.html">웹디자인개발기능사</a>
+            <a href="cs.html">CS리더스관리사</a>
+            <a href="javascript.html" class="active">JavaScript</a>
+            <a href="node.html">Node.js</a>
+            <a href="python.html">Python</a>
+            <a href="kotlin.html">Kotlin</a>
+        </div>
+    </nav>
+
+    <!-- 좌측 배너 -->
+    <div class="side-banner left" id="leftBanner">
+        <img src="images/wecandeo.jpg" alt="WeCanDo 배너" onclick="window.open('https://www.wecandeo.com', '_blank')">
+    </div>
+
+    <!-- 우측 배너 -->
+    <div class="side-banner right" id="rightBanner">
+        <img src="images/malgnsoft.jpg" alt="MalgnSoft 배너" onclick="window.open('https://www.malgnsoft.com', '_blank')">
+    </div>
+
+    <!-- 메인 화면 -->
+    <div class="container">
+        <div class="main-screen" id="mainScreen">
+            <h1>⚡ JavaScript 기초 강의</h1>
+            <p>기초부터 고급까지 단계별로 JavaScript 기초를 다지세요!</p>
+            
+            <div class="chapter-grid">
+                <div class="chapter-box" onclick="showLesson(1)">
+                    <div class="chapter-icon">⚡</div>
+                    <div class="chapter-number">1</div>
+                    <h2>JavaScript란?</h2>
+                    <p>JavaScript의 기본 개념과 특징을 알아봅니다</p>
+                </div>
+                
+                <div class="chapter-box" onclick="showLesson(2)">
+                    <div class="chapter-icon">📊</div>
+                    <div class="chapter-number">2</div>
+                    <h2>변수와 자료형</h2>
+                    <p>변수 선언과 다양한 자료형을 학습합니다</p>
+                </div>
+                
+                <div class="chapter-box" onclick="showLesson(3)">
+                    <div class="chapter-icon">➕</div>
+                    <div class="chapter-number">3</div>
+                    <h2>연산자</h2>
+                    <p>산술, 비교, 논리 연산자를 다룹니다</p>
+                </div>
+                
+                <div class="chapter-box" onclick="showLesson(4)">
+                    <div class="chapter-icon">🔀</div>
+                    <div class="chapter-number">4</div>
+                    <h2>조건문</h2>
+                    <p>if, else, switch를 사용한 조건 분기</p>
+                </div>
+                
+                <div class="chapter-box" onclick="showLesson(5)">
+                    <div class="chapter-icon">🔁</div>
+                    <div class="chapter-number">5</div>
+                    <h2>반복문</h2>
+                    <p>for, while을 이용한 반복 처리</p>
+                </div>
+                
+                <div class="chapter-box" onclick="showLesson(6)">
+                    <div class="chapter-icon">⚙️</div>
+                    <div class="chapter-number">6</div>
+                    <h2>함수</h2>
+                    <p>함수 정의와 호출 방법을 배웁니다</p>
+                </div>
+                
+                <div class="chapter-box" onclick="showLesson(7)">
+                    <div class="chapter-icon">📋</div>
+                    <div class="chapter-number">7</div>
+                    <h2>배열</h2>
+                    <p>배열 생성, 조작, 메서드를 학습합니다</p>
+                </div>
+                
+                <div class="chapter-box" onclick="showLesson(8)">
+                    <div class="chapter-icon">📖</div>
+                    <div class="chapter-number">8</div>
+                    <h2>객체</h2>
+                    <p>객체 생성과 속성 접근 방법</p>
+                </div>
+                
+                <div class="chapter-box" onclick="showLesson(9)">
+                    <div class="chapter-icon">📝</div>
+                    <div class="chapter-number">9</div>
+                    <h2>문자열 처리</h2>
+                    <p>문자열 메서드와 템플릿 리터럴</p>
+                </div>
+                
+                <div class="chapter-box" onclick="showLesson(10)">
+                    <div class="chapter-icon">🌳</div>
+                    <div class="chapter-number">10</div>
+                    <h2>DOM 조작</h2>
+                    <p>HTML 요소 선택과 조작</p>
+                </div>
+                
+                <div class="chapter-box" onclick="showLesson(11)">
+                    <div class="chapter-icon">🖱️</div>
+                    <div class="chapter-number">11</div>
+                    <h2>이벤트 처리</h2>
+                    <p>클릭, 입력 등 이벤트 처리 방법</p>
+                </div>
+                
+                <div class="chapter-box" onclick="showLesson(12)">
+                    <div class="chapter-icon">🏗️</div>
+                    <div class="chapter-number">12</div>
+                    <h2>클래스와 객체</h2>
+                    <p>ES6 클래스 문법</p>
+                </div>
+                
+                <div class="chapter-box" onclick="showLesson(13)">
+                    <div class="chapter-icon">🔮</div>
+                    <div class="chapter-number">13</div>
+                    <h2>Promise</h2>
+                    <p>비동기 처리와 Promise</p>
+                </div>
+                
+                <div class="chapter-box" onclick="showLesson(14)">
+                    <div class="chapter-icon">⏳</div>
+                    <div class="chapter-number">14</div>
+                    <h2>async/await</h2>
+                    <p>비동기 코드를 동기처럼 작성</p>
+                </div>
+                
+                <div class="chapter-box" onclick="showLesson(15)">
+                    <div class="chapter-icon">🔄</div>
+                    <div class="chapter-number">15</div>
+                    <h2>배열 메서드</h2>
+                    <p>map, filter, reduce 활용</p>
+                </div>
+                
+                <div class="chapter-box" onclick="showLesson(16)">
+                    <div class="chapter-icon">📦</div>
+                    <div class="chapter-number">16</div>
+                    <h2>모듈</h2>
+                    <p>ES6 모듈 import/export</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- 학습 화면들 -->
+        <div id="lessonScreens"></div>
+    </div>
+
+    <script>
+        // 강의 내용 데이터
+        const lessons = [
+            {
+                title: "JavaScript란?",
+                content: `
+                    <h3>JavaScript란 무엇인가?</h3>
+                    <p>JavaScript는 1995년 브렌던 아이크(Brendan Eich)가 넷스케이프(Netscape) 브라우저를 위해 개발한 프로그래밍 언어입니다. 
+                    처음에는 웹 브라우저에서 동적인 웹 페이지를 만들기 위한 간단한 스크립트 언어였지만, 현재는 웹 개발의 핵심 언어로 자리잡았습니다.</p>
+                    
+                    <p>JavaScript는 웹 페이지에 <strong>인터랙티브 기능</strong>을 추가하는 데 사용됩니다. 
+                    버튼 클릭, 폼 제출, 페이지 요소 동적 변경, 데이터 검증 등 사용자와 웹 페이지 간의 상호작용을 담당합니다. 
+                    HTML이 웹페이지의 구조를, CSS가 디자인을 담당한다면, JavaScript는 동작과 상호작용을 담당합니다.</p>
+                    
+                    <h3>JavaScript가 사용되는 곳</h3>
+                    <p><strong>1. 웹 브라우저 (프론트엔드):</strong></p>
+                    <ul style="margin-left: 20px; margin-top: 10px;">
+                        <li>웹 페이지의 동적 기능 구현 (클릭, 입력, 스크롤 등 이벤트 처리)</li>
+                        <li>DOM 조작 (HTML 요소 선택, 수정, 추가, 삭제)</li>
+                        <li>AJAX를 통한 서버와의 비동기 통신</li>
+                        <li>애니메이션 및 시각 효과</li>
+                        <li>사용자 입력 검증 및 폼 처리</li>
+                    </ul>
+                    
+                    <p><strong>2. 서버 (백엔드):</strong></p>
+                    <ul style="margin-left: 20px; margin-top: 10px;">
+                        <li>Node.js를 활용한 서버 개발</li>
+                        <li>API 개발 및 데이터베이스 연동</li>
+                        <li>웹 서버 구축</li>
+                    </ul>
+                    
+                    <p><strong>3. 모바일 앱 개발:</strong></p>
+                    <ul style="margin-left: 20px; margin-top: 10px;">
+                        <li>React Native, Ionic 등을 통한 크로스 플랫폼 앱 개발</li>
+                    </ul>
+                    
+                    <p><strong>4. 데스크톱 앱 개발:</strong></p>
+                    <ul style="margin-left: 20px; margin-top: 10px;">
+                        <li>Electron을 통한 데스크톱 애플리케이션 개발</li>
+                    </ul>
+                    
+                    <h3>JavaScript의 특징 완벽 이해</h3>
+                    <p><strong>1. 인터프리터 언어:</strong></p>
+                    <ul style="margin-left: 20px; margin-top: 10px;">
+                        <li>코드를 한 줄씩 읽어서 즉시 실행하는 인터프리터 방식입니다</li>
+                        <li>컴파일 과정 없이 브라우저에서 바로 실행 가능합니다</li>
+                        <li>코드 수정 후 새로고침만 하면 즉시 반영되어 빠른 개발이 가능합니다</li>
+                        <li>단, 실행 속도는 컴파일 언어보다 상대적으로 느릴 수 있습니다</li>
+                    </ul>
+                    
+                    <p><strong>2. 동적 타이핑 (Dynamic Typing):</strong></p>
+                    <ul style="margin-left: 20px; margin-top: 10px;">
+                        <li>변수의 타입을 미리 선언하지 않고, 값에 따라 자동으로 타입이 결정됩니다</li>
+                        <li>예: <code>let x = 10;</code> (숫자), <code>x = "hello";</code> (문자열로 변경 가능)</li>
+                        <li>유연한 코딩이 가능하지만, 타입 관련 오류를 미리 발견하기 어려울 수 있습니다</li>
+                        <li>TypeScript는 JavaScript에 타입 시스템을 추가한 언어입니다</li>
+                    </ul>
+                    
+                    <p><strong>3. 멀티 패러다임 언어:</strong></p>
+                    <ul style="margin-left: 20px; margin-top: 10px;">
+                        <li><strong>절차형 프로그래밍:</strong> 순차적으로 코드를 실행하는 방식</li>
+                        <li><strong>객체지향 프로그래밍:</strong> 클래스와 객체를 사용하는 방식 (ES6 이후)</li>
+                        <li><strong>함수형 프로그래밍:</strong> 함수를 중심으로 하는 방식 (고차 함수, 배열 메서드 등)</li>
+                        <li>프로젝트나 상황에 맞게 적절한 패러다임을 선택할 수 있습니다</li>
+                    </ul>
+                    
+                    <p><strong>4. 브라우저 내장:</strong></p>
+                    <ul style="margin-left: 20px; margin-top: 10px;">
+                        <li>모든 최신 웹 브라우저(Chrome, Firefox, Safari, Edge)에 JavaScript 엔진이 내장되어 있습니다</li>
+                        <li>별도의 설치나 설정 없이 바로 사용할 수 있습니다</li>
+                        <li>브라우저 개발자 도구(F12)로 바로 테스트하고 디버깅할 수 있습니다</li>
+                    </ul>
+                    
+                    <p><strong>5. 이벤트 기반 (Event-Driven):</strong></p>
+                    <ul style="margin-left: 20px; margin-top: 10px;">
+                        <li>사용자의 행동(클릭, 입력 등)이나 시스템 이벤트에 반응하여 코드를 실행합니다</li>
+                        <li>비동기 처리와 콜백 함수를 통해 이벤트를 처리합니다</li>
+                    </ul>
+                    
+                    <h3>JavaScript 실행 환경</h3>
+                    <p><strong>1. 브라우저에서 실행:</strong></p>
+                    <p>HTML 파일에 <code>&lt;script&gt;</code> 태그를 추가하여 실행할 수 있습니다:</p>
+                    <div class="code-example">
+                        <pre>&lt;!DOCTYPE html&gt;
+&lt;html&gt;
+&lt;head&gt;
+    &lt;title&gt;JavaScript 테스트&lt;/title&gt;
+&lt;/head&gt;
+&lt;body&gt;
+    &lt;script&gt;
+        console.log("Hello, JavaScript!");
+    &lt;/script&gt;
+&lt;/body&gt;
+&lt;/html&gt;</pre>
+                    </div>
+                    
+                    <p><strong>2. 외부 JavaScript 파일 연결:</strong></p>
+                    <div class="code-example">
+                        <pre>&lt;script src="script.js"&gt;&lt;/script&gt;</pre>
+                    </div>
+                    
+                    <p><strong>3. 브라우저 개발자 도구 콘솔:</strong></p>
+                    <ul style="margin-left: 20px; margin-top: 10px;">
+                        <li>F12 키를 누르면 개발자 도구가 열립니다</li>
+                        <li>Console 탭에서 JavaScript 코드를 직접 입력하고 실행할 수 있습니다</li>
+                        <li><code>console.log()</code>의 결과를 확인할 수 있습니다</li>
+                        <li>오류 메시지와 디버깅 정보를 확인할 수 있습니다</li>
+                    </ul>
+                    
+                    <h3>JavaScript의 첫 프로그램 완벽 이해</h3>
+                    <p>JavaScript에서 가장 간단한 프로그램은 다음과 같습니다:</p>
+                    <div class="code-example">
+                        <pre>console.log("Hello, JavaScript!");</pre>
+                    </div>
+                    
+                    <p><strong>코드 설명:</strong></p>
+                    <ul style="margin-left: 20px; margin-top: 10px;">
+                        <li><code>console</code>: 브라우저의 개발자 도구 콘솔을 의미하는 객체입니다</li>
+                        <li><code>log</code>: 콘솔에 메시지를 출력하는 메서드입니다</li>
+                        <li><code>"Hello, JavaScript!"</code>: 출력할 문자열입니다. 큰따옴표(") 또는 작은따옴표(')로 감쌉니다</li>
+                        <li><code>;</code>: 문장의 끝을 나타내는 세미콜론입니다 (선택 사항이지만 권장됨)</li>
+                    </ul>
+                    
+                    <p><strong>console.log()의 용도:</strong></p>
+                    <ul style="margin-left: 20px; margin-top: 10px;">
+                        <li>디버깅: 코드의 중간 결과를 확인하기 위해 사용</li>
+                        <li>변수 값 확인: 변수에 저장된 값을 출력하여 확인</li>
+                        <li>프로그램 실행 흐름 추적: 어느 부분이 실행되었는지 확인</li>
+                        <li>오류 발견: 예상과 다른 값이 출력되면 오류를 발견할 수 있음</li>
+                    </ul>
+                    
+                    <h3>JavaScript 학습 로드맵</h3>
+                    <p><strong>기초 단계:</strong></p>
+                    <ul style="margin-left: 20px; margin-top: 10px;">
+                        <li>변수와 자료형 이해</li>
+                        <li>연산자 사용법</li>
+                        <li>조건문과 반복문</li>
+                        <li>함수 정의와 호출</li>
+                    </ul>
+                    
+                    <p><strong>중급 단계:</strong></p>
+                    <ul style="margin-left: 20px; margin-top: 10px;">
+                        <li>배열과 객체 다루기</li>
+                        <li>DOM 조작 (HTML 요소 선택 및 수정)</li>
+                        <li>이벤트 처리 (클릭, 입력 등)</li>
+                        <li>배열 메서드 (map, filter, reduce 등)</li>
+                    </ul>
+                    
+                    <p><strong>고급 단계:</strong></p>
+                    <ul style="margin-left: 20px; margin-top: 10px;">
+                        <li>비동기 처리 (Promise, async/await)</li>
+                        <li>클래스와 객체지향 프로그래밍</li>
+                        <li>모듈 시스템 (import/export)</li>
+                        <li>API 통신 (fetch, axios)</li>
+                    </ul>
+                `,
+                problem: "다음 코드를 작성하여 '안녕하세요, JavaScript!'를 콘솔에 출력하세요.",
+                solution: "console.log('안녕하세요, JavaScript!')",
+                test: (code) => {
+                    try {
+                        const result = code.trim();
+                        return result.includes("console.log") && 
+                               (result.includes("'안녕하세요, JavaScript!'") || 
+                                result.includes('"안녕하세요, JavaScript!"'));
+                    } catch (e) {
+                        return false;
+                    }
+                }
+            },
+            {
+                title: "변수와 자료형",
+                content: `
+                    <h3>변수란 무엇인가?</h3>
+                    <p>변수는 데이터를 저장하고 참조하기 위한 이름이 붙은 메모리 공간입니다. 
+                    변수를 사용하면 값을 저장하고, 나중에 그 값을 다시 사용할 수 있습니다. 
+                    변수는 값이 변경될 수 있는 저장 공간으로, 프로그램에서 데이터를 관리하는 기본 단위입니다.</p>
+                    
+                    <p>변수 없이는 프로그래밍이 불가능합니다. 변수를 사용해야 데이터를 저장하고, 
+                    여러 곳에서 재사용하고, 계산 결과를 저장할 수 있습니다.</p>
+                    
+                    <h3>JavaScript 변수 선언 키워드 완벽 이해</h3>
+                    <p>JavaScript에서는 <code>let</code>, <code>const</code>, <code>var</code> 세 가지 키워드로 변수를 선언할 수 있습니다:</p>
+                    
+                    <div class="code-example">
+                        <pre>let name = "홍길동";
+const age = 25;
+var height = 175.5;
+let isStudent = true;</pre>
+                    </div>
+                    
+                    <p><strong>1. let (권장):</strong></p>
+                    <ul style="margin-left: 20px; margin-top: 10px;">
+                        <li>ES6에서 도입된 모던한 변수 선언 방법입니다</li>
+                        <li><strong>블록 스코프:</strong> 중괄호 {} 안에서만 유효합니다</li>
+                        <li><strong>재할당 가능:</strong> 값을 여러 번 변경할 수 있습니다</li>
+                        <li><strong>재선언 불가:</strong> 같은 이름의 변수를 두 번 선언할 수 없습니다</li>
+                        <li><strong>호이스팅:</strong> 선언은 끌어올려지지만, 초기화 전에는 사용할 수 없습니다 (TDZ)</li>
+                    </ul>
+                    
+                    <div class="code-example">
+                        <pre>// let 예제
+let name = "김철수";
+name = "이영희";  // 재할당 가능
+console.log(name);  // "이영희"
+
+// 블록 스코프
+{
+    let x = 10;
+    console.log(x);  // 10
+}
+// console.log(x);  // 에러! x는 블록 밖에서 접근 불가
+
+// 재선언 불가
+let num = 5;
+// let num = 10;  // 에러! 같은 변수명 재선언 불가</pre>
+                    </div>
+                    
+                    <p><strong>2. const (권장):</strong></p>
+                    <ul style="margin-left: 20px; margin-top: 10px;">
+                        <li>ES6에서 도입된 상수 선언 방법입니다</li>
+                        <li><strong>블록 스코프:</strong> let과 동일하게 블록 내에서만 유효합니다</li>
+                        <li><strong>재할당 불가:</strong> 한 번 할당한 값을 변경할 수 없습니다</li>
+                        <li><strong>선언 시 초기화 필수:</strong> 선언과 동시에 값을 할당해야 합니다</li>
+                        <li><strong>객체/배열은 내부 수정 가능:</strong> const로 선언한 객체나 배열의 내용은 수정할 수 있습니다</li>
+                        <li>값이 변하지 않는 상수, 설정값, 함수 표현식 등에 사용합니다</li>
+                    </ul>
+                    
+                    <div class="code-example">
+                        <pre>// const 예제
+const PI = 3.14159;
+// PI = 3.14;  // 에러! 재할당 불가
+
+// const 선언 시 초기화 필수
+// const MAX_SIZE;  // 에러! 초기화 없이 선언 불가
+
+// 객체는 내부 수정 가능
+const person = { name: "홍길동", age: 20 };
+person.age = 21;  // 가능! 객체 내부 수정
+// person = {};  // 에러! 재할당 불가
+
+// 배열도 내부 수정 가능
+const numbers = [1, 2, 3];
+numbers.push(4);  // 가능! 배열에 추가
+console.log(numbers);  // [1, 2, 3, 4]</pre>
+                    </div>
+                    
+                    <p><strong>3. var (비권장, 레거시 코드):</strong></p>
+                    <ul style="margin-left: 20px; margin-top: 10px;">
+                        <li>ES5 이전의 변수 선언 방법입니다 (구식)</li>
+                        <li><strong>함수 스코프:</strong> 함수 내에서만 유효합니다 (블록 스코프 아님)</li>
+                        <li><strong>재할당 가능:</strong> 값을 여러 번 변경할 수 있습니다</li>
+                        <li><strong>재선언 가능:</strong> 같은 이름으로 여러 번 선언할 수 있어 실수하기 쉬움</li>
+                        <li><strong>호이스팅:</strong> 선언이 최상단으로 끌어올려져서 예상치 못한 동작을 할 수 있음</li>
+                        <li>현재는 let과 const 사용을 권장하며, var는 레거시 코드에서만 사용됩니다</li>
+                    </ul>
+                    
+                    <div class="code-example">
+                        <pre>// var의 문제점 예제
+// 함수 스코프 문제
+for (var i = 0; i < 3; i++) {
+    // var는 블록이 아니라 함수 스코프
+}
+console.log(i);  // 3 (블록 밖에서도 접근 가능 - 문제!)
+
+// 호이스팅 문제
+console.log(x);  // undefined (에러가 아니라 undefined 출력 - 문제!)
+var x = 5;
+
+// 재선언 가능 문제
+var name = "홍길동";
+var name = "김철수";  // 에러 없이 재선언 가능 - 문제!</pre>
+                    </div>
+                    
+                    <h3>자료형 완벽 가이드</h3>
+                    <p>JavaScript는 동적 타이핑 언어이므로, 변수의 타입은 값에 따라 자동으로 결정됩니다. 
+                    JavaScript의 자료형은 원시 타입(Primitive Type)과 참조 타입(Reference Type)으로 나뉩니다.</p>
+                    
+                    <p><strong>원시 타입 (Primitive Types):</strong></p>
+                    <ul style="margin-left: 20px; margin-top: 10px;">
+                        <li><strong>Number:</strong> 숫자 (정수, 실수 모두 포함)
+                            <ul style="margin-left: 15px; margin-top: 5px;">
+                                <li><code>let age = 25;</code> (정수)</li>
+                                <li><code>let height = 175.5;</code> (실수)</li>
+                                <li><code>let price = -100;</code> (음수)</li>
+                                <li>특수 값: <code>Infinity</code>, <code>-Infinity</code>, <code>NaN</code> (Not a Number)</li>
+                            </ul>
+                        </li>
+                        <li><strong>String:</strong> 문자열 (텍스트)
+                            <ul style="margin-left: 15px; margin-top: 5px;">
+                                <li><code>let name = "홍길동";</code> (큰따옴표)</li>
+                                <li><code>let text = 'JavaScript';</code> (작은따옴표)</li>
+                                <li><code>let msg = \`템플릿 리터럴\`;</code> (백틱, ES6)</li>
+                                <li>템플릿 리터럴에서는 변수 삽입 가능: <code>\`안녕하세요, \${name}님\`</code></li>
+                            </ul>
+                        </li>
+                        <li><strong>Boolean:</strong> 불린 (참/거짓)
+                            <ul style="margin-left: 15px; margin-top: 5px;">
+                                <li><code>let isStudent = true;</code></li>
+                                <li><code>let isAdult = false;</code></li>
+                                <li>조건문에서 많이 사용됩니다</li>
+                            </ul>
+                        </li>
+                        <li><strong>Undefined:</strong> 정의되지 않음
+                            <ul style="margin-left: 15px; margin-top: 5px;">
+                                <li>변수가 선언되었지만 값이 할당되지 않았을 때</li>
+                                <li><code>let x;</code> → <code>x</code>는 <code>undefined</code></li>
+                                <li>의도적이지 않은 상태를 나타냅니다</li>
+                            </ul>
+                        </li>
+                        <li><strong>Null:</strong> 값이 없음 (의도적)
+                            <ul style="margin-left: 15px; margin-top: 5px;">
+                                <li>의도적으로 값을 비워둔 상태</li>
+                                <li><code>let user = null;</code></li>
+                                <li>객체가 없음을 명시적으로 표현할 때 사용</li>
+                            </ul>
+                        </li>
+                        <li><strong>Symbol:</strong> 고유한 식별자 (ES6)
+                            <ul style="margin-left: 15px; margin-top: 5px;">
+                                <li>객체의 속성 키로 사용되며, 항상 고유한 값을 가집니다</li>
+                                <li><code>let id = Symbol('id');</code></li>
+                            </ul>
+                        </li>
+                    </ul>
+                    
+                    <p><strong>참조 타입 (Reference Types):</strong></p>
+                    <ul style="margin-left: 20px; margin-top: 10px;">
+                        <li><strong>Object:</strong> 객체
+                            <ul style="margin-left: 15px; margin-top: 5px;">
+                                <li>키-값 쌍으로 데이터를 저장</li>
+                                <li><code>let person = { name: "홍길동", age: 20 };</code></li>
+                            </ul>
+                        </li>
+                        <li><strong>Array:</strong> 배열
+                            <ul style="margin-left: 15px; margin-top: 5px;">
+                                <li>순서가 있는 값들의 집합</li>
+                                <li><code>let numbers = [1, 2, 3, 4, 5];</code></li>
+                            </ul>
+                        </li>
+                        <li><strong>Function:</strong> 함수
+                            <ul style="margin-left: 15px; margin-top: 5px;">
+                                <li>실행 가능한 코드 블록</li>
+                                <li><code>function greet() { ... }</code></li>
+                            </ul>
+                        </li>
+                    </ul>
+                    
+                    <h3>변수 명명 규칙과 관례</h3>
+                    <p><strong>규칙 (반드시 지켜야 함):</strong></p>
+                    <ul style="margin-left: 20px; margin-top: 10px;">
+                        <li>변수명은 문자(letter), 숫자, 언더스코어(_), 달러 기호($)만 사용 가능</li>
+                        <li>변수명은 숫자로 시작할 수 없음</li>
+                        <li>예약어(if, for, function 등)는 변수명으로 사용할 수 없음</li>
+                        <li>대소문자를 구분함 (<code>name</code>과 <code>Name</code>은 다름)</li>
+                    </ul>
+                    
+                    <p><strong>관례 (권장사항):</strong></p>
+                    <ul style="margin-left: 20px; margin-top: 10px;">
+                        <li><strong>camelCase 사용:</strong> 여러 단어는 첫 단어는 소문자, 이후 단어는 대문자로 시작
+                            <ul style="margin-left: 15px; margin-top: 5px;">
+                                <li><code>let userName;</code> ✅</li>
+                                <li><code>let user_name;</code> ⚠️ (언더스코어는 일부 스타일에서 사용)</li>
+                            </ul>
+                        </li>
+                        <li><strong>의미 있는 이름 사용:</strong> 변수의 용도를 명확히 알 수 있는 이름
+                            <ul style="margin-left: 15px; margin-top: 5px;">
+                                <li><code>let age;</code> ✅</li>
+                                <li><code>let a;</code> ❌ (의미 불명확)</li>
+                            </ul>
+                        </li>
+                        <li><strong>상수는 대문자:</strong> const로 선언한 상수는 대문자와 언더스코어 사용
+                            <ul style="margin-left: 15px; margin-top: 5px;">
+                                <li><code>const MAX_SIZE = 100;</code> ✅</li>
+                                <li><code>const PI = 3.14;</code> ✅</li>
+                            </ul>
+                        </li>
+                    </ul>
+                    
+                    <h3>typeof 연산자</h3>
+                    <p>변수의 타입을 확인하려면 <code>typeof</code> 연산자를 사용합니다:</p>
+                    <div class="code-example">
+                        <pre>console.log(typeof 42);         // "number"
+console.log(typeof "hello");    // "string"
+console.log(typeof true);       // "boolean"
+console.log(typeof undefined);  // "undefined"
+console.log(typeof null);       // "object" (주의! 버그)
+console.log(typeof {});         // "object"
+console.log(typeof []);         // "object" (주의! 배열도 object)
+console.log(typeof function(){}); // "function"</pre>
+                    </div>
+                    
+                    <h3>변수 사용 시 주의사항</h3>
+                    <ul style="margin-left: 20px; margin-top: 10px;">
+                        <li><strong>선언하지 않은 변수 사용 금지:</strong> 변수를 선언하지 않고 사용하면 ReferenceError 발생</li>
+                        <li><strong>let/const 사용 권장:</strong> var는 호이스팅과 스코프 문제로 인해 사용 지양</li>
+                        <li><strong>const를 기본으로 사용:</strong> 값이 변하지 않는 경우 const 사용, 필요할 때만 let 사용</li>
+                        <li><strong>전역 변수 최소화:</strong> 전역 변수는 이름 충돌과 디버깅 어려움을 야기</li>
+                        <li><strong>의미 있는 이름 사용:</strong> 변수명만 봐도 용도를 알 수 있게 작성</li>
+                    </ul>
+                `,
+                problem: "변수 name에 'JavaScript'를 저장하고, 변수 number에 100을 저장한 후, 두 변수를 콘솔에 출력하세요. (let 사용)",
+                solution: "let name = 'JavaScript';\nlet number = 100;\nconsole.log(name);\nconsole.log(number);",
+                test: (code) => {
+                    try {
+                        return code.includes("let name") && 
+                               code.includes("let number") && 
+                               code.includes("console.log");
+                    } catch (e) {
+                        return false;
+                    }
+                }
+            },
+            {
+                title: "연산자",
+                content: `
+                    <h3>산술 연산자</h3>
+                    <p>수학 연산을 수행하는 연산자입니다:</p>
+                    <ul style="margin-left: 20px; margin-top: 10px;">
+                        <li><code>+</code>: 덧셈</li>
+                        <li><code>-</code>: 뺄셈</li>
+                        <li><code>*</code>: 곱셈</li>
+                        <li><code>/</code>: 나눗셈</li>
+                        <li><code>%</code>: 나머지</li>
+                        <li><code>**</code>: 거듭제곱</li>
+                    </ul>
+                    
+                    <div class="code-example">
+                        <pre>let a = 10;
+let b = 3;
+console.log(a + b);  // 13
+console.log(a - b);  // 7
+console.log(a * b);  // 30
+console.log(a / b);  // 3.333...
+console.log(a % b);  // 1
+console.log(a ** b); // 1000</pre>
+                    </div>
+                    
+                    <h3>비교 연산자</h3>
+                    <p>두 값을 비교하여 true 또는 false를 반환합니다:</p>
+                    <div class="code-example">
+                        <pre>console.log(5 > 3);   // true
+console.log(5 < 3);   // false
+console.log(5 === 5); // true (엄격한 같음)
+console.log(5 !== 3); // true</pre>
+                    </div>
+                    
+                    <h3>논리 연산자</h3>
+                    <p>논리 연산을 수행합니다:</p>
+                    <ul style="margin-left: 20px; margin-top: 10px;">
+                        <li><code>&&</code>: AND (둘 다 true일 때 true)</li>
+                        <li><code>||</code>: OR (하나라도 true이면 true)</li>
+                        <li><code>!</code>: NOT (true면 false, false면 true)</li>
+                    </ul>
+                `,
+                problem: "변수 a에 15, 변수 b에 4를 저장하고, a와 b의 합, 차, 곱을 각각 콘솔에 출력하세요.",
+                solution: "let a = 15;\nlet b = 4;\nconsole.log(a + b);\nconsole.log(a - b);\nconsole.log(a * b);",
+                test: (code) => {
+                    try {
+                        return code.includes("let a = 15") && 
+                               code.includes("let b = 4") &&
+                               code.includes("console.log(a + b)") &&
+                               code.includes("console.log(a - b)") &&
+                               code.includes("console.log(a * b)");
+                    } catch (e) {
+                        return false;
+                    }
+                }
+            },
+            {
+                title: "조건문",
+                content: `
+                    <h3>if 문</h3>
+                    <p>조건에 따라 코드를 실행할지 결정합니다:</p>
+                    
+                    <div class="code-example">
+                        <pre>let age = 20;
+if (age >= 18) {
+    console.log("성인입니다");
+} else {
+    console.log("미성년자입니다");
+}</pre>
+                    </div>
+                    
+                    <h3>else if 사용</h3>
+                    <p>여러 조건을 확인할 때 else if를 사용합니다:</p>
+                    
+                    <div class="code-example">
+                        <pre>let score = 85;
+if (score >= 90) {
+    console.log("A등급");
+} else if (score >= 80) {
+    console.log("B등급");
+} else if (score >= 70) {
+    console.log("C등급");
+} else {
+    console.log("D등급");
+}</pre>
+                    </div>
+                    
+                    <h3>삼항 연산자</h3>
+                    <p>간단한 조건문은 삼항 연산자로 작성할 수 있습니다:</p>
+                    
+                    <div class="code-example">
+                        <pre>let age = 20;
+let message = age >= 18 ? "성인" : "미성년자";
+console.log(message); // "성인"</pre>
+                    </div>
+                    
+                    <h3>switch 문</h3>
+                    <p>여러 경우를 비교할 때 switch를 사용합니다:</p>
+                    
+                    <div class="code-example">
+                        <pre>let day = "월요일";
+switch(day) {
+    case "월요일":
+        console.log("주간 시작!");
+        break;
+    case "금요일":
+        console.log("주말 전날!");
+        break;
+    default:
+        console.log("평일");
+}</pre>
+                    </div>
+                `,
+                problem: "변수 score에 85를 저장하고, score가 80 이상이면 '합격', 그렇지 않으면 '불합격'을 콘솔에 출력하세요.",
+                solution: "let score = 85;\nif (score >= 80) {\n    console.log('합격');\n} else {\n    console.log('불합격');\n}",
+                test: (code) => {
+                    try {
+                        return code.includes("let score = 85") &&
+                               code.includes("if") &&
+                               code.includes("score >= 80") &&
+                               code.includes("console.log('합격')") &&
+                               code.includes("else") &&
+                               code.includes("console.log('불합격')");
+                    } catch (e) {
+                        return false;
+                    }
+                }
+            },
+            {
+                title: "반복문",
+                content: `
+                    <h3>for 문</h3>
+                    <p>특정 횟수만큼 코드를 반복 실행합니다:</p>
+                    
+                    <div class="code-example">
+                        <pre>// 기본 for 문
+for (let i = 0; i < 5; i++) {
+    console.log(i); // 0, 1, 2, 3, 4
+}
+
+// for...of (배열 반복)
+let fruits = ["사과", "바나나", "오렌지"];
+for (let fruit of fruits) {
+    console.log(fruit);
+}
+
+// for...in (객체 반복)
+let person = {name: "홍길동", age: 20};
+for (let key in person) {
+    console.log(key + ": " + person[key]);
+}</pre>
+                    </div>
+                    
+                    <h3>while 문</h3>
+                    <p>조건이 true인 동안 계속 반복합니다:</p>
+                    
+                    <div class="code-example">
+                        <pre>let count = 0;
+while (count < 5) {
+    console.log(count);
+    count++; // count = count + 1과 같음
+}</pre>
+                    </div>
+                    
+                    <h3>반복문 제어</h3>
+                    <ul style="margin-left: 20px; margin-top: 10px;">
+                        <li><code>break</code>: 반복문을 즉시 종료</li>
+                        <li><code>continue</code>: 현재 반복을 건너뛰고 다음 반복으로</li>
+                    </ul>
+                    
+                    <div class="code-example">
+                        <pre>for (let i = 0; i < 10; i++) {
+    if (i === 5) {
+        break; // i가 5가 되면 반복 종료
+    }
+    console.log(i);
+}</pre>
+                    </div>
+                `,
+                problem: "for 문을 사용하여 1부터 5까지의 숫자를 콘솔에 출력하세요. (let i = 1; i <= 5; i++)",
+                solution: "for (let i = 1; i <= 5; i++) {\n    console.log(i);\n}",
+                test: (code) => {
+                    try {
+                        return code.includes("for") &&
+                               (code.includes("i = 1") || code.includes("i=1")) &&
+                               code.includes("i <= 5") &&
+                               code.includes("console.log(i)");
+                    } catch (e) {
+                        return false;
+                    }
+                }
+            },
+            {
+                title: "함수",
+                content: `
+                    <h3>함수란 무엇인가?</h3>
+                    <p>함수는 특정 작업을 수행하는 재사용 가능한 코드 블록입니다. 
+                    같은 코드를 여러 번 반복해서 작성하는 대신, 함수로 만들어서 필요할 때마다 호출하여 사용할 수 있습니다. 
+                    함수를 사용하면 코드의 재사용성, 가독성, 유지보수성을 크게 향상시킬 수 있습니다.</p>
+                    
+                    <p>함수는 입력(매개변수)을 받아서 처리한 후 결과(반환값)를 출력합니다. 
+                    예를 들어, 두 수를 더하는 함수는 두 수를 입력받아 더한 결과를 반환합니다.</p>
+                    
+                    <h3>함수를 사용하는 이유</h3>
+                    <ul style="margin-left: 20px; margin-top: 10px;">
+                        <li><strong>코드 재사용:</strong> 같은 작업을 여러 번 할 때 함수를 한 번만 작성하고 여러 번 호출</li>
+                        <li><strong>코드 가독성:</strong> 복잡한 코드를 의미 있는 이름의 함수로 분리하여 이해하기 쉽게 만듦</li>
+                        <li><strong>유지보수:</strong> 코드를 함수 단위로 관리하여 수정이 필요할 때 해당 함수만 수정하면 됨</li>
+                        <li><strong>모듈화:</strong> 프로그램을 작은 단위로 나누어 개발할 수 있음</li>
+                        <li><strong>테스트 용이:</strong> 함수 단위로 테스트하여 오류를 쉽게 발견할 수 있음</li>
+                    </ul>
+                    
+                    <h3>함수 정의 방법 완벽 가이드</h3>
+                    <p>JavaScript에서는 세 가지 방법으로 함수를 정의할 수 있습니다:</p>
+                    
+                    <p><strong>1. 함수 선언식 (Function Declaration):</strong></p>
+                    <ul style="margin-left: 20px; margin-top: 10px;">
+                        <li>가장 일반적인 함수 정의 방법입니다</li>
+                        <li><strong>호이스팅:</strong> 함수 선언은 코드 실행 전에 끌어올려져서 어디서든 호출 가능합니다</li>
+                        <li>함수 이름이 필수입니다</li>
+                    </ul>
+                    <div class="code-example">
+                        <pre>// 함수 선언식
+function greet() {
+    console.log("안녕하세요!");
+}
+greet(); // 함수 호출
+
+// 호이스팅 때문에 아래처럼 먼저 호출해도 작동함
+hello(); // 작동함!
+function hello() {
+    console.log("Hello!");
+}</pre>
+                    </div>
+                    
+                    <p><strong>2. 함수 표현식 (Function Expression):</strong></p>
+                    <ul style="margin-left: 20px; margin-top: 10px;">
+                        <li>변수에 함수를 할당하는 방식입니다</li>
+                        <li><strong>호이스팅 없음:</strong> 선언 전에는 호출할 수 없습니다</li>
+                        <li>함수 이름은 선택 사항입니다 (익명 함수 가능)</li>
+                        <li>변수에 할당되므로 재할당 가능합니다</li>
+                    </ul>
+                    <div class="code-example">
+                        <pre>// 함수 표현식
+const greet2 = function() {
+    console.log("안녕하세요!");
+};
+greet2();
+
+// 익명 함수
+const greet3 = function() {
+    console.log("안녕하세요!");
+};
+
+// 기명 함수 표현식 (디버깅 시 유용)
+const greet4 = function hello() {
+    console.log("안녕하세요!");
+};
+// hello(); // 에러! 외부에서는 호출 불가</pre>
+                    </div>
+                    
+                    <p><strong>3. 화살표 함수 (Arrow Function, ES6):</strong></p>
+                    <ul style="margin-left: 20px; margin-top: 10px;">
+                        <li>ES6에서 도입된 간결한 함수 정의 방법입니다</li>
+                        <li><strong>this 바인딩:</strong> 화살표 함수는 자신의 this를 가지지 않고 상위 스코프의 this를 사용합니다</li>
+                        <li>함수 표현식과 동일하게 호이스팅되지 않습니다</li>
+                        <li>간결한 문법으로 코드가 짧아집니다</li>
+                    </ul>
+                    <div class="code-example">
+                        <pre>// 화살표 함수 기본 형태
+const greet5 = () => {
+    console.log("안녕하세요!");
+};
+
+// 매개변수가 하나면 괄호 생략 가능
+const greet6 = name => {
+    console.log("안녕하세요, " + name + "!");
+};
+
+// 매개변수가 없거나 둘 이상이면 괄호 필수
+const greet7 = () => console.log("안녕하세요!");
+const greet8 = (name, age) => {
+    console.log("안녕하세요, " + name + "! 나이: " + age);
+};</pre>
+                    </div>
+                    
+                    <h3>매개변수와 인수 완벽 이해</h3>
+                    <p><strong>매개변수(Parameter):</strong> 함수 정의 시 괄호 안에 선언하는 변수입니다.</p>
+                    <p><strong>인수(Argument):</strong> 함수 호출 시 전달하는 실제 값입니다.</p>
+                    
+                    <div class="code-example">
+                        <pre>// name은 매개변수(parameter)
+function greet(name) {
+    console.log("안녕하세요, " + name + "님!");
+}
+
+// "홍길동"은 인수(argument)
+greet("홍길동"); // "안녕하세요, 홍길동님!"
+
+// 여러 매개변수
+function introduce(name, age) {
+    console.log("이름: " + name + ", 나이: " + age);
+}
+introduce("홍길동", 20); // 이름: 홍길동, 나이: 20
+
+// 화살표 함수
+const greet2 = (name) => {
+    console.log("안녕하세요, " + name + "님!");
+};</pre>
+                    </div>
+                    
+                    <h3>반환값 완벽 이해</h3>
+                    <p><code>return</code> 키워드를 사용하여 함수의 결과값을 반환할 수 있습니다. 
+                    <code>return</code>이 실행되면 함수는 즉시 종료되고, 그 이후의 코드는 실행되지 않습니다.</p>
+                    
+                    <div class="code-example">
+                        <pre>// 반환값이 있는 함수
+function add(a, b) {
+    return a + b;  // 결과를 반환
+}
+let result = add(3, 5);
+console.log(result); // 8
+
+// return 이후 코드는 실행되지 않음
+function check() {
+    return "종료";
+    console.log("이 코드는 실행되지 않음"); // 실행 안 됨
+}
+
+// 화살표 함수에서 단일 표현식은 return 생략 가능
+const add2 = (a, b) => a + b;  // 자동으로 return됨
+const add3 = (a, b) => {
+    return a + b;  // 명시적으로 return 사용
+};
+
+// 반환값이 없으면 undefined 반환
+function noReturn() {
+    console.log("반환값 없음");
+}
+let value = noReturn();
+console.log(value); // undefined</pre>
+                    </div>
+                    
+                    <h3>기본값 매개변수 (Default Parameters)</h3>
+                    <p>ES6에서 도입된 기능으로, 매개변수에 기본값을 설정할 수 있습니다. 
+                    함수 호출 시 인수를 전달하지 않으면 기본값이 사용됩니다.</p>
+                    
+                    <div class="code-example">
+                        <pre>// 기본값 매개변수
+function greet(name = "게스트") {
+    console.log("안녕하세요, " + name + "님!");
+}
+greet(); // "안녕하세요, 게스트님!" (기본값 사용)
+greet("홍길동"); // "안녕하세요, 홍길동님!"
+
+// 여러 기본값
+function introduce(name = "이름 없음", age = 0) {
+    console.log("이름: " + name + ", 나이: " + age);
+}
+introduce(); // 이름: 이름 없음, 나이: 0
+introduce("홍길동"); // 이름: 홍길동, 나이: 0
+introduce("홍길동", 20); // 이름: 홍길동, 나이: 20
+
+// 화살표 함수에서도 사용 가능
+const greet2 = (name = "게스트") => {
+    console.log("안녕하세요, " + name + "님!");
+};</pre>
+                    </div>
+                    
+                    <h3>함수 스코프와 클로저</h3>
+                    <p><strong>함수 스코프:</strong> 함수 안에서 선언한 변수는 함수 내부에서만 접근 가능합니다.</p>
+                    <div class="code-example">
+                        <pre>function example() {
+    let x = 10;  // 함수 스코프
+    console.log(x); // 10
+}
+// console.log(x); // 에러! x는 함수 밖에서 접근 불가</pre>
+                    </div>
+                    
+                    <p><strong>클로저(Closure):</strong> 함수가 자신의 스코프 밖의 변수에 접근할 수 있는 현상입니다.</p>
+                    <div class="code-example">
+                        <pre>function outer() {
+    let count = 0;  // 외부 함수의 변수
+    function inner() {
+        count++;  // 내부 함수가 외부 변수에 접근
+        return count;
+    }
+    return inner;
+}
+
+const counter = outer();
+console.log(counter()); // 1
+console.log(counter()); // 2
+console.log(counter()); // 3</pre>
+                    </div>
+                    
+                    <h3>함수 사용 시 주의사항</h3>
+                    <ul style="margin-left: 20px; margin-top: 10px;">
+                        <li><strong>함수 선언식 vs 표현식:</strong> 호이스팅 차이를 이해하고 상황에 맞게 선택</li>
+                        <li><strong>화살표 함수의 this:</strong> this 바인딩이 다르므로 객체 메서드에서는 주의 필요</li>
+                        <li><strong>return 문:</strong> 반환값이 필요한 함수는 반드시 return 사용</li>
+                        <li><strong>매개변수 검증:</strong> 잘못된 입력값을 받지 않도록 검증 로직 추가 권장</li>
+                        <li><strong>함수 이름:</strong> 함수의 역할을 명확히 나타내는 의미 있는 이름 사용</li>
+                    </ul>
+                `,
+                problem: "두 수를 더하는 함수 add를 정의하고, add(10, 20)을 호출하여 결과를 콘솔에 출력하세요.",
+                solution: "function add(a, b) {\n    return a + b;\n}\nlet result = add(10, 20);\nconsole.log(result);",
+                test: (code) => {
+                    try {
+                        return code.includes("function add") &&
+                               code.includes("return") &&
+                               code.includes("add(10, 20)") &&
+                               code.includes("console.log");
+                    } catch (e) {
+                        return false;
+                    }
+                }
+            },
+            {
+                title: "배열",
+                content: `
+                    <h3>배열이란?</h3>
+                    <p>배열은 여러 값을 순서대로 저장하는 자료구조입니다. 대괄호 [ ]로 생성합니다.</p>
+                    
+                    <div class="code-example">
+                        <pre>let fruits = ["사과", "바나나", "오렌지"];
+let numbers = [1, 2, 3, 4, 5];
+let mixed = [1, "문자열", 3.14, true];</pre>
+                    </div>
+                    
+                    <h3>배열 인덱싱과 접근</h3>
+                    <p>인덱스로 요소에 접근하고 수정할 수 있습니다:</p>
+                    
+                    <div class="code-example">
+                        <pre>let numbers = [10, 20, 30, 40, 50];
+console.log(numbers[0]);      // 10 (첫 번째 요소)
+console.log(numbers[numbers.length - 1]); // 50 (마지막 요소)
+numbers[0] = 100; // 값 수정
+console.log(numbers); // [100, 20, 30, 40, 50]</pre>
+                    </div>
+                    
+                    <h3>배열 메서드</h3>
+                    <ul style="margin-left: 20px; margin-top: 10px;">
+                        <li><code>push(x)</code>: 배열 끝에 요소 추가</li>
+                        <li><code>pop()</code>: 배열 끝 요소 제거</li>
+                        <li><code>unshift(x)</code>: 배열 앞에 요소 추가</li>
+                        <li><code>shift()</code>: 배열 앞 요소 제거</li>
+                        <li><code>length</code>: 배열 길이</li>
+                        <li><code>indexOf(x)</code>: 요소의 인덱스 찾기</li>
+                    </ul>
+                    
+                    <div class="code-example">
+                        <pre>let numbers = [3, 1, 4, 1, 5];
+numbers.push(9);
+console.log(numbers); // [3, 1, 4, 1, 5, 9]
+let last = numbers.pop();
+console.log(last); // 9</pre>
+                    </div>
+                `,
+                problem: "배열 numbers에 [5, 2, 8, 1]을 저장하고, push() 메서드를 사용하여 9를 추가한 후, 전체 배열을 콘솔에 출력하세요.",
+                solution: "let numbers = [5, 2, 8, 1];\nnumbers.push(9);\nconsole.log(numbers);",
+                test: (code) => {
+                    try {
+                        return code.includes("let numbers = [5, 2, 8, 1]") &&
+                               code.includes("push(9)") &&
+                               code.includes("console.log(numbers)");
+                    } catch (e) {
+                        return false;
+                    }
+                }
+            },
+            {
+                title: "객체",
+                content: `
+                    <h3>객체란?</h3>
+                    <p>객체는 키(key)와 값(value)의 쌍으로 데이터를 저장하는 자료구조입니다. 중괄호 { }로 생성합니다.</p>
+                    
+                    <div class="code-example">
+                        <pre>let student = {
+    name: "홍길동",
+    age: 20,
+    grade: "A"
+};</pre>
+                    </div>
+                    
+                    <h3>객체 접근과 수정</h3>
+                    <p>점 표기법 또는 대괄호 표기법으로 속성에 접근합니다:</p>
+                    
+                    <div class="code-example">
+                        <pre>let student = {name: "홍길동", age: 20};
+console.log(student.name);     // "홍길동" (점 표기법)
+console.log(student["age"]);   // 20 (대괄호 표기법)
+
+// 값 수정
+student.age = 21;
+student.grade = "A"; // 새 속성 추가
+console.log(student);</pre>
+                    </div>
+                    
+                    <h3>객체 메서드</h3>
+                    <p>객체 안에 함수를 정의할 수 있습니다:</p>
+                    
+                    <div class="code-example">
+                        <pre>let person = {
+    name: "홍길동",
+    age: 20,
+    introduce: function() {
+        return "안녕하세요, " + this.name + "입니다.";
+    }
+};
+console.log(person.introduce()); // "안녕하세요, 홍길동입니다."
+
+// ES6 축약 문법
+let person2 = {
+    name: "김철수",
+    introduce() {
+        return "안녕하세요, " + this.name + "입니다.";
+    }
+};</pre>
+                    </div>
+                `,
+                problem: "객체 person에 name: '김철수', age: 25를 저장하고, age 값을 콘솔에 출력하세요.",
+                solution: "let person = {name: '김철수', age: 25};\nconsole.log(person.age);",
+                test: (code) => {
+                    try {
+                        return code.includes("let person = {") &&
+                               code.includes("name: '김철수'") &&
+                               code.includes("age: 25") &&
+                               code.includes("console.log(person.age)");
+                    } catch (e) {
+                        return false;
+                    }
+                }
+            },
+            {
+                title: "문자열 처리",
+                content: `
+                    <h3>문자열 메서드</h3>
+                    <p>JavaScript는 문자열을 다루는 다양한 메서드를 제공합니다:</p>
+                    
+                    <div class="code-example">
+                        <pre>let text = "  Hello JavaScript  ";
+console.log(text.trim());        // "Hello JavaScript" (양쪽 공백 제거)
+console.log(text.toUpperCase()); // "  HELLO JAVASCRIPT  " (대문자 변환)
+console.log(text.toLowerCase()); // "  hello javascript  " (소문자 변환)
+console.log(text.replace("JavaScript", "World")); // "  Hello World  "</pre>
+                    </div>
+                    
+                    <h3>문자열 분할과 결합</h3>
+                    <div class="code-example">
+                        <pre>let text = "사과,바나나,오렌지";
+let fruits = text.split(",");   // ["사과", "바나나", "오렌지"]
+let result = fruits.join("-");  // "사과-바나나-오렌지"</pre>
+                    </div>
+                    
+                    <h3>템플릿 리터럴</h3>
+                    <p>ES6의 백틱(&#96;)을 사용한 문자열 포맷팅:</p>
+                    
+                    <div class="code-example">
+                        <pre>let name = "홍길동";
+let age = 20;
+
+// 템플릿 리터럴 (백틱 사용)
+let message = "이름: " + name + ", 나이: " + age;
+console.log(message); // "이름: 홍길동, 나이: 20"
+
+// 여러 줄 문자열
+let multiLine = "첫 번째 줄\n두 번째 줄\n세 번째 줄";</pre>
+                    </div>
+                    
+                    <h3>문자열 검색</h3>
+                    <div class="code-example">
+                        <pre>let text = "JavaScript Programming";
+console.log(text.indexOf("JavaScript")); // 0 (위치 반환)
+console.log(text.includes("JavaScript")); // true (포함 여부)
+console.log(text.startsWith("Java")); // true
+console.log(text.endsWith("ing")); // true</pre>
+                    </div>
+                `,
+                problem: "문자열 text에 'Hello World'를 저장하고, toUpperCase() 메서드를 사용하여 대문자로 변환한 후 콘솔에 출력하세요.",
+                solution: "let text = 'Hello World';\nconsole.log(text.toUpperCase());",
+                test: (code) => {
+                    try {
+                        return code.includes("let text = 'Hello World'") &&
+                               code.includes("toUpperCase()") &&
+                               code.includes("console.log");
+                    } catch (e) {
+                        return false;
+                    }
+                }
+            },
+            {
+                title: "DOM 조작",
+                content: `
+                    <h3>DOM이란?</h3>
+                    <p>DOM(Document Object Model)은 HTML 문서를 객체로 표현한 것입니다. 
+                    JavaScript를 사용하여 HTML 요소를 선택하고 조작할 수 있습니다.</p>
+                    
+                    <h3>요소 선택</h3>
+                    <div class="code-example">
+                        <pre>// ID로 선택
+let element = document.getElementById("myId");
+
+// 클래스로 선택 (첫 번째 요소)
+let element2 = document.querySelector(".myClass");
+
+// 클래스로 모든 요소 선택
+let elements = document.querySelectorAll(".myClass");
+
+// 태그로 선택
+let paragraphs = document.getElementsByTagName("p");</pre>
+                    </div>
+                    
+                    <h3>요소 조작</h3>
+                    <div class="code-example">
+                        <pre>// 텍스트 내용 변경
+element.textContent = "새로운 텍스트";
+element.innerHTML = "<strong>강조된 텍스트</strong>";
+
+// 속성 변경
+element.setAttribute("class", "newClass");
+element.style.color = "red";
+
+// 요소 생성 및 추가
+let newDiv = document.createElement("div");
+newDiv.textContent = "새로운 div";
+document.body.appendChild(newDiv);</pre>
+                    </div>
+                    
+                    <h3>스타일 변경</h3>
+                    <div class="code-example">
+                        <pre>let element = document.querySelector(".myElement");
+element.style.backgroundColor = "blue";
+element.style.fontSize = "20px";
+element.style.display = "none"; // 숨기기</pre>
+                    </div>
+                `,
+                problem: "document.createElement()를 사용하여 새로운 div 요소를 만들고, textContent를 'Hello DOM'으로 설정한 후, document.body.appendChild()로 body에 추가하세요.",
+                solution: "let newDiv = document.createElement('div');\nnewDiv.textContent = 'Hello DOM';\ndocument.body.appendChild(newDiv);",
+                test: (code) => {
+                    try {
+                        return code.includes("createElement") &&
+                               code.includes("textContent") &&
+                               code.includes("appendChild");
+                    } catch (e) {
+                        return false;
+                    }
+                }
+            },
+            {
+                title: "이벤트 처리",
+                content: `
+                    <h3>이벤트란?</h3>
+                    <p>이벤트는 사용자의 행동(클릭, 입력, 스크롤 등) 또는 시스템에서 발생하는 사건입니다. 
+                    JavaScript로 이러한 이벤트를 감지하고 처리할 수 있습니다.</p>
+                    
+                    <h3>이벤트 리스너 추가</h3>
+                    <div class="code-example">
+                        <pre>// addEventListener 사용
+let button = document.querySelector("#myButton");
+button.addEventListener("click", function() {
+    console.log("버튼이 클릭되었습니다!");
+});
+
+// 화살표 함수 사용
+button.addEventListener("click", () => {
+    console.log("버튼 클릭!");
+});</pre>
+                    </div>
+                    
+                    <h3>주요 이벤트</h3>
+                    <ul style="margin-left: 20px; margin-top: 10px;">
+                        <li><code>click</code>: 클릭 이벤트</li>
+                        <li><code>input</code>: 입력 이벤트</li>
+                        <li><code>change</code>: 값 변경 이벤트</li>
+                        <li><code>submit</code>: 폼 제출 이벤트</li>
+                        <li><code>load</code>: 페이지 로드 이벤트</li>
+                        <li><code>keydown</code>: 키 누름 이벤트</li>
+                    </ul>
+                    
+                    <h3>이벤트 객체</h3>
+                    <div class="code-example">
+                        <pre>button.addEventListener("click", function(event) {
+    console.log(event.target); // 이벤트가 발생한 요소
+    console.log(event.type);   // 이벤트 타입 ("click")
+    event.preventDefault();    // 기본 동작 방지
+});</pre>
+                    </div>
+                `,
+                problem: "버튼 요소를 선택하고(addEventListener 미사용), onclick 속성을 사용하여 클릭 시 '버튼 클릭됨!'을 콘솔에 출력하는 함수를 연결하세요. (함수는 따로 정의)",
+                solution: "let button = document.querySelector('button');\nfunction handleClick() {\n    console.log('버튼 클릭됨!');\n}\nbutton.onclick = handleClick;",
+                test: (code) => {
+                    try {
+                        return code.includes("querySelector") &&
+                               code.includes("function") &&
+                               code.includes("console.log") &&
+                               code.includes("onclick");
+                    } catch (e) {
+                        return false;
+                    }
+                }
+            },
+            {
+                title: "클래스와 객체",
+                content: `
+                    <h3>클래스란?</h3>
+                    <p>클래스는 객체를 만드는 설계도입니다. ES6에서 클래스 문법이 추가되었습니다.</p>
+                    
+                    <h3>클래스 정의</h3>
+                    <div class="code-example">
+                        <pre>class Person {
+    constructor(name, age) {
+        this.name = name;
+        this.age = age;
+    }
+    
+    introduce() {
+        return "안녕하세요, 저는 " + this.name + "이고 " + this.age + "세입니다.";
+    }
+}
+
+// 객체 생성
+let person1 = new Person("홍길동", 20);
+console.log(person1.introduce());</pre>
+                    </div>
+                    
+                    <h3>메서드</h3>
+                    <p>클래스 안에 정의된 함수를 메서드라고 합니다:</p>
+                    
+                    <div class="code-example">
+                        <pre>class Circle {
+    constructor(radius) {
+        this.radius = radius;
+    }
+    
+    area() {
+        return Math.PI * this.radius ** 2;
+    }
+    
+    circumference() {
+        return 2 * Math.PI * this.radius;
+    }
+}
+
+let circle = new Circle(5);
+console.log(circle.area()); // 78.54...</pre>
+                    </div>
+                    
+                    <h3>상속</h3>
+                    <p>extends 키워드로 클래스를 상속할 수 있습니다:</p>
+                    
+                    <div class="code-example">
+                        <pre>class Animal {
+    constructor(name) {
+        this.name = name;
+    }
+    
+    speak() {
+        return "동물이 소리를 냅니다";
+    }
+}
+
+class Dog extends Animal {
+    speak() {
+        return this.name + "가 멍멍 짖습니다";
+    }
+}
+
+let dog = new Dog("멍멍이");
+console.log(dog.speak()); // "멍멍이가 멍멍 짖습니다"</pre>
+                    </div>
+                `,
+                problem: "Person 클래스를 정의하고, constructor에서 name과 age를 받아 저장한 후, introduce() 메서드로 '안녕하세요, 저는 [name]이고 [age]세입니다.'를 반환하세요. 객체를 생성하여 introduce()를 호출하세요.",
+                solution: "class Person {\n    constructor(name, age) {\n        this.name = name;\n        this.age = age;\n    }\n    \n    introduce() {\n        return '안녕하세요, 저는 ' + this.name + '이고 ' + this.age + '세입니다.';\n    }\n}\n\nlet person = new Person('홍길동', 20);\nconsole.log(person.introduce());",
+                test: (code) => {
+                    try {
+                        return code.includes("class Person") &&
+                               code.includes("constructor") &&
+                               code.includes("introduce") &&
+                               code.includes("new Person");
+                    } catch (e) {
+                        return false;
+                    }
+                }
+            },
+            {
+                title: "Promise",
+                content: `
+                    <h3>Promise란?</h3>
+                    <p>Promise는 비동기 작업의 결과를 나타내는 객체입니다. 성공(fulfilled) 또는 실패(rejected) 상태를 가집니다.</p>
+                    
+                    <h3>Promise 생성</h3>
+                    <div class="code-example">
+                        <pre>let promise = new Promise(function(resolve, reject) {
+    setTimeout(function() {
+        let success = true;
+        if (success) {
+            resolve("작업 완료!");
+        } else {
+            reject("작업 실패!");
+        }
+    }, 1000);
+});</pre>
+                    </div>
+                    
+                    <h3>Promise 사용</h3>
+                    <div class="code-example">
+                        <pre>promise
+    .then(function(result) {
+        console.log(result); // "작업 완료!"
+    })
+    .catch(function(error) {
+        console.log(error); // "작업 실패!"
+    });
+
+// 화살표 함수
+promise
+    .then(result => console.log(result))
+    .catch(error => console.log(error));</pre>
+                    </div>
+                    
+                    <h3>여러 Promise 처리</h3>
+                    <div class="code-example">
+                        <pre>Promise.all([promise1, promise2, promise3])
+    .then(results => {
+        console.log("모든 작업 완료:", results);
+    })
+    .catch(error => {
+        console.log("에러 발생:", error);
+    });</pre>
+                    </div>
+                    
+                    <h3>실제 사용 예제 (fetch API)</h3>
+                    <div class="code-example">
+                        <pre>fetch('https://api.example.com/data')
+    .then(response => response.json())
+    .then(data => console.log(data))
+    .catch(error => console.log('에러:', error));</pre>
+                    </div>
+                `,
+                problem: "새로운 Promise를 생성하고, 1초 후 resolve를 호출하여 '성공!'을 반환하세요. 그리고 then을 사용하여 결과를 콘솔에 출력하세요.",
+                solution: "let promise = new Promise(function(resolve, reject) {\n    setTimeout(function() {\n        resolve('성공!');\n    }, 1000);\n});\n\npromise.then(function(result) {\n    console.log(result);\n});",
+                test: (code) => {
+                    try {
+                        return code.includes("new Promise") &&
+                               code.includes("resolve") &&
+                               code.includes("then") &&
+                               code.includes("console.log");
+                    } catch (e) {
+                        return false;
+                    }
+                }
+            },
+            {
+                title: "async/await",
+                content: `
+                    <h3>async/await란?</h3>
+                    <p>async/await는 Promise를 더 쉽게 사용할 수 있게 해주는 문법입니다. 
+                    비동기 코드를 동기 코드처럼 작성할 수 있습니다.</p>
+                    
+                    <h3>async 함수</h3>
+                    <div class="code-example">
+                        <pre>// async 함수는 항상 Promise를 반환
+async function fetchData() {
+    return "데이터";
+}
+
+fetchData().then(data => console.log(data));</pre>
+                    </div>
+                    
+                    <h3>await 사용</h3>
+                    <p>await는 Promise가 완료될 때까지 기다립니다. async 함수 안에서만 사용 가능합니다:</p>
+                    
+                    <div class="code-example">
+                        <pre>async function getData() {
+    let promise = new Promise((resolve) => {
+        setTimeout(() => resolve("데이터 받음!"), 1000);
+    });
+    
+    let result = await promise; // Promise 완료까지 대기
+    console.log(result); // "데이터 받음!"
+}
+
+getData();</pre>
+                    </div>
+                    
+                    <h3>에러 처리</h3>
+                    <p>try-catch를 사용하여 에러를 처리합니다:</p>
+                    
+                    <div class="code-example">
+                        <pre>async function fetchData() {
+    try {
+        let response = await fetch('https://api.example.com/data');
+        let data = await response.json();
+        console.log(data);
+    } catch (error) {
+        console.log('에러 발생:', error);
+    }
+}</pre>
+                    </div>
+                    
+                    <h3>여러 비동기 작업</h3>
+                    <div class="code-example">
+                        <pre>async function getMultipleData() {
+    let [data1, data2] = await Promise.all([
+        fetch('/api/data1').then(r => r.json()),
+        fetch('/api/data2').then(r => r.json())
+    ]);
+    console.log(data1, data2);
+}</pre>
+                    </div>
+                `,
+                problem: "async 함수 fetchData를 만들고, 내부에서 Promise를 생성하여 resolve('완료!')를 호출하세요. await를 사용하여 결과를 받아 콘솔에 출력하세요.",
+                solution: "async function fetchData() {\n    let promise = new Promise(function(resolve) {\n        resolve('완료!');\n    });\n    \n    let result = await promise;\n    console.log(result);\n}\n\nfetchData();",
+                test: (code) => {
+                    try {
+                        return code.includes("async function") &&
+                               code.includes("await") &&
+                               code.includes("resolve") &&
+                               code.includes("console.log");
+                    } catch (e) {
+                        return false;
+                    }
+                }
+            },
+            {
+                title: "배열 메서드",
+                content: `
+                    <h3>배열 고차 함수</h3>
+                    <p>배열을 다루는 강력한 메서드들입니다. 함수를 매개변수로 받아 배열의 각 요소에 적용합니다.</p>
+                    
+                    <h3>map() - 변환</h3>
+                    <p>배열의 각 요소를 변환하여 새로운 배열을 만듭니다:</p>
+                    
+                    <div class="code-example">
+                        <pre>let numbers = [1, 2, 3, 4, 5];
+let squared = numbers.map(x => x ** 2);
+console.log(squared); // [1, 4, 9, 16, 25]
+
+let names = ["홍길동", "김철수"];
+let greetings = names.map(name => "안녕, " + name + "!");
+console.log(greetings); // ["안녕, 홍길동!", "안녕, 김철수!"]</pre>
+                    </div>
+                    
+                    <h3>filter() - 필터링</h3>
+                    <p>조건을 만족하는 요소만 필터링합니다:</p>
+                    
+                    <div class="code-example">
+                        <pre>let numbers = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
+let evens = numbers.filter(x => x % 2 === 0);
+console.log(evens); // [2, 4, 6, 8, 10]
+
+let scores = [85, 92, 78, 96, 88];
+let highScores = scores.filter(score => score >= 90);
+console.log(highScores); // [92, 96]</pre>
+                    </div>
+                    
+                    <h3>reduce() - 누적</h3>
+                    <p>배열을 하나의 값으로 축소합니다:</p>
+                    
+                    <div class="code-example">
+                        <pre>let numbers = [1, 2, 3, 4, 5];
+let sum = numbers.reduce((acc, x) => acc + x, 0);
+console.log(sum); // 15
+
+let max = numbers.reduce((acc, x) => x > acc ? x : acc, numbers[0]);
+console.log(max); // 5</pre>
+                    </div>
+                    
+                    <h3>forEach() - 반복</h3>
+                    <p>배열의 각 요소에 대해 함수를 실행합니다:</p>
+                    
+                    <div class="code-example">
+                        <pre>let fruits = ["사과", "바나나", "오렌지"];
+fruits.forEach(fruit => console.log(fruit));
+// "사과"
+// "바나나"
+// "오렌지"</pre>
+                    </div>
+                `,
+                problem: "배열 [1, 2, 3, 4, 5]을 map()을 사용하여 각 요소를 제곱한 새로운 배열을 만들고, 결과를 콘솔에 출력하세요.",
+                solution: "let numbers = [1, 2, 3, 4, 5];\nlet squared = numbers.map(x => x ** 2);\nconsole.log(squared);",
+                test: (code) => {
+                    try {
+                        return code.includes("map") &&
+                               code.includes("x ** 2") &&
+                               code.includes("console.log");
+                    } catch (e) {
+                        return false;
+                    }
+                }
+            },
+            {
+                title: "모듈",
+                content: `
+                    <h3>모듈이란?</h3>
+                    <p>모듈은 코드를 여러 파일로 나누어 관리하는 방법입니다. ES6에서 모듈 시스템이 추가되었습니다.</p>
+                    
+                    <h3>export - 내보내기</h3>
+                    <p>모듈에서 함수, 변수, 클래스를 내보냅니다:</p>
+                    
+                    <div class="code-example">
+                        <pre>// math.js
+export function add(a, b) {
+    return a + b;
+}
+
+export function multiply(a, b) {
+    return a * b;
+}
+
+export const PI = 3.14159;
+
+// 기본 내보내기
+export default function greet() {
+    return "안녕하세요!";
+}</pre>
+                    </div>
+                    
+                    <h3>import - 가져오기</h3>
+                    <p>다른 모듈에서 함수, 변수, 클래스를 가져옵니다:</p>
+                    
+                    <div class="code-example">
+                        <pre>// main.js
+import { add, multiply, PI } from './math.js';
+import greet from './math.js'; // 기본 내보내기
+
+console.log(add(2, 3)); // 5
+console.log(multiply(2, 3)); // 6
+console.log(PI); // 3.14159
+console.log(greet()); // "안녕하세요!"
+
+// 모든 것을 가져오기
+import * as math from './math.js';
+console.log(math.add(2, 3));</pre>
+                    </div>
+                    
+                    <h3>모듈 사용 방법</h3>
+                    <p>HTML에서 모듈을 사용하려면 script 태그에 type="module"을 추가해야 합니다:</p>
+                    
+                    <div class="code-example">
+                        <pre>&lt;script type="module"&gt;
+    import { add } from './math.js';
+    console.log(add(1, 2));
+&lt;/script&gt;</pre>
+                    </div>
+                `,
+                problem: "export를 사용하여 함수 add를 내보내는 코드를 작성하세요. (export function add(a, b) { return a + b; })",
+                solution: "export function add(a, b) {\n    return a + b;\n}",
+                test: (code) => {
+                    try {
+                        return code.includes("export") &&
+                               code.includes("function add") &&
+                               code.includes("return");
+                    } catch (e) {
+                        return false;
+                    }
+                }
+            }
+        ];
+
+        // 메인 화면 표시
+        function showMainScreen() {
+            document.getElementById('mainScreen').style.display = 'block';
+            document.getElementById('lessonScreens').innerHTML = '';
+            window.scrollTo(0, 0);
+        }
+
+        // 강의 화면 표시
+        function showLesson(chapterNum) {
+            const lesson = lessons[chapterNum - 1];
+            if (!lesson) return;
+
+            document.getElementById('mainScreen').style.display = 'none';
+            
+            const lessonHTML = `
+                <div class="lesson-screen active">
+                    <div class="lesson-header">
+                        <h2>${lesson.title}</h2>
+                        <button class="back-button" onclick="showMainScreen()">← 목차로</button>
+                    </div>
+                    
+                    <div class="lesson-content">
+                        ${lesson.content}
+                    </div>
+                    
+                    <div class="practice-section">
+                        <h3>📝 실습 문제</h3>
+                        <div class="problem">
+                            <p>${lesson.problem}</p>
+                        </div>
+                        
+                        <textarea class="code-editor" id="codeEditor${chapterNum}" placeholder="여기에 코드를 작성하세요..."></textarea>
+                        
+                        <button class="run-button" onclick="runCode(${chapterNum})">코드 실행</button>
+                        
+                        <div class="output" id="output${chapterNum}">실행 결과가 여기에 표시됩니다...</div>
+                        
+                        <div class="success-message" id="success${chapterNum}">
+                            ✅ 정답입니다! 다음 장으로 넘어갈 수 있습니다.
+                        </div>
+                        
+                        <div class="error-message" id="error${chapterNum}">
+                            ❌ 아직 정답이 아닙니다. 다시 시도해보세요!
+                        </div>
+                        
+                        <button class="next-button" id="nextButton${chapterNum}" onclick="nextChapter(${chapterNum})">
+                            다음 장으로 →
+                        </button>
+                    </div>
+                </div>
+            `;
+            
+            document.getElementById('lessonScreens').innerHTML = lessonHTML;
+            window.scrollTo(0, 0);
+        }
+
+        // 코드 실행 (실제 JavaScript 실행)
+        function runCode(chapterNum) {
+            const code = document.getElementById('codeEditor' + chapterNum).value;
+            const output = document.getElementById('output' + chapterNum);
+            const successMsg = document.getElementById('success' + chapterNum);
+            const errorMsg = document.getElementById('error' + chapterNum);
+            const nextBtn = document.getElementById('nextButton' + chapterNum);
+            const lesson = lessons[chapterNum - 1];
+
+            // 출력 초기화
+            output.textContent = '';
+            successMsg.classList.remove('show');
+            errorMsg.classList.remove('show');
+            nextBtn.classList.remove('show');
+
+            // 실제 JavaScript 코드 실행
+            try {
+                // console.log를 가로채서 출력에 표시
+                const originalLog = console.log;
+                let logOutput = '';
+                
+                console.log = function(...args) {
+                    logOutput += args.map(arg => 
+                        typeof arg === 'object' ? JSON.stringify(arg, null, 2) : String(arg)
+                    ).join(' ') + '\n';
+                    originalLog.apply(console, args);
+                };
+
+                // 코드 실행
+                eval(code);
+
+                // console.log 복원
+                console.log = originalLog;
+
+                // 출력 표시
+                if (logOutput) {
+                    output.textContent = logOutput.trim();
+                } else {
+                    output.textContent = '코드가 실행되었습니다. (출력 없음)';
+                }
+
+                // 코드 검증
+                if (lesson.test(code)) {
+                    successMsg.classList.add('show');
+                    nextBtn.classList.add('show');
+                } else {
+                    errorMsg.classList.add('show');
+                }
+            } catch (e) {
+                errorMsg.classList.add('show');
+                output.textContent = '오류: ' + e.message;
+                console.error(e);
+            }
+        }
+
+        // 다음 장으로 이동
+        function nextChapter(currentChapter) {
+            if (currentChapter < lessons.length) {
+                showLesson(currentChapter + 1);
+            } else {
+                alert('모든 강의를 완료했습니다! 🎉');
+                showMainScreen();
+            }
+        }
+    </script>
+</body>
+</html>
+

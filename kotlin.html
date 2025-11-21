@@ -1,0 +1,1829 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>코틀린 기초 강의</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #7F52FF 0%, #B794F6 100%);
+            min-height: 100vh;
+            padding: 20px;
+            padding-left: 180px;
+            padding-right: 180px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        /* 좌우 고정 배너 */
+        .side-banner {
+            position: fixed;
+            top: 50%;
+            transform: translateY(-50%);
+            z-index: 1000;
+            width: 150px;
+            transition: opacity 0.3s ease;
+        }
+
+        .side-banner.left {
+            left: 10px;
+        }
+
+        .side-banner.right {
+            right: 10px;
+        }
+
+        .side-banner img {
+            width: 100%;
+            height: auto;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+            cursor: pointer;
+            transition: transform 0.3s ease;
+        }
+
+        .side-banner img:hover {
+            transform: scale(1.05);
+        }
+
+        /* 모바일에서는 배너 숨김 */
+        @media (max-width: 1400px) {
+            body {
+                padding-left: 20px;
+                padding-right: 20px;
+            }
+            .side-banner {
+                display: none;
+            }
+        }
+
+        /* 네비게이션 바 */
+        .navbar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            z-index: 2000;
+            padding: 15px 0;
+        }
+
+        .navbar-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 30px;
+        }
+
+        .navbar a {
+            text-decoration: none;
+            color: #333;
+            font-size: 16px;
+            font-weight: 500;
+            padding: 8px 15px;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+        }
+
+        .navbar a:hover {
+            background: #9b59b6;
+            color: white;
+        }
+
+        .navbar a.active {
+            background: #9b59b6;
+            color: white;
+        }
+
+        body {
+            padding-top: 70px;
+        }
+
+        /* 메인 화면 스타일 */
+        .main-screen {
+            text-align: center;
+            padding: 40px 20px;
+        }
+
+        .main-screen h1 {
+            color: white;
+            font-size: 3em;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .main-screen p {
+            color: rgba(255,255,255,0.9);
+            font-size: 1.2em;
+            margin-bottom: 50px;
+        }
+
+        .chapter-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 25px;
+            margin-top: 40px;
+        }
+
+        .chapter-box {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: 3px solid transparent;
+            text-align: center;
+        }
+
+        .chapter-box:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 40px rgba(0,0,0,0.3);
+            border-color: #7F52FF;
+        }
+
+        .chapter-box h2 {
+            color: #7F52FF;
+            font-size: 1.8em;
+            margin-bottom: 10px;
+        }
+
+        .chapter-box p {
+            color: #666;
+            font-size: 1em;
+            line-height: 1.6;
+        }
+
+        .chapter-icon {
+            font-size: 4em;
+            margin-bottom: 10px;
+            display: block;
+            transition: transform 0.3s ease;
+            filter: drop-shadow(0 2px 4px rgba(0,0,0,0.1));
+        }
+
+        .chapter-box:hover .chapter-icon {
+            transform: scale(1.15) rotate(5deg);
+        }
+
+        .chapter-number {
+            display: inline-block;
+            background: #7F52FF;
+            color: white;
+            width: 35px;
+            height: 35px;
+            border-radius: 50%;
+            line-height: 35px;
+            font-weight: bold;
+            font-size: 0.9em;
+            margin-bottom: 15px;
+            margin-top: 5px;
+        }
+
+        /* 학습 화면 스타일 */
+        .lesson-screen {
+            display: none;
+            background: white;
+            border-radius: 15px;
+            padding: 40px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            margin-top: 20px;
+        }
+
+        .lesson-screen.active {
+            display: block;
+        }
+
+        .lesson-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 2px solid #eee;
+        }
+
+        .lesson-header h2 {
+            color: #7F52FF;
+            font-size: 2em;
+        }
+
+        .back-button {
+            background: #7F52FF;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1em;
+            transition: background 0.3s;
+        }
+
+        .back-button:hover {
+            background: #6B42E6;
+        }
+
+        .lesson-content {
+            line-height: 1.8;
+            color: #333;
+            font-size: 1.1em;
+            margin-bottom: 40px;
+        }
+
+        .lesson-content h3 {
+            color: #B794F6;
+            margin-top: 30px;
+            margin-bottom: 15px;
+            font-size: 1.5em;
+        }
+
+        .lesson-content p {
+            margin-bottom: 15px;
+        }
+
+        .lesson-content code {
+            background: #f4f4f4;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-family: 'Courier New', monospace;
+            color: #e83e8c;
+        }
+
+        .code-example {
+            background: #2d2d2d;
+            color: #f8f8f2;
+            padding: 20px;
+            border-radius: 8px;
+            margin: 20px 0;
+            overflow-x: auto;
+            font-family: 'Courier New', monospace;
+        }
+
+        .code-example pre {
+            margin: 0;
+        }
+
+        /* 실습 영역 */
+        .practice-section {
+            background: #f8f9fa;
+            border-radius: 10px;
+            padding: 30px;
+            margin-top: 40px;
+            border-left: 5px solid #7F52FF;
+        }
+
+        .practice-section h3 {
+            color: #7F52FF;
+            margin-bottom: 20px;
+            font-size: 1.5em;
+        }
+
+        .problem {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+
+        .problem p {
+            color: #333;
+            font-size: 1.1em;
+            line-height: 1.6;
+        }
+
+        .code-editor {
+            width: 100%;
+            min-height: 200px;
+            padding: 15px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            font-family: 'Courier New', monospace;
+            font-size: 14px;
+            resize: vertical;
+            margin-bottom: 15px;
+        }
+
+        .code-editor:focus {
+            outline: none;
+            border-color: #7F52FF;
+        }
+
+        .run-button {
+            background: #28a745;
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1em;
+            margin-right: 10px;
+            transition: background 0.3s;
+        }
+
+        .run-button:hover {
+            background: #218838;
+        }
+
+        .output {
+            background: #2d2d2d;
+            color: #f8f8f2;
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 15px;
+            min-height: 50px;
+            font-family: 'Courier New', monospace;
+            white-space: pre-wrap;
+        }
+
+        .success-message {
+            background: #d4edda;
+            color: #155724;
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 15px;
+            display: none;
+        }
+
+        .success-message.show {
+            display: block;
+        }
+
+        .next-button {
+            background: #7F52FF;
+            color: white;
+            border: none;
+            padding: 15px 40px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1.1em;
+            margin-top: 20px;
+            display: none;
+            transition: background 0.3s;
+        }
+
+        .next-button.show {
+            display: inline-block;
+        }
+
+        .next-button:hover {
+            background: #6B42E6;
+        }
+
+        .error-message {
+            background: #f8d7da;
+            color: #721c24;
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 15px;
+            display: none;
+        }
+
+        .error-message.show {
+            display: block;
+        }
+    </style>
+</head>
+<body>
+    <!-- 네비게이션 바 -->
+    <nav class="navbar">
+        <div class="navbar-content">
+            <a href="index.html">홈</a>
+            <a href="webdesign.html">웹디자인개발기능사</a>
+            <a href="cs.html">CS리더스관리사</a>
+            <a href="javascript.html">JavaScript</a>
+            <a href="node.html">Node.js</a>
+            <a href="python.html">Python</a>
+            <a href="kotlin.html" class="active">Kotlin</a>
+        </div>
+    </nav>
+
+    <!-- 좌측 배너 -->
+    <div class="side-banner left" id="leftBanner">
+        <img src="images/wecandeo.jpg" alt="WeCanDo 배너" onclick="window.open('https://www.wecandeo.com', '_blank')">
+    </div>
+
+    <!-- 우측 배너 -->
+    <div class="side-banner right" id="rightBanner">
+        <img src="images/malgnsoft.jpg" alt="MalgnSoft 배너" onclick="window.open('https://www.malgnsoft.com', '_blank')">
+    </div>
+
+    <!-- 메인 화면 -->
+    <div class="container">
+        <div class="main-screen" id="mainScreen">
+            <h1>💜 코틀린 기초 강의</h1>
+            <p>기초부터 고급까지 단계별로 코틀린 기초를 다지세요!</p>
+            
+            <div class="chapter-grid">
+                <div class="chapter-box" onclick="showLesson(1)">
+                    <div class="chapter-icon">💜</div>
+                    <div class="chapter-number">1</div>
+                    <h2>코틀린이란?</h2>
+                    <p>코틀린의 기본 개념과 특징을 알아봅니다</p>
+                </div>
+                
+                <div class="chapter-box" onclick="showLesson(2)">
+                    <div class="chapter-icon">📊</div>
+                    <div class="chapter-number">2</div>
+                    <h2>변수와 자료형</h2>
+                    <p>변수 선언과 다양한 자료형을 학습합니다</p>
+                </div>
+                
+                <div class="chapter-box" onclick="showLesson(3)">
+                    <div class="chapter-icon">➕</div>
+                    <div class="chapter-number">3</div>
+                    <h2>연산자</h2>
+                    <p>산술, 비교, 논리 연산자를 다룹니다</p>
+                </div>
+                
+                <div class="chapter-box" onclick="showLesson(4)">
+                    <div class="chapter-icon">🔀</div>
+                    <div class="chapter-number">4</div>
+                    <h2>조건문</h2>
+                    <p>if, when을 사용한 조건 분기</p>
+                </div>
+                
+                <div class="chapter-box" onclick="showLesson(5)">
+                    <div class="chapter-icon">🔁</div>
+                    <div class="chapter-number">5</div>
+                    <h2>반복문</h2>
+                    <p>for, while을 이용한 반복 처리</p>
+                </div>
+                
+                <div class="chapter-box" onclick="showLesson(6)">
+                    <div class="chapter-icon">⚙️</div>
+                    <div class="chapter-number">6</div>
+                    <h2>함수</h2>
+                    <p>함수 정의와 호출 방법을 배웁니다</p>
+                </div>
+                
+                <div class="chapter-box" onclick="showLesson(7)">
+                    <div class="chapter-icon">📋</div>
+                    <div class="chapter-number">7</div>
+                    <h2>배열과 리스트</h2>
+                    <p>배열, 리스트 생성과 조작</p>
+                </div>
+                
+                <div class="chapter-box" onclick="showLesson(8)">
+                    <div class="chapter-icon">🏗️</div>
+                    <div class="chapter-number">8</div>
+                    <h2>클래스와 객체</h2>
+                    <p>객체지향 프로그래밍의 기초</p>
+                </div>
+                
+                <div class="chapter-box" onclick="showLesson(9)">
+                    <div class="chapter-icon">🔗</div>
+                    <div class="chapter-number">9</div>
+                    <h2>상속</h2>
+                    <p>클래스 상속과 오버라이딩</p>
+                </div>
+                
+                <div class="chapter-box" onclick="showLesson(10)">
+                    <div class="chapter-icon">🔌</div>
+                    <div class="chapter-number">10</div>
+                    <h2>인터페이스</h2>
+                    <p>인터페이스 정의와 구현</p>
+                </div>
+                
+                <div class="chapter-box" onclick="showLesson(11)">
+                    <div class="chapter-icon">✨</div>
+                    <div class="chapter-number">11</div>
+                    <h2>확장 함수</h2>
+                    <p>기존 클래스에 함수 추가하기</p>
+                </div>
+                
+                <div class="chapter-box" onclick="showLesson(12)">
+                    <div class="chapter-icon">🔷</div>
+                    <div class="chapter-number">12</div>
+                    <h2>람다와 고차 함수</h2>
+                    <p>익명 함수와 함수형 프로그래밍</p>
+                </div>
+                
+                <div class="chapter-box" onclick="showLesson(13)">
+                    <div class="chapter-icon">🛡️</div>
+                    <div class="chapter-number">13</div>
+                    <h2>null 안전성</h2>
+                    <p>null 처리와 안전한 호출</p>
+                </div>
+                
+                <div class="chapter-box" onclick="showLesson(14)">
+                    <div class="chapter-icon">📦</div>
+                    <div class="chapter-number">14</div>
+                    <h2>컬렉션</h2>
+                    <p>List, Set, Map 활용</p>
+                </div>
+                
+                <div class="chapter-box" onclick="showLesson(15)">
+                    <div class="chapter-icon">⚠️</div>
+                    <div class="chapter-number">15</div>
+                    <h2>예외 처리</h2>
+                    <p>try-catch로 오류 처리하기</p>
+                </div>
+                
+                <div class="chapter-box" onclick="showLesson(16)">
+                    <div class="chapter-icon">📝</div>
+                    <div class="chapter-number">16</div>
+                    <h2>데이터 클래스</h2>
+                    <p>데이터 보관을 위한 클래스</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- 학습 화면들 -->
+        <div id="lessonScreens"></div>
+    </div>
+
+    <script>
+        // 강의 내용 데이터
+        const lessons = [
+            {
+                title: "코틀린이란?",
+                content: `
+                    <h3>코틀린이란 무엇인가?</h3>
+                    <p>코틀린(Kotlin)은 2011년 제트브레인스(JetBrains)가 개발한 현대적인 프로그래밍 언어입니다. 
+                    이름은 러시아 상트페테르부르크 근처의 코틀린 섬에서 따왔습니다. 
+                    코틀린은 JVM(Java Virtual Machine)에서 실행되며, Java와 100% 호환되어 기존 Java 코드와 함께 사용할 수 있습니다.</p>
+                    
+                    <p>코틀린은 Java의 단점을 보완하면서도 Java의 장점은 유지한 현대적인 언어입니다. 
+                    2017년 구글이 안드로이드 앱 개발의 공식 언어로 채택하면서 전 세계적으로 주목받기 시작했습니다. 
+                    현재는 안드로이드 앱 개발뿐만 아니라 서버 개발, 웹 개발, 데스크톱 앱 개발 등 다양한 분야에서 사용됩니다.</p>
+                    
+                    <h3>코틀린이 사용되는 분야</h3>
+                    <p><strong>1. 안드로이드 앱 개발:</strong></p>
+                    <ul style="margin-left: 20px; margin-top: 10px;">
+                        <li>2017년 구글이 안드로이드 공식 언어로 채택</li>
+                        <li>대부분의 새로운 안드로이드 앱이 코틀린으로 개발됨</li>
+                        <li>Java보다 간결하고 안전한 코드 작성 가능</li>
+                    </ul>
+                    
+                    <p><strong>2. 서버 개발 (백엔드):</strong></p>
+                    <ul style="margin-left: 20px; margin-top: 10px;">
+                        <li>Spring Framework에서 코틀린 지원</li>
+                        <li>Ktor 등 코틀린 네이티브 웹 프레임워크</li>
+                        <li>JVM 위에서 실행되어 Java 라이브러리 활용 가능</li>
+                    </ul>
+                    
+                    <p><strong>3. 크로스 플랫폼 개발:</strong></p>
+                    <ul style="margin-left: 20px; margin-top: 10px;">
+                        <li>Kotlin Multiplatform으로 iOS, 안드로이드, 웹 공통 코드 작성</li>
+                        <li>하나의 코드베이스로 여러 플랫폼 지원</li>
+                    </ul>
+                    
+                    <h3>코틀린의 특징 완벽 이해</h3>
+                    <p><strong>1. 간결하고 읽기 쉬운 문법:</strong></p>
+                    <ul style="margin-left: 20px; margin-top: 10px;">
+                        <li>Java보다 훨씬 간결한 코드로 같은 작업을 수행할 수 있습니다</li>
+                        <li>세미콜론(;) 불필요, 타입 추론, 간결한 함수 정의 등</li>
+                        <li>코드가 짧아질수록 읽기 쉽고 유지보수가 쉬워집니다</li>
+                    </ul>
+                    
+                    <p><strong>2. Null 안전성 (Null Safety):</strong></p>
+                    <ul style="margin-left: 20px; margin-top: 10px;">
+                        <li>코틀린의 가장 큰 특징 중 하나입니다</li>
+                        <li>컴파일 시점에 null 관련 오류를 미리 잡아냅니다</li>
+                        <li>Java의 "NullPointerException" 오류를 대폭 줄입니다</li>
+                        <li>타입 뒤에 <code>?</code>를 붙여 nullable 타입을 명시합니다</li>
+                    </ul>
+                    
+                    <p><strong>3. 타입 추론 (Type Inference):</strong></p>
+                    <ul style="margin-left: 20px; margin-top: 10px;">
+                        <li>변수의 타입을 명시하지 않아도 값에 따라 자동으로 타입을 추론합니다</li>
+                        <li>코드가 간결해지면서도 타입 안전성을 유지합니다</li>
+                    </ul>
+                    
+                    <p><strong>4. Java 100% 호환성:</strong></p>
+                    <ul style="margin-left: 20px; margin-top: 10px;">
+                        <li>기존 Java 코드를 그대로 사용할 수 있습니다</li>
+                        <li>Java 라이브러리를 코틀린에서 직접 사용 가능</li>
+                        <li>점진적으로 Java 프로젝트를 코틀린으로 마이그레이션 가능</li>
+                    </ul>
+                    
+                    <p><strong>5. 함수형 프로그래밍 지원:</strong></p>
+                    <ul style="margin-left: 20px; margin-top: 10px;">
+                        <li>고차 함수, 람다 표현식, 함수 타입 등을 지원합니다</li>
+                        <li>불변 데이터 구조, 순수 함수 등을 쉽게 작성할 수 있습니다</li>
+                    </ul>
+                    
+                    <h3>코틀린의 첫 프로그램 완벽 이해</h3>
+                    <p>코틀린에서 가장 간단한 프로그램은 다음과 같습니다:</p>
+                    <div class="code-example">
+                        <pre>fun main() {
+    println("Hello, Kotlin!")
+}</pre>
+                    </div>
+                    
+                    <p><strong>코드 설명:</strong></p>
+                    <ul style="margin-left: 20px; margin-top: 10px;">
+                        <li><code>fun</code>: 함수를 정의하는 키워드입니다 (function의 약자)</li>
+                        <li><code>main</code>: 프로그램의 진입점입니다. 프로그램이 실행되면 main 함수가 먼저 호출됩니다</li>
+                        <li><code>()</code>: 함수의 매개변수를 받는 부분입니다. main 함수는 매개변수가 없으므로 비어있습니다</li>
+                        <li><code>{ }</code>: 함수의 본문을 나타냅니다. 중괄호 안에 실행할 코드를 작성합니다</li>
+                        <li><code>println()</code>: 값을 화면에 출력하고 줄바꿈을 추가하는 함수입니다</li>
+                        <li><code>"Hello, Kotlin!"</code>: 출력할 문자열입니다. 큰따옴표(")로 감쌉니다</li>
+                    </ul>
+                `,
+                problem: "다음 코드를 작성하여 '안녕하세요, 코틀린!'을 출력하세요.",
+                solution: "fun main() {\n    println(\"안녕하세요, 코틀린!\")\n}",
+                test: (code) => {
+                    try {
+                        const result = code.trim();
+                        return result.includes("fun main") && 
+                               result.includes("println") && 
+                               (result.includes("'안녕하세요, 코틀린!'") || 
+                                result.includes('"안녕하세요, 코틀린!"'));
+                    } catch (e) {
+                        return false;
+                    }
+                }
+            },
+            {
+                title: "변수와 자료형",
+                content: `
+                    <h3>변수란 무엇인가?</h3>
+                    <p>변수는 데이터를 저장하고 참조하기 위한 이름이 붙은 메모리 공간입니다. 
+                    변수를 사용하면 값을 저장하고, 나중에 그 값을 다시 사용할 수 있습니다. 
+                    코틀린에서는 <code>var</code>(가변 변수)와 <code>val</code>(불변 변수, 상수) 두 가지 키워드로 변수를 선언합니다.</p>
+                    
+                    <p>코틀린은 정적 타이핑 언어이므로 변수의 타입을 명시할 수 있지만, 
+                    타입 추론을 지원하여 타입을 생략해도 값에 따라 자동으로 타입이 결정됩니다.</p>
+                    
+                    <h3>var vs val 완벽 이해</h3>
+                    <p><strong>1. var (가변 변수, Variable):</strong></p>
+                    <ul style="margin-left: 20px; margin-top: 10px;">
+                        <li>값을 변경할 수 있는 변수입니다</li>
+                        <li>선언 후 값을 여러 번 변경할 수 있습니다</li>
+                        <li>Java의 변수와 유사합니다</li>
+                    </ul>
+                    
+                    <div class="code-example">
+                        <pre>var name = "홍길동"
+name = "김철수"  // 재할당 가능
+println(name)  // "김철수"
+
+var age = 25
+age = 26  // 재할당 가능
+println(age)  // 26</pre>
+                    </div>
+                    
+                    <p><strong>2. val (불변 변수, Value):</strong></p>
+                    <ul style="margin-left: 20px; margin-top: 10px;">
+                        <li>값을 변경할 수 없는 변수입니다 (상수)</li>
+                        <li>한 번 할당한 값을 변경할 수 없습니다</li>
+                        <li>Java의 <code>final</code> 변수와 유사합니다</li>
+                        <li><strong>코틀린 권장사항:</strong> 가능한 한 <code>val</code>을 사용하는 것이 좋습니다. 불변성을 권장합니다</li>
+                        <li>객체나 배열의 경우, 참조는 변경할 수 없지만 내부 내용은 수정 가능합니다</li>
+                    </ul>
+                    
+                    <div class="code-example">
+                        <pre>val age = 25
+// age = 26  // 컴파일 오류! 재할당 불가
+
+val name = "홍길동"
+// name = "김철수"  // 컴파일 오류! 재할당 불가
+
+// 객체의 경우 참조는 변경 불가하지만 내부는 수정 가능
+val person = mutableListOf&lt;String&gt;("홍길동")
+person.add("김철수")  // 가능! 리스트에 추가
+// person = mutableListOf()  // 에러! 재할당 불가</pre>
+                    </div>
+                    
+                    <p><strong>언제 var를 사용하고, 언제 val을 사용할까?</strong></p>
+                    <ul style="margin-left: 20px; margin-top: 10px;">
+                        <li><strong>val 권장:</strong> 값이 변하지 않으면 무조건 val 사용</li>
+                        <li><strong>var 사용:</strong> 값이 변경되어야 하는 경우에만 var 사용</li>
+                        <li><strong>불변성의 장점:</strong> 버그를 줄이고, 코드를 예측하기 쉽게 만듭니다</li>
+                    </ul>
+                    
+                    <h3>자료형 완벽 가이드</h3>
+                    <p>코틀린의 자료형은 숫자형, 문자형, 불린형, 문자열, 배열 등으로 나뉩니다.</p>
+                    
+                    <p><strong>1. 숫자형 (Numeric Types):</strong></p>
+                    <ul style="margin-left: 20px; margin-top: 10px;">
+                        <li><strong>Int:</strong> 32비트 정수
+                            <ul style="margin-left: 15px; margin-top: 5px;">
+                                <li><code>val age: Int = 25</code></li>
+                                <li><code>val count: Int = -100</code></li>
+                                <li>범위: -2,147,483,648 ~ 2,147,483,647</li>
+                            </ul>
+                        </li>
+                        <li><strong>Long:</strong> 64비트 정수
+                            <ul style="margin-left: 15px; margin-top: 5px;">
+                                <li><code>val bigNumber: Long = 1000000000L</code> (L 접미사)</li>
+                                <li>큰 정수를 저장할 때 사용</li>
+                            </ul>
+                        </li>
+                        <li><strong>Double:</strong> 64비트 실수
+                            <ul style="margin-left: 15px; margin-top: 5px;">
+                                <li><code>val height: Double = 175.5</code></li>
+                                <li><code>val pi: Double = 3.14159</code></li>
+                                <li>소수점이 있는 수를 저장할 때 사용</li>
+                            </ul>
+                        </li>
+                        <li><strong>Float:</strong> 32비트 실수
+                            <ul style="margin-left: 15px; margin-top: 5px;">
+                                <li><code>val price: Float = 99.99f</code> (f 접미사)</li>
+                                <li>Double보다 정밀도가 낮지만 메모리를 적게 사용</li>
+                            </ul>
+                        </li>
+                        <li><strong>Short:</strong> 16비트 정수</li>
+                        <li><strong>Byte:</strong> 8비트 정수</li>
+                    </ul>
+                    
+                    <p><strong>2. 문자형:</strong></p>
+                    <ul style="margin-left: 20px; margin-top: 10px;">
+                        <li><strong>Char:</strong> 하나의 문자를 저장
+                            <ul style="margin-left: 15px; margin-top: 5px;">
+                                <li><code>val grade: Char = 'A'</code> (작은따옴표 사용)</li>
+                                <li><code>val letter: Char = '가'</code></li>
+                                <li>문자열(String)과 다릅니다</li>
+                            </ul>
+                        </li>
+                    </ul>
+                    
+                    <p><strong>3. 문자열(String):</strong></p>
+                    <ul style="margin-left: 20px; margin-top: 10px;">
+                        <li>텍스트를 저장하는 자료형입니다</li>
+                        <li><code>val name: String = "홍길동"</code> (큰따옴표 사용)</li>
+                        <li><strong>문자열 템플릿:</strong> 변수 값을 문자열에 삽입
+                            <ul style="margin-left: 15px; margin-top: 5px;">
+                                <li><code>println("이름: \$name")</code> ($ 기호 사용)</li>
+                                <li><code>println("나이: \${age}")</code> (표현식인 경우 중괄호 사용)</li>
+                            </ul>
+                        </li>
+                    </ul>
+                    
+                    <p><strong>4. 불린형(Boolean):</strong></p>
+                    <ul style="margin-left: 20px; margin-top: 10px;">
+                        <li>참(true)과 거짓(false) 두 가지 값만 가집니다</li>
+                        <li><code>val isStudent: Boolean = true</code></li>
+                        <li><code>val isAdult: Boolean = false</code></li>
+                        <li>조건문에서 많이 사용됩니다</li>
+                    </ul>
+                    
+                    <p><strong>5. 배열 및 컬렉션:</strong></p>
+                    <ul style="margin-left: 20px; margin-top: 10px;">
+                        <li><strong>Array:</strong> 배열</li>
+                        <li><strong>List:</strong> 리스트 (나중에 자세히 배움)</li>
+                        <li><strong>Map:</strong> 맵 (나중에 자세히 배움)</li>
+                    </ul>
+                    
+                    <h3>타입 추론 (Type Inference) 완벽 이해</h3>
+                    <p>코틀린은 타입 추론을 지원하므로 변수의 타입을 명시하지 않아도 값에 따라 자동으로 타입을 추론합니다:</p>
+                    
+                    <div class="code-example">
+                        <pre>// 타입 추론 - 타입 명시 불필요
+val name = "홍길동"  // String으로 추론
+val age = 25        // Int로 추론
+val height = 175.5  // Double로 추론
+val isStudent = true // Boolean으로 추론
+
+// 명시적 타입 선언도 가능
+val name: String = "홍길동"
+val age: Int = 20
+val pi: Double = 3.14</pre>
+                    </div>
+                    
+                    <p><strong>타입 추론의 장점:</strong></p>
+                    <ul style="margin-left: 20px; margin-top: 10px;">
+                        <li>코드가 간결해집니다</li>
+                        <li>타입 안전성을 유지하면서도 코드를 짧게 작성할 수 있습니다</li>
+                        <li>타입을 명시할 필요가 없어 빠르게 코드를 작성할 수 있습니다</li>
+                    </ul>
+                    
+                    <p><strong>명시적 타입 선언이 필요한 경우:</strong></p>
+                    <ul style="margin-left: 20px; margin-top: 10px;">
+                        <li>변수만 선언하고 나중에 값을 할당하는 경우</li>
+                        <li>타입을 명확히 하고 싶은 경우</li>
+                        <li>다른 타입으로 추론되는 것을 방지하고 싶은 경우</li>
+                    </ul>
+                    
+                    <h3>문자열 템플릿 (String Templates) 완벽 이해</h3>
+                    <p>코틀린은 문자열 내에 변수나 표현식을 쉽게 삽입할 수 있는 문자열 템플릿 기능을 제공합니다:</p>
+                    
+                    <div class="code-example">
+                        <pre>val name = "홍길동"
+val age = 20
+
+// 변수 삽입 ($ 기호 사용)
+println("이름: \$name")  // 이름: 홍길동
+
+// 표현식 삽입 (중괄호 사용)
+println("나이: \${age}")  // 나이: 20
+println("내년 나이: \${age + 1}")  // 내년 나이: 21
+
+// 여러 변수 삽입
+println("이름: \$name, 나이: \$age")  // 이름: 홍길동, 나이: 20
+
+// $ 문자 자체를 출력하려면 이스케이프
+println("가격: \\\$100")  // 가격: $100</pre>
+                    </div>
+                    
+                    <h3>변수 사용 예제</h3>
+                    <div class="code-example">
+                        <pre>// 변수 선언 및 사용
+val name = "김철수"
+val age = 20
+
+// 변수 출력
+println(name)  // 김철수
+println(age)   // 20
+
+// 문자열 템플릿 사용
+println("이름: \$name, 나이: \$age")  // 이름: 김철수, 나이: 20
+
+// var로 변경 가능한 변수
+var count = 0
+count = 10
+println(count)  // 10
+
+// val로 불변 변수
+val maxSize = 100
+// maxSize = 200  // 컴파일 오류!</pre>
+                    </div>
+                    
+                    <h3>변수 사용 시 주의사항</h3>
+                    <ul style="margin-left: 20px; margin-top: 10px;">
+                        <li><strong>val을 기본으로 사용:</strong> 값이 변하지 않으면 무조건 val 사용</li>
+                        <li><strong>의미 있는 이름:</strong> 변수명만 봐도 용도를 알 수 있게 작성</li>
+                        <li><strong>타입 추론 활용:</strong> 타입을 생략할 수 있지만, 필요시 명시</li>
+                        <li><strong>초기화:</strong> 변수를 사용하기 전에 값을 할당해야 함</li>
+                        <li><strong>null 안전성:</strong> nullable 타입은 나중에 자세히 배움</li>
+                    </ul>
+                `,
+                problem: "변수 name에 '코틀린'을 저장하고, 변수 number에 100을 저장한 후, 두 변수를 출력하세요. (val 사용)",
+                solution: "val name = \"코틀린\"\nval number = 100\nprintln(name)\nprintln(number)",
+                test: (code) => {
+                    try {
+                        return code.includes("val name") && 
+                               code.includes("val number") && 
+                               code.includes("println");
+                    } catch (e) {
+                        return false;
+                    }
+                }
+            },
+            {
+                title: "연산자",
+                content: `
+                    <h3>산술 연산자</h3>
+                    <p>수학 연산을 수행하는 연산자입니다:</p>
+                    <ul style="margin-left: 20px; margin-top: 10px;">
+                        <li><code>+</code>: 덧셈</li>
+                        <li><code>-</code>: 뺄셈</li>
+                        <li><code>*</code>: 곱셈</li>
+                        <li><code>/</code>: 나눗셈</li>
+                        <li><code>%</code>: 나머지</li>
+                    </ul>
+                    
+                    <div class="code-example">
+                        <pre>val a = 10
+val b = 3
+println(a + b)  // 13
+println(a - b)  // 7
+println(a * b)  // 30
+println(a / b)  // 3
+println(a % b)  // 1</pre>
+                    </div>
+                    
+                    <h3>비교 연산자</h3>
+                    <p>두 값을 비교하여 true 또는 false를 반환합니다:</p>
+                    <div class="code-example">
+                        <pre>println(5 > 3)   // true
+println(5 < 3)   // false
+println(5 == 5)  // true
+println(5 != 3)  // true</pre>
+                    </div>
+                    
+                    <h3>논리 연산자</h3>
+                    <p>논리 연산을 수행합니다:</p>
+                    <ul style="margin-left: 20px; margin-top: 10px;">
+                        <li><code>&&</code>: AND (둘 다 true일 때 true)</li>
+                        <li><code>||</code>: OR (하나라도 true이면 true)</li>
+                        <li><code>!</code>: NOT (true면 false, false면 true)</li>
+                    </ul>
+                `,
+                problem: "변수 a에 15, 변수 b에 4를 저장하고, a와 b의 합, 차, 곱을 각각 출력하세요.",
+                solution: "val a = 15\nval b = 4\nprintln(a + b)\nprintln(a - b)\nprintln(a * b)",
+                test: (code) => {
+                    try {
+                        return code.includes("val a = 15") && 
+                               code.includes("val b = 4") &&
+                               code.includes("println(a + b)") &&
+                               code.includes("println(a - b)") &&
+                               code.includes("println(a * b)");
+                    } catch (e) {
+                        return false;
+                    }
+                }
+            },
+            {
+                title: "조건문",
+                content: `
+                    <h3>if 문</h3>
+                    <p>조건에 따라 코드를 실행할지 결정합니다:</p>
+                    
+                    <div class="code-example">
+                        <pre>val age = 20
+if (age >= 18) {
+    println("성인입니다")
+} else {
+    println("미성년자입니다")
+}</pre>
+                    </div>
+                    
+                    <h3>if 표현식</h3>
+                    <p>코틀린의 if는 표현식으로 사용할 수 있어 값을 반환합니다:</p>
+                    
+                    <div class="code-example">
+                        <pre>val score = 85
+val grade = if (score >= 90) {
+    "A등급"
+} else if (score >= 80) {
+    "B등급"
+} else if (score >= 70) {
+    "C등급"
+} else {
+    "D등급"
+}
+println(grade)</pre>
+                    </div>
+                    
+                    <h3>when 문</h3>
+                    <p>여러 경우를 비교할 때 when을 사용합니다 (switch와 유사):</p>
+                    
+                    <div class="code-example">
+                        <pre>val day = "월요일"
+when (day) {
+    "월요일" -> println("주간 시작!")
+    "금요일" -> println("주말 전날!")
+    else -> println("평일")
+}</pre>
+                    </div>
+                `,
+                problem: "변수 score에 85를 저장하고, score가 80 이상이면 '합격', 그렇지 않으면 '불합격'을 출력하세요.",
+                solution: "val score = 85\nif (score >= 80) {\n    println(\"합격\")\n} else {\n    println(\"불합격\")\n}",
+                test: (code) => {
+                    try {
+                        return code.includes("val score = 85") &&
+                               code.includes("if") &&
+                               code.includes("score >= 80") &&
+                               code.includes("println(\"합격\")") &&
+                               code.includes("else") &&
+                               code.includes("println(\"불합격\")");
+                    } catch (e) {
+                        return false;
+                    }
+                }
+            },
+            {
+                title: "반복문",
+                content: `
+                    <h3>for 문</h3>
+                    <p>범위나 컬렉션의 각 항목에 대해 코드를 반복 실행합니다:</p>
+                    
+                    <div class="code-example">
+                        <pre>// 범위 반복
+for (i in 1..5) {
+    println(i)  // 1, 2, 3, 4, 5
+}
+
+// 리스트 반복
+val fruits = listOf("사과", "바나나", "오렌지")
+for (fruit in fruits) {
+    println(fruit)
+}
+
+// 인덱스와 함께 반복
+for ((index, fruit) in fruits.withIndex()) {
+    println("$index: $fruit")
+}</pre>
+                    </div>
+                    
+                    <h3>while 문</h3>
+                    <p>조건이 true인 동안 계속 반복합니다:</p>
+                    
+                    <div class="code-example">
+                        <pre>var count = 0
+while (count < 5) {
+    println(count)
+    count++
+}</pre>
+                    </div>
+                    
+                    <h3>반복문 제어</h3>
+                    <ul style="margin-left: 20px; margin-top: 10px;">
+                        <li><code>break</code>: 반복문을 즉시 종료</li>
+                        <li><code>continue</code>: 현재 반복을 건너뛰고 다음 반복으로</li>
+                    </ul>
+                    
+                    <div class="code-example">
+                        <pre>for (i in 1..10) {
+    if (i == 5) {
+        break  // i가 5가 되면 반복 종료
+    }
+    println(i)
+}</pre>
+                    </div>
+                `,
+                problem: "for 문을 사용하여 1부터 5까지의 숫자를 출력하세요. (for (i in 1..5) 사용)",
+                solution: "for (i in 1..5) {\n    println(i)\n}",
+                test: (code) => {
+                    try {
+                        return code.includes("for") &&
+                               code.includes("1..5") &&
+                               code.includes("println(i)");
+                    } catch (e) {
+                        return false;
+                    }
+                }
+            },
+            {
+                title: "함수",
+                content: `
+                    <h3>함수 정의</h3>
+                    <p>함수는 특정 작업을 수행하는 코드 블록입니다. <code>fun</code> 키워드로 정의합니다:</p>
+                    
+                    <div class="code-example">
+                        <pre>fun greet() {
+    println("안녕하세요!")
+}
+
+greet()  // 함수 호출</pre>
+                    </div>
+                    
+                    <h3>매개변수가 있는 함수</h3>
+                    <p>함수에 값을 전달할 수 있습니다:</p>
+                    
+                    <div class="code-example">
+                        <pre>fun greet(name: String) {
+    println("안녕하세요, $name님!")
+}
+
+greet("홍길동")  // "안녕하세요, 홍길동님!" 출력</pre>
+                    </div>
+                    
+                    <h3>반환값이 있는 함수</h3>
+                    <p>함수는 값을 반환할 수 있습니다:</p>
+                    
+                    <div class="code-example">
+                        <pre>fun add(a: Int, b: Int): Int {
+    return a + b
+}
+
+val result = add(3, 5)
+println(result)  // 8
+
+// 단일 표현식 함수
+fun add2(a: Int, b: Int) = a + b</pre>
+                    </div>
+                    
+                    <h3>기본값 매개변수</h3>
+                    <p>매개변수에 기본값을 설정할 수 있습니다:</p>
+                    
+                    <div class="code-example">
+                        <pre>fun greet(name: String = "게스트") {
+    println("안녕하세요, $name님!")
+}
+
+greet()  // "안녕하세요, 게스트님!" 출력
+greet("홍길동")  // "안녕하세요, 홍길동님!" 출력</pre>
+                    </div>
+                `,
+                problem: "두 수를 더하는 함수 add를 정의하고, add(10, 20)을 호출하여 결과를 출력하세요.",
+                solution: "fun add(a: Int, b: Int): Int {\n    return a + b\n}\n\nval result = add(10, 20)\nprintln(result)",
+                test: (code) => {
+                    try {
+                        return code.includes("fun add") &&
+                               code.includes("return") &&
+                               code.includes("add(10, 20)") &&
+                               code.includes("println");
+                    } catch (e) {
+                        return false;
+                    }
+                }
+            },
+            {
+                title: "배열과 리스트",
+                content: `
+                    <h3>배열이란?</h3>
+                    <p>배열은 여러 값을 순서대로 저장하는 자료구조입니다. <code>arrayOf()</code>로 생성합니다.</p>
+                    
+                    <div class="code-example">
+                        <pre>val fruits = arrayOf("사과", "바나나", "오렌지")
+val numbers = arrayOf(1, 2, 3, 4, 5)</pre>
+                    </div>
+                    
+                    <h3>리스트</h3>
+                    <p>리스트는 배열과 비슷하지만 크기가 가변적입니다:</p>
+                    
+                    <div class="code-example">
+                        <pre>val fruits = listOf("사과", "바나나", "오렌지")  // 불변 리스트
+val numbers = mutableListOf(1, 2, 3)  // 가변 리스트
+
+numbers.add(4)  // 요소 추가
+numbers.remove(1)  // 요소 제거
+println(numbers)  // [2, 3, 4]</pre>
+                    </div>
+                    
+                    <h3>배열/리스트 접근</h3>
+                    <p>인덱스로 요소에 접근하고 수정할 수 있습니다:</p>
+                    
+                    <div class="code-example">
+                        <pre>val numbers = arrayOf(10, 20, 30, 40, 50)
+println(numbers[0])      // 10 (첫 번째 요소)
+println(numbers.size)    // 5 (배열 크기)
+
+val list = mutableListOf(1, 2, 3)
+list[0] = 100  // 값 수정
+list.add(4)    // 요소 추가
+println(list)  // [100, 2, 3, 4]</pre>
+                    </div>
+                `,
+                problem: "리스트 numbers에 [5, 2, 8, 1]을 저장하고, add() 메서드를 사용하여 9를 추가한 후, 전체 리스트를 출력하세요. (mutableListOf 사용)",
+                solution: "val numbers = mutableListOf(5, 2, 8, 1)\nnumbers.add(9)\nprintln(numbers)",
+                test: (code) => {
+                    try {
+                        return code.includes("mutableListOf(5, 2, 8, 1)") &&
+                               code.includes("add(9)") &&
+                               code.includes("println(numbers)");
+                    } catch (e) {
+                        return false;
+                    }
+                }
+            },
+            {
+                title: "클래스와 객체",
+                content: `
+                    <h3>클래스란?</h3>
+                    <p>클래스는 객체를 만드는 설계도입니다. 객체지향 프로그래밍의 핵심 개념입니다.</p>
+                    
+                    <h3>클래스 정의</h3>
+                    <div class="code-example">
+                        <pre>class Person(val name: String, val age: Int) {
+    fun introduce() {
+        println("안녕하세요, 저는 $name이고 $age세입니다.")
+    }
+}
+
+// 객체 생성
+val person1 = Person("홍길동", 20)
+person1.introduce()</pre>
+                    </div>
+                    
+                    <h3>프로퍼티와 메서드</h3>
+                    <div class="code-example">
+                        <pre>class Circle(val radius: Double) {
+    fun area(): Double {
+        return 3.14 * radius * radius
+    }
+    
+    fun circumference(): Double {
+        return 2 * 3.14 * radius
+    }
+}
+
+val circle = Circle(5.0)
+println(circle.area())  // 78.5</pre>
+                    </div>
+                    
+                    <h3>초기화 블록</h3>
+                    <p>객체 생성 시 실행되는 코드입니다:</p>
+                    
+                    <div class="code-example">
+                        <pre>class Person(val name: String) {
+    init {
+        println("$name 객체가 생성되었습니다")
+    }
+}</pre>
+                    </div>
+                `,
+                problem: "Person 클래스를 정의하고, name과 age를 받아 저장한 후, introduce() 메서드로 '안녕하세요, 저는 [name]이고 [age]세입니다.'를 출력하세요. 객체를 생성하여 introduce()를 호출하세요.",
+                solution: "class Person(val name: String, val age: Int) {\n    fun introduce() {\n        println(\"안녕하세요, 저는 \\$name이고 \\$age세입니다.\")\n    }\n}\n\nval person = Person(\"홍길동\", 20)\nperson.introduce()",
+                test: (code) => {
+                    try {
+                        return code.includes("class Person") &&
+                               code.includes("fun introduce") &&
+                               code.includes("Person(");
+                    } catch (e) {
+                        return false;
+                    }
+                }
+            },
+            {
+                title: "상속",
+                content: `
+                    <h3>상속이란?</h3>
+                    <p>상속은 기존 클래스의 기능을 확장하여 새로운 클래스를 만드는 방법입니다.</p>
+                    
+                    <h3>기본 상속</h3>
+                    <div class="code-example">
+                        <pre>open class Animal(val name: String) {
+    open fun speak() {
+        println("동물이 소리를 냅니다")
+    }
+}
+
+class Dog(name: String) : Animal(name) {
+    override fun speak() {
+        println("$name가 멍멍 짖습니다")
+    }
+}
+
+val dog = Dog("멍멍이")
+dog.speak()  // "멍멍이가 멍멍 짖습니다"</pre>
+                    </div>
+                    
+                    <h3>open과 override</h3>
+                    <p>코틀린에서는 클래스와 메서드가 기본적으로 final입니다. 상속을 허용하려면 <code>open</code> 키워드를 사용하고, 
+                    메서드를 재정의하려면 <code>override</code> 키워드를 사용합니다.</p>
+                    
+                    <h3>super 사용</h3>
+                    <div class="code-example">
+                        <pre>open class Animal(val name: String) {
+    open fun speak() {
+        println("동물 소리")
+    }
+}
+
+class Dog(name: String) : Animal(name) {
+    override fun speak() {
+        super.speak()  // 부모 클래스 메서드 호출
+        println("멍멍")
+    }
+}</pre>
+                    </div>
+                `,
+                problem: "Animal 클래스를 상속받는 Dog 클래스를 만들고, speak() 메서드를 오버라이딩하여 '멍멍'을 출력하도록 하세요. 객체를 생성하여 speak()를 호출하세요.",
+                solution: "open class Animal {\n    open fun speak() {\n        println(\"동물 소리\")\n    }\n}\n\nclass Dog : Animal() {\n    override fun speak() {\n        println(\"멍멍\")\n    }\n}\n\nval dog = Dog()\ndog.speak()",
+                test: (code) => {
+                    try {
+                        return code.includes("open class Animal") &&
+                               code.includes("class Dog : Animal") &&
+                               code.includes("override fun speak") &&
+                               code.includes("println(\"멍멍\")");
+                    } catch (e) {
+                        return false;
+                    }
+                }
+            },
+            {
+                title: "인터페이스",
+                content: `
+                    <h3>인터페이스란?</h3>
+                    <p>인터페이스는 클래스가 구현해야 하는 메서드들을 정의하는 계약입니다.</p>
+                    
+                    <h3>인터페이스 정의</h3>
+                    <div class="code-example">
+                        <pre>interface Flyable {
+    fun fly()
+}
+
+interface Swimmable {
+    fun swim()
+}
+
+class Duck : Flyable, Swimmable {
+    override fun fly() {
+        println("오리가 날아갑니다")
+    }
+    
+    override fun swim() {
+        println("오리가 수영합니다")
+    }
+}</pre>
+                    </div>
+                    
+                    <h3>인터페이스 프로퍼티</h3>
+                    <p>인터페이스에 프로퍼티를 정의할 수 있습니다:</p>
+                    
+                    <div class="code-example">
+                        <pre>interface Animal {
+    val name: String
+    fun makeSound()
+}
+
+class Dog(override val name: String) : Animal {
+    override fun makeSound() {
+        println("$name가 멍멍 짖습니다")
+    }
+}</pre>
+                    </div>
+                    
+                    <h3>다중 인터페이스 구현</h3>
+                    <p>한 클래스가 여러 인터페이스를 구현할 수 있습니다:</p>
+                    
+                    <div class="code-example">
+                        <pre>interface A {
+    fun methodA()
+}
+
+interface B {
+    fun methodB()
+}
+
+class C : A, B {
+    override fun methodA() { }
+    override fun methodB() { }
+}</pre>
+                    </div>
+                `,
+                problem: "인터페이스 Drawable을 정의하고 draw() 메서드를 선언하세요. 그리고 Circle 클래스가 Drawable을 구현하여 draw()에서 '원을 그립니다'를 출력하세요.",
+                solution: "interface Drawable {\n    fun draw()\n}\n\nclass Circle : Drawable {\n    override fun draw() {\n        println(\"원을 그립니다\")\n    }\n}\n\nval circle = Circle()\ncircle.draw()",
+                test: (code) => {
+                    try {
+                        return code.includes("interface Drawable") &&
+                               code.includes("fun draw()") &&
+                               code.includes("class Circle : Drawable") &&
+                               code.includes("override fun draw");
+                    } catch (e) {
+                        return false;
+                    }
+                }
+            },
+            {
+                title: "확장 함수",
+                content: `
+                    <h3>확장 함수란?</h3>
+                    <p>확장 함수는 기존 클래스에 새로운 함수를 추가하는 기능입니다. 원본 클래스를 수정하지 않고도 기능을 확장할 수 있습니다.</p>
+                    
+                    <h3>확장 함수 정의</h3>
+                    <div class="code-example">
+                        <pre>// String 클래스에 확장 함수 추가
+fun String.removeSpaces(): String {
+    return this.replace(" ", "")
+}
+
+val text = "Hello World"
+println(text.removeSpaces())  // "HelloWorld"</pre>
+                    </div>
+                    
+                    <h3>확장 함수 사용 예제</h3>
+                    <div class="code-example">
+                        <pre>// Int에 제곱 함수 추가
+fun Int.square(): Int {
+    return this * this
+}
+
+val number = 5
+println(number.square())  // 25
+
+// List에 평균 함수 추가
+fun List<Int>.average(): Double {
+    return this.sum().toDouble() / this.size
+}
+
+val numbers = listOf(1, 2, 3, 4, 5)
+println(numbers.average())  // 3.0</pre>
+                    </div>
+                    
+                    <h3>확장 프로퍼티</h3>
+                    <p>확장 프로퍼티도 정의할 수 있습니다:</p>
+                    
+                    <div class="code-example">
+                        <pre>val String.firstChar: Char
+    get() = this[0]
+
+val text = "Kotlin"
+println(text.firstChar)  // 'K'</pre>
+                    </div>
+                `,
+                problem: "String 클래스에 확장 함수 toTitleCase()를 추가하여 첫 글자만 대문자로 변환하세요. 그리고 \"hello\"에 적용하여 결과를 출력하세요.",
+                solution: "fun String.toTitleCase(): String {\n    return this[0].uppercaseChar() + this.substring(1).lowercase()\n}\n\nval text = \"hello\"\nprintln(text.toTitleCase())",
+                test: (code) => {
+                    try {
+                        return code.includes("fun String.toTitleCase") &&
+                               code.includes("uppercaseChar") &&
+                               code.includes("toTitleCase()");
+                    } catch (e) {
+                        return false;
+                    }
+                }
+            },
+            {
+                title: "람다와 고차 함수",
+                content: `
+                    <h3>람다란?</h3>
+                    <p>람다는 이름 없이 정의할 수 있는 함수입니다. 간결하게 함수를 표현할 수 있습니다.</p>
+                    
+                    <h3>람다 기본 문법</h3>
+                    <div class="code-example">
+                        <pre>// 일반 함수
+fun add(x: Int, y: Int): Int {
+    return x + y
+}
+
+// 람다 함수
+val add = { x: Int, y: Int -> x + y }
+
+println(add(3, 5))  // 8</pre>
+                    </div>
+                    
+                    <h3>고차 함수</h3>
+                    <p>함수를 매개변수로 받거나 반환하는 함수를 고차 함수라고 합니다:</p>
+                    
+                    <div class="code-example">
+                        <pre>fun operate(a: Int, b: Int, operation: (Int, Int) -> Int): Int {
+    return operation(a, b)
+}
+
+val sum = operate(10, 5) { x, y -> x + y }
+val multiply = operate(10, 5) { x, y -> x * y }
+
+println(sum)      // 15
+println(multiply) // 50</pre>
+                    </div>
+                    
+                    <h3>컬렉션과 람다</h3>
+                    <div class="code-example">
+                        <pre>val numbers = listOf(1, 2, 3, 4, 5)
+
+// map: 각 요소를 변환
+val squared = numbers.map { it * it }  // [1, 4, 9, 16, 25]
+
+// filter: 조건을 만족하는 요소만 필터링
+val evens = numbers.filter { it % 2 == 0 }  // [2, 4]
+
+// forEach: 각 요소에 대해 실행
+numbers.forEach { println(it) }</pre>
+                    </div>
+                `,
+                problem: "리스트 [1, 2, 3, 4, 5]를 map()을 사용하여 각 요소를 제곱한 새로운 리스트를 만들고, 결과를 출력하세요.",
+                solution: "val numbers = listOf(1, 2, 3, 4, 5)\nval squared = numbers.map { it * it }\nprintln(squared)",
+                test: (code) => {
+                    try {
+                        return code.includes("map") &&
+                               code.includes("it * it") &&
+                               code.includes("println");
+                    } catch (e) {
+                        return false;
+                    }
+                }
+            },
+            {
+                title: "null 안전성",
+                content: `
+                    <h3>null 안전성이란?</h3>
+                    <p>코틀린은 null 안전성을 언어 차원에서 지원합니다. null 오류를 컴파일 시점에 방지합니다.</p>
+                    
+                    <h3>nullable 타입</h3>
+                    <p>타입 뒤에 <code>?</code>를 붙이면 null을 허용합니다:</p>
+                    
+                    <div class="code-example">
+                        <pre>var name: String? = null  // null 허용
+var age: Int = 25        // null 불허용
+
+name = "홍길동"  // 가능
+name = null     // 가능
+// age = null   // 컴파일 오류!</pre>
+                    </div>
+                    
+                    <h3>안전한 호출 연산자 (?.)</h3>
+                    <p>null이 아닐 때만 메서드를 호출합니다:</p>
+                    
+                    <div class="code-example">
+                        <pre>val name: String? = "홍길동"
+val length = name?.length  // null이 아니면 length 반환, null이면 null 반환
+
+val name2: String? = null
+val length2 = name2?.length  // null 반환</pre>
+                    </div>
+                    
+                    <h3>엘비스 연산자 (?:)</h3>
+                    <p>null일 때 기본값을 제공합니다:</p>
+                    
+                    <div class="code-example">
+                        <pre>val name: String? = null
+val displayName = name ?: "익명"  // name이 null이면 "익명" 사용
+
+println(displayName)  // "익명"</pre>
+                    </div>
+                    
+                    <h3>안전한 캐스팅 (as?)</h3>
+                    <div class="code-example">
+                        <pre>val obj: Any = "문자열"
+val str: String? = obj as? String  // 안전하게 캐스팅</pre>
+                    </div>
+                `,
+                problem: "nullable 변수 name에 null을 저장하고, 엘비스 연산자(?:)를 사용하여 name이 null이면 '익명'을, null이 아니면 name을 출력하세요.",
+                solution: "val name: String? = null\nval displayName = name ?: \"익명\"\nprintln(displayName)",
+                test: (code) => {
+                    try {
+                        return code.includes("String?") &&
+                               code.includes("?:") &&
+                               code.includes("println");
+                    } catch (e) {
+                        return false;
+                    }
+                }
+            },
+            {
+                title: "컬렉션",
+                content: `
+                    <h3>컬렉션이란?</h3>
+                    <p>컬렉션은 여러 요소를 저장하는 자료구조입니다. 코틀린은 List, Set, Map을 제공합니다.</p>
+                    
+                    <h3>List</h3>
+                    <p>순서가 있는 요소들의 모음입니다:</p>
+                    
+                    <div class="code-example">
+                        <pre>val list = listOf(1, 2, 3)           // 불변 리스트
+val mutableList = mutableListOf(1, 2, 3)  // 가변 리스트
+
+mutableList.add(4)
+mutableList.remove(1)
+println(mutableList)  // [2, 3, 4]</pre>
+                    </div>
+                    
+                    <h3>Set</h3>
+                    <p>중복되지 않는 요소들의 모음입니다:</p>
+                    
+                    <div class="code-example">
+                        <pre>val set = setOf(1, 2, 3, 3, 2)  // [1, 2, 3] (중복 제거)
+val mutableSet = mutableSetOf(1, 2, 3)
+
+mutableSet.add(4)
+mutableSet.add(2)  // 이미 있으므로 추가되지 않음
+println(mutableSet)  // [1, 2, 3, 4]</pre>
+                    </div>
+                    
+                    <h3>Map</h3>
+                    <p>키-값 쌍으로 데이터를 저장합니다:</p>
+                    
+                    <div class="code-example">
+                        <pre>val map = mapOf("name" to "홍길동", "age" to 20)
+val mutableMap = mutableMapOf("name" to "김철수")
+
+mutableMap["age"] = 25  // 값 추가/수정
+println(mutableMap["name"])  // "김철수"</pre>
+                    </div>
+                `,
+                problem: "Map person에 'name': '김철수', 'age': 25를 저장하고, 'age' 값을 출력하세요. (mapOf 사용)",
+                solution: "val person = mapOf(\"name\" to \"김철수\", \"age\" to 25)\nprintln(person[\"age\"])",
+                test: (code) => {
+                    try {
+                        return code.includes("mapOf") &&
+                               code.includes("\"name\" to \"김철수\"") &&
+                               code.includes("\"age\" to 25") &&
+                               code.includes("person[\"age\"]");
+                    } catch (e) {
+                        return false;
+                    }
+                }
+            },
+            {
+                title: "예외 처리",
+                content: `
+                    <h3>예외 처리란?</h3>
+                    <p>프로그램 실행 중 발생할 수 있는 오류를 처리하는 방법입니다. try-catch 문을 사용합니다.</p>
+                    
+                    <h3>기본 예외 처리</h3>
+                    <div class="code-example">
+                        <pre>try {
+    val result = 10 / 0
+} catch (e: ArithmeticException) {
+    println("0으로 나눌 수 없습니다!")
+}</pre>
+                    </div>
+                    
+                    <h3>여러 예외 처리</h3>
+                    <div class="code-example">
+                        <pre>try {
+    val number = "abc".toInt()
+    val result = 10 / number
+} catch (e: NumberFormatException) {
+    println("숫자가 아닙니다!")
+} catch (e: ArithmeticException) {
+    println("0으로 나눌 수 없습니다!")
+} catch (e: Exception) {
+    println("오류 발생: " + e.message)
+}</pre>
+                    </div>
+                    
+                    <h3>finally 블록</h3>
+                    <p>예외 발생 여부와 관계없이 항상 실행되는 코드입니다:</p>
+                    
+                    <div class="code-example">
+                        <pre>try {
+    val result = 10 / 2
+    println(result)
+} catch (e: Exception) {
+    println("오류 발생")
+} finally {
+    println("항상 실행됩니다")
+}</pre>
+                    </div>
+                    
+                    <h3>throw로 예외 발생시키기</h3>
+                    <div class="code-example">
+                        <pre>fun checkAge(age: Int) {
+    if (age < 0) {
+        throw IllegalArgumentException("나이는 음수일 수 없습니다!")
+    }
+}
+
+try {
+    checkAge(-5)
+} catch (e: IllegalArgumentException) {
+    println(e.message)
+}</pre>
+                    </div>
+                `,
+                problem: "try-catch를 사용하여 10을 0으로 나누려고 시도하고, ArithmeticException이 발생하면 '0으로 나눌 수 없습니다'를 출력하세요.",
+                solution: "try {\n    val result = 10 / 0\n} catch (e: ArithmeticException) {\n    println(\"0으로 나눌 수 없습니다\")\n}",
+                test: (code) => {
+                    try {
+                        return code.includes("try {") &&
+                               code.includes("10 / 0") &&
+                               code.includes("catch (e: ArithmeticException)") &&
+                               code.includes("println");
+                    } catch (e) {
+                        return false;
+                    }
+                }
+            },
+            {
+                title: "데이터 클래스",
+                content: `
+                    <h3>데이터 클래스란?</h3>
+                    <p>데이터 클래스는 주로 데이터를 보관하는 용도로 사용되는 클래스입니다. <code>data</code> 키워드로 정의합니다.</p>
+                    
+                    <h3>데이터 클래스 정의</h3>
+                    <div class="code-example">
+                        <pre>data class Person(val name: String, val age: Int)
+
+val person1 = Person("홍길동", 20)
+val person2 = Person("홍길동", 20)
+
+println(person1 == person2)  // true (내용 비교)
+println(person1)  // Person(name=홍길동, age=20)</pre>
+                    </div>
+                    
+                    <h3>데이터 클래스의 자동 생성 기능</h3>
+                    <p>데이터 클래스는 다음 기능들을 자동으로 제공합니다:</p>
+                    <ul style="margin-left: 20px; margin-top: 10px;">
+                        <li><code>equals()</code>: 내용 비교</li>
+                        <li><code>hashCode()</code>: 해시 코드</li>
+                        <li><code>toString()</code>: 문자열 표현</li>
+                        <li><code>copy()</code>: 복사</li>
+                        <li><code>componentN()</code>: 구조 분해</li>
+                    </ul>
+                    
+                    <h3>copy() 메서드</h3>
+                    <div class="code-example">
+                        <pre>data class Person(val name: String, val age: Int)
+
+val person1 = Person("홍길동", 20)
+val person2 = person1.copy(age = 21)  // age만 변경하여 복사
+
+println(person1)  // Person(name=홍길동, age=20)
+println(person2)  // Person(name=홍길동, age=21)</pre>
+                    </div>
+                    
+                    <h3>구조 분해</h3>
+                    <div class="code-example">
+                        <pre>data class Person(val name: String, val age: Int)
+
+val person = Person("홍길동", 20)
+val (name, age) = person  // 구조 분해
+
+println(name)  // "홍길동"
+println(age)   // 20</pre>
+                    </div>
+                `,
+                problem: "데이터 클래스 Person을 정의하고, name과 age를 받아 저장하세요. 그리고 Person('홍길동', 20) 객체를 생성하여 출력하세요.",
+                solution: "data class Person(val name: String, val age: Int)\n\nval person = Person(\"홍길동\", 20)\nprintln(person)",
+                test: (code) => {
+                    try {
+                        return code.includes("data class Person") &&
+                               code.includes("Person(") &&
+                               code.includes("println");
+                    } catch (e) {
+                        return false;
+                    }
+                }
+            }
+        ];
+
+        // 메인 화면 표시
+        function showMainScreen() {
+            document.getElementById('mainScreen').style.display = 'block';
+            document.getElementById('lessonScreens').innerHTML = '';
+            window.scrollTo(0, 0);
+        }
+
+        // 강의 화면 표시
+        function showLesson(chapterNum) {
+            const lesson = lessons[chapterNum - 1];
+            if (!lesson) return;
+
+            document.getElementById('mainScreen').style.display = 'none';
+            
+            const lessonHTML = `
+                <div class="lesson-screen active">
+                    <div class="lesson-header">
+                        <h2>${lesson.title}</h2>
+                        <button class="back-button" onclick="showMainScreen()">← 목차로</button>
+                    </div>
+                    
+                    <div class="lesson-content">
+                        ${lesson.content}
+                    </div>
+                    
+                    <div class="practice-section">
+                        <h3>📝 실습 문제</h3>
+                        <div class="problem">
+                            <p>${lesson.problem}</p>
+                        </div>
+                        
+                        <textarea class="code-editor" id="codeEditor${chapterNum}" placeholder="여기에 코드를 작성하세요..."></textarea>
+                        
+                        <button class="run-button" onclick="runCode(${chapterNum})">코드 실행</button>
+                        
+                        <div class="output" id="output${chapterNum}">실행 결과가 여기에 표시됩니다...</div>
+                        
+                        <div class="success-message" id="success${chapterNum}">
+                            ✅ 정답입니다! 다음 장으로 넘어갈 수 있습니다.
+                        </div>
+                        
+                        <div class="error-message" id="error${chapterNum}">
+                            ❌ 아직 정답이 아닙니다. 다시 시도해보세요!
+                        </div>
+                        
+                        <button class="next-button" id="nextButton${chapterNum}" onclick="nextChapter(${chapterNum})">
+                            다음 장으로 →
+                        </button>
+                    </div>
+                </div>
+            `;
+            
+            document.getElementById('lessonScreens').innerHTML = lessonHTML;
+            window.scrollTo(0, 0);
+        }
+
+        // 코드 실행 (간단한 검증)
+        function runCode(chapterNum) {
+            const code = document.getElementById(`codeEditor${chapterNum}`).value;
+            const output = document.getElementById(`output${chapterNum}`);
+            const successMsg = document.getElementById(`success${chapterNum}`);
+            const errorMsg = document.getElementById(`error${chapterNum}`);
+            const nextBtn = document.getElementById(`nextButton${chapterNum}`);
+            const lesson = lessons[chapterNum - 1];
+
+            // 출력 초기화
+            output.textContent = '';
+            successMsg.classList.remove('show');
+            errorMsg.classList.remove('show');
+            nextBtn.classList.remove('show');
+
+            // 간단한 코드 실행 시뮬레이션
+            try {
+                // 실제 코틀린 실행은 불가능하므로, 간단한 검증만 수행
+                const lines = code.split('\n').filter(line => line.trim() !== '');
+                
+                if (lines.length === 0) {
+                    output.textContent = '코드를 입력해주세요.';
+                    return;
+                }
+
+                // 코드 검증
+                if (lesson.test(code)) {
+                    successMsg.classList.add('show');
+                    nextBtn.classList.add('show');
+                    output.textContent = '✅ 코드가 올바르게 작성되었습니다!';
+                } else {
+                    errorMsg.classList.add('show');
+                    output.textContent = '코드를 실행했습니다. 정답을 확인해주세요.';
+                }
+            } catch (e) {
+                errorMsg.classList.add('show');
+                output.textContent = '오류: ' + e.message;
+            }
+        }
+
+        // 다음 장으로 이동
+        function nextChapter(currentChapter) {
+            if (currentChapter < lessons.length) {
+                showLesson(currentChapter + 1);
+            } else {
+                alert('모든 강의를 완료했습니다! 🎉');
+                showMainScreen();
+            }
+        }
+    </script>
+</body>
+</html>
+

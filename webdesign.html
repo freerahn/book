@@ -1,0 +1,3562 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>웹디자인개발기능사 기초 강의</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+            padding-left: 180px;
+            padding-right: 180px;
+            overflow-x: hidden;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            overflow-x: hidden;
+        }
+
+        /* 좌우 고정 배너 */
+        .side-banner {
+            position: fixed;
+            top: 50%;
+            transform: translateY(-50%);
+            z-index: 1000;
+            width: 150px;
+            transition: opacity 0.3s ease;
+        }
+
+        .side-banner.left {
+            left: 10px;
+        }
+
+        .side-banner.right {
+            right: 10px;
+        }
+
+        .side-banner img {
+            width: 100%;
+            height: auto;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+            cursor: pointer;
+            transition: transform 0.3s ease;
+        }
+
+        .side-banner img:hover {
+            transform: scale(1.05);
+        }
+
+        /* 모바일에서는 배너 숨김 */
+        @media (max-width: 1400px) {
+            body {
+                padding-left: 20px;
+                padding-right: 20px;
+            }
+            .side-banner {
+                display: none;
+            }
+        }
+
+        /* 네비게이션 바 */
+        .navbar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            z-index: 2000;
+            padding: 15px 0;
+        }
+
+        .navbar-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 30px;
+        }
+
+        .navbar a {
+            text-decoration: none;
+            color: #333;
+            font-size: 16px;
+            font-weight: 500;
+            padding: 8px 15px;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+        }
+
+        .navbar a:hover {
+            background: #667eea;
+            color: white;
+        }
+
+        .navbar a.active {
+            background: #667eea;
+            color: white;
+        }
+
+        body {
+            padding-top: 70px;
+        }
+
+        /* 메인 화면 스타일 */
+        .main-screen {
+            text-align: center;
+            padding: 40px 20px;
+        }
+
+        .main-screen h1 {
+            color: white;
+            font-size: 3em;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .main-screen p {
+            color: rgba(255,255,255,0.9);
+            font-size: 1.2em;
+            margin-bottom: 50px;
+        }
+
+        .chapter-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 25px;
+            margin-top: 40px;
+        }
+
+        .chapter-box {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: 3px solid transparent;
+            text-align: center;
+        }
+
+        .chapter-box:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 40px rgba(0,0,0,0.3);
+            border-color: #667eea;
+        }
+
+        .chapter-box h2 {
+            color: #667eea;
+            font-size: 1.8em;
+            margin-bottom: 10px;
+        }
+
+        .chapter-box p {
+            color: #666;
+            font-size: 1em;
+            line-height: 1.6;
+        }
+
+        .chapter-icon {
+            font-size: 4em;
+            margin-bottom: 10px;
+            display: block;
+            transition: transform 0.3s ease;
+            filter: drop-shadow(0 2px 4px rgba(0,0,0,0.1));
+        }
+
+        .chapter-box:hover .chapter-icon {
+            transform: scale(1.15) rotate(5deg);
+        }
+
+        .chapter-number {
+            display: inline-block;
+            background: #667eea;
+            color: white;
+            width: 35px;
+            height: 35px;
+            border-radius: 50%;
+            line-height: 35px;
+            font-weight: bold;
+            font-size: 0.9em;
+            margin-bottom: 15px;
+            margin-top: 5px;
+        }
+
+        /* 학습 화면 스타일 */
+        .lesson-screen {
+            display: none;
+            background: white;
+            border-radius: 15px;
+            padding: 40px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            margin-top: 20px;
+            overflow-x: hidden;
+            word-wrap: break-word;
+            overflow-wrap: break-word;
+        }
+
+        .lesson-screen.active {
+            display: block;
+        }
+
+        .lesson-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 2px solid #eee;
+        }
+
+        .lesson-header h2 {
+            color: #667eea;
+            font-size: 2em;
+        }
+
+        .back-button {
+            background: #667eea;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1em;
+            transition: background 0.3s;
+        }
+
+        .back-button:hover {
+            background: #5568d3;
+        }
+
+        .lesson-content {
+            line-height: 1.8;
+            color: #333;
+            font-size: 1.1em;
+            margin-bottom: 40px;
+            word-wrap: break-word;
+            overflow-wrap: break-word;
+        }
+
+        .lesson-content h3 {
+            color: #764ba2;
+            margin-top: 30px;
+            margin-bottom: 15px;
+            font-size: 1.5em;
+        }
+
+        .lesson-content p {
+            margin-bottom: 15px;
+        }
+
+        .lesson-content code {
+            background: #f4f4f4;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-family: 'Courier New', monospace;
+            color: #e83e8c;
+        }
+
+        .code-example {
+            background: #2d2d2d;
+            color: #f8f8f2;
+            padding: 20px;
+            border-radius: 8px;
+            margin: 20px 0;
+            overflow-x: auto;
+            overflow-y: hidden;
+            font-family: 'Courier New', monospace;
+            word-wrap: break-word;
+            overflow-wrap: break-word;
+        }
+
+        .code-example pre {
+            margin: 0;
+        }
+
+        /* 실습 영역 */
+        .practice-section {
+            background: #f8f9fa;
+            border-radius: 10px;
+            padding: 30px;
+            margin-top: 40px;
+            border-left: 5px solid #667eea;
+        }
+
+        .practice-section h3 {
+            color: #667eea;
+            margin-bottom: 20px;
+            font-size: 1.5em;
+        }
+
+        .problem {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+
+        .problem p {
+            color: #333;
+            font-size: 1.1em;
+            line-height: 1.6;
+        }
+
+        .code-editor {
+            width: 100%;
+            min-height: 200px;
+            padding: 15px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            font-family: 'Courier New', monospace;
+            font-size: 14px;
+            resize: vertical;
+            margin-bottom: 15px;
+        }
+
+        .code-editor:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        .run-button {
+            background: #28a745;
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1em;
+            margin-right: 10px;
+            transition: background 0.3s;
+        }
+
+        .run-button:hover {
+            background: #218838;
+        }
+
+        .output {
+            background: #2d2d2d;
+            color: #f8f8f2;
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 15px;
+            min-height: 50px;
+            font-family: 'Courier New', monospace;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+            overflow-wrap: break-word;
+            max-width: 100%;
+            overflow-x: auto;
+        }
+
+        .success-message {
+            background: #d4edda;
+            color: #155724;
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 15px;
+            display: none;
+        }
+
+        .success-message.show {
+            display: block;
+        }
+
+        .next-button {
+            background: #667eea;
+            color: white;
+            border: none;
+            padding: 15px 40px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1.1em;
+            margin-top: 20px;
+            display: none;
+            transition: background 0.3s;
+        }
+
+        .next-button.show {
+            display: inline-block;
+        }
+
+        .next-button:hover {
+            background: #5568d3;
+        }
+
+        .error-message {
+            background: #f8d7da;
+            color: #721c24;
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 15px;
+            display: none;
+        }
+
+        .error-message.show {
+            display: block;
+        }
+    </style>
+</head>
+<body>
+    <!-- 네비게이션 바 -->
+    <nav class="navbar">
+        <div class="navbar-content">
+            <a href="index.html">홈</a>
+            <a href="webdesign.html" class="active">웹디자인개발기능사</a>
+            <a href="cs.html">CS리더스관리사</a>
+            <a href="javascript.html">JavaScript</a>
+            <a href="node.html">Node.js</a>
+            <a href="python.html">Python</a>
+            <a href="kotlin.html">Kotlin</a>
+        </div>
+    </nav>
+
+    <!-- 좌측 배너 -->
+    <div class="side-banner left" id="leftBanner">
+        <img src="images/wecandeo.jpg" alt="WeCanDo 배너" onclick="window.open('https://www.wecandeo.com', '_blank')">
+    </div>
+
+    <!-- 우측 배너 -->
+    <div class="side-banner right" id="rightBanner">
+        <img src="images/malgnsoft.jpg" alt="MalgnSoft 배너" onclick="window.open('https://www.malgnsoft.com', '_blank')">
+    </div>
+
+    <!-- 메인 화면 -->
+    <div class="container">
+        <div class="main-screen" id="mainScreen">
+            <h1>🎨 웹디자인개발기능사 기초 강의</h1>
+            <p>기초부터 실전까지 단계별로 웹디자인개발기능사 기초를 다지세요!</p>
+            
+            <div class="chapter-grid">
+                <div class="chapter-box" onclick="showLesson(1)">
+                    <div class="chapter-icon">📋</div>
+                    <div class="chapter-number">1</div>
+                    <h2>시험 소개 및 개요</h2>
+                    <p>웹디자인개발기능사 시험에 대한 전반적인 이해</p>
+                </div>
+                
+                <div class="chapter-box" onclick="showLesson(2)">
+                    <div class="chapter-icon">🌐</div>
+                    <div class="chapter-number">2</div>
+                    <h2>HTML5 기본 문법</h2>
+                    <p>HTML5의 기본 태그와 구조를 학습합니다</p>
+                </div>
+                
+                <div class="chapter-box" onclick="showLesson(3)">
+                    <div class="chapter-icon">🎨</div>
+                    <div class="chapter-number">3</div>
+                    <h2>CSS3 기본 문법</h2>
+                    <p>CSS3의 선택자와 스타일 속성을 다룹니다</p>
+                </div>
+                
+                <div class="chapter-box" onclick="showLesson(4)">
+                    <div class="chapter-icon">⚡</div>
+                    <div class="chapter-number">4</div>
+                    <h2>자바스크립트/jQuery 기초</h2>
+                    <p>JavaScript와 jQuery의 기본 문법과 활용</p>
+                </div>
+                
+                <div class="chapter-box" onclick="showLesson(5)">
+                    <div class="chapter-icon">🛠️</div>
+                    <div class="chapter-number">5</div>
+                    <h2>작업 환경 설정</h2>
+                    <p>시험 환경과 개발 도구 설정 방법</p>
+                </div>
+                
+                <div class="chapter-box" onclick="showLesson(6)">
+                    <div class="chapter-icon">📐</div>
+                    <div class="chapter-number">6</div>
+                    <h2>레이아웃 구조 이해</h2>
+                    <p>웹페이지의 기본 레이아웃 구조 설계</p>
+                </div>
+                
+                <div class="chapter-box" onclick="showLesson(7)">
+                    <div class="chapter-icon">📄</div>
+                    <div class="chapter-number">7</div>
+                    <h2>헤더/푸터 영역 만들기</h2>
+                    <p>헤더와 푸터 영역 제작 방법</p>
+                </div>
+                
+                <div class="chapter-box" onclick="showLesson(8)">
+                    <div class="chapter-icon">🧭</div>
+                    <div class="chapter-number">8</div>
+                    <h2>네비게이션 메뉴 제작</h2>
+                    <p>네비게이션 메뉴의 구조와 스타일링</p>
+                </div>
+                
+                <div class="chapter-box" onclick="showLesson(9)">
+                    <div class="chapter-icon">🖼️</div>
+                    <div class="chapter-number">9</div>
+                    <h2>슬라이드 배너 만들기</h2>
+                    <p>이미지 슬라이드 배너 구현하기</p>
+                </div>
+                
+                <div class="chapter-box" onclick="showLesson(10)">
+                    <div class="chapter-icon">📂</div>
+                    <div class="chapter-number">10</div>
+                    <h2>드롭다운 메뉴 구현</h2>
+                    <p>드롭다운 메뉴의 동작 구현</p>
+                </div>
+                
+                <div class="chapter-box" onclick="showLesson(11)">
+                    <div class="chapter-icon">📑</div>
+                    <div class="chapter-number">11</div>
+                    <h2>탭 메뉴 구현</h2>
+                    <p>탭 메뉴의 전환 기능 구현</p>
+                </div>
+                
+                <div class="chapter-box" onclick="showLesson(12)">
+                    <div class="chapter-icon">🔲</div>
+                    <div class="chapter-number">12</div>
+                    <h2>레이어 팝업 만들기</h2>
+                    <p>모달 팝업 창 구현하기</p>
+                </div>
+                
+                <div class="chapter-box" onclick="showLesson(13)">
+                    <div class="chapter-icon">📊</div>
+                    <div class="chapter-number">13</div>
+                    <h2>A유형 완벽 분석</h2>
+                    <p>A유형 문제 유형과 해결 방법</p>
+                </div>
+                
+                <div class="chapter-box" onclick="showLesson(14)">
+                    <div class="chapter-icon">📊</div>
+                    <div class="chapter-number">14</div>
+                    <h2>B유형 완벽 분석</h2>
+                    <p>B유형 문제 유형과 해결 방법</p>
+                </div>
+                
+                <div class="chapter-box" onclick="showLesson(15)">
+                    <div class="chapter-icon">📊</div>
+                    <div class="chapter-number">15</div>
+                    <h2>C유형 완벽 분석</h2>
+                    <p>C유형 문제 유형과 해결 방법</p>
+                </div>
+                
+                <div class="chapter-box" onclick="showLesson(16)">
+                    <div class="chapter-icon">📝</div>
+                    <div class="chapter-number">16</div>
+                    <h2>1회차 모의고사</h2>
+                    <p>실전 모의고사 문제 풀이</p>
+                </div>
+                
+                <div class="chapter-box" onclick="showLesson(17)">
+                    <div class="chapter-icon">📝</div>
+                    <div class="chapter-number">17</div>
+                    <h2>2회차 모의고사</h2>
+                    <p>실전 모의고사 문제 풀이</p>
+                </div>
+                
+                <div class="chapter-box" onclick="showLesson(18)">
+                    <div class="chapter-icon">📝</div>
+                    <div class="chapter-number">18</div>
+                    <h2>3회차 모의고사</h2>
+                    <p>실전 모의고사 문제 풀이</p>
+                </div>
+                
+                <div class="chapter-box" onclick="showLesson(19)">
+                    <div class="chapter-icon">✅</div>
+                    <div class="chapter-number">19</div>
+                    <h2>제출 전 필수 체크사항</h2>
+                    <p>제출 전 확인해야 할 체크리스트</p>
+                </div>
+                
+                <div class="chapter-box" onclick="showLesson(20)">
+                    <div class="chapter-icon">🐛</div>
+                    <div class="chapter-number">20</div>
+                    <h2>자주하는 실수 및 디버깅</h2>
+                    <p>흔한 실수와 디버깅 방법</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- 학습 화면들 -->
+        <div id="lessonScreens"></div>
+    </div>
+
+    <script>
+        // 강의 내용 데이터
+        const lessons = [
+            {
+                title: "시험 소개 및 개요",
+                content: `
+                    <h3>웹디자인개발기능사란?</h3>
+                    <p>웹디자인개발기능사는 웹사이트의 디자인과 개발을 담당하는 국가기술자격증입니다. 
+                    이 자격증은 한국산업인력공단에서 주관하며, 웹 디자이너와 웹 개발자가 반드시 갖춰야 할 기본 역량을 평가합니다. 
+                    HTML, CSS, JavaScript를 활용하여 실제 웹페이지를 제작하는 능력을 평가하는 실기 중심의 시험입니다.</p>
+                    
+                    <p>웹디자인개발기능사 자격증을 취득하면 웹 개발 분야에서 실무 능력을 인정받을 수 있으며, 
+                    취업 시 큰 도움이 됩니다. 특히 웹 에이전시, IT 기업, 스타트업 등에서 웹 디자이너나 프론트엔드 개발자로 
+                    취업하기 위해서는 필수적인 자격증입니다.</p>
+                    
+                    <h3>시험 구성 및 평가 방법</h3>
+                    <ul style="margin-left: 20px; margin-top: 10px;">
+                        <li><strong>시험 시간:</strong> 총 3시간 (180분) - 시간 관리가 매우 중요합니다</li>
+                        <li><strong>시험 방식:</strong> 실기 시험 (컴퓨터 작업) - 이론 시험이 아닌 실제 코딩 능력을 평가합니다</li>
+                        <li><strong>평가 항목:</strong> HTML 구조 작성, CSS 스타일링, JavaScript/jQuery 기능 구현</li>
+                        <li><strong>합격 기준:</strong> 100점 만점에 60점 이상 - 각 평가 항목별 점수 배분이 중요합니다</li>
+                        <li><strong>평가 기준:</strong> 코드 정확성, 디자인 구현도, 기능 작동 여부, 파일 관리 등</li>
+                    </ul>
+                    
+                    <p>시험에서는 제시된 시나리오와 이미지를 보고 웹페이지를 제작해야 합니다. 
+                    HTML 구조 작성(30점), CSS 스타일링(40점), JavaScript 기능 구현(30점)으로 점수가 배분되며, 
+                    각 부분에서 실수 없이 완성도를 높여야 합니다.</p>
+                    
+                    <h3>시험 유형별 특징</h3>
+                    <p>시험은 A, B, C 세 가지 유형으로 나뉘며, 시험 당일 랜덤하게 유형이 정해집니다:</p>
+                    <ul style="margin-left: 20px; margin-top: 10px;">
+                        <li><strong>A유형:</strong> 기본 레이아웃과 메뉴 구현이 중심입니다. 헤더/푸터/네비게이션 구조를 만들고 CSS로 스타일링하는 것이 주된 과제입니다. 가장 기본적인 유형으로 HTML과 CSS 활용이 중요합니다.</li>
+                        <li><strong>B유형:</strong> 슬라이드 배너와 드롭다운 메뉴 구현이 핵심입니다. jQuery를 활용한 동적 기능 구현이 필수이며, 자동 슬라이드 전환과 호버 효과 구현이 중요합니다.</li>
+                        <li><strong>C유형:</strong> 탭 메뉴와 팝업 창 구현이 주된 과제입니다. jQuery의 이벤트 처리와 애니메이션 효과(fadeIn, fadeOut)를 활용해야 하며, 상호작용 기능 구현이 중요합니다.</li>
+                    </ul>
+                    
+                    <h3>준비 사항 및 학습 계획</h3>
+                    <p>시험에 합격하기 위해서는 다음 기술들을 숙지해야 합니다:</p>
+                    <ul style="margin-left: 20px; margin-top: 10px;">
+                        <li><strong>HTML5 기본 문법:</strong> 시맨틱 태그, 기본 태그, 속성 이해</li>
+                        <li><strong>CSS3 선택자와 속성:</strong> 선택자 종류, 박스 모델, Flexbox, Position 속성 등</li>
+                        <li><strong>JavaScript 기본 문법:</strong> 변수, 함수, 이벤트 처리, DOM 조작</li>
+                        <li><strong>jQuery 라이브러리 활용:</strong> 선택자, 이벤트, 애니메이션, DOM 조작 메서드</li>
+                    </ul>
+                    
+                    <p>효과적인 학습 방법은 다음과 같습니다:</p>
+                    <ol style="margin-left: 20px; margin-top: 10px;">
+                        <li>기초 문법부터 차근차근 학습하고, 각 개념을 이해한 후 예제를 따라해봅니다</li>
+                        <li>실제 프로젝트를 만들어보며 반복 연습합니다</li>
+                        <li>모의고사를 통해 시간 안배와 문제 해결 능력을 기릅니다</li>
+                        <li>실수하기 쉬운 부분(파일 경로, 선택자 오류 등)을 정리하고 암기합니다</li>
+                    </ol>
+                    
+                    <h3>시험 당일 주의사항</h3>
+                    <ul style="margin-left: 20px; margin-top: 10px;">
+                        <li>시간 관리: 구조 작성(30분), CSS 스타일링(90분), JavaScript 구현(60분) 정도로 시간을 배분합니다</li>
+                        <li>파일 관리: 올바른 폴더 구조와 파일명을 확인합니다 (대소문자 구분 중요)</li>
+                        <li>브라우저 테스트: 각 기능 구현 후 브라우저에서 정상 작동 여부를 확인합니다</li>
+                        <li>최종 점검: 제출 전 모든 파일이 정상적으로 작동하는지 확인합니다</li>
+                    </ul>
+                `,
+                problem: "웹디자인개발기능사 시험의 합격 기준 점수를 작성하세요. (예: 60점 이상)",
+                solution: "60점 이상",
+                test: (code) => {
+                    try {
+                        return code.includes("60") || code.includes("60점");
+                    } catch (e) {
+                        return false;
+                    }
+                }
+            },
+            {
+                title: "HTML5 기본 문법",
+                content: `
+                    <h3>HTML이란?</h3>
+                    <p>HTML(HyperText Markup Language)은 웹페이지의 구조를 만드는 마크업 언어입니다. 
+                    HTML5는 HTML의 최신 버전으로, 웹 표준을 따르는 시맨틱 태그를 제공하여 더 의미 있는 
+                    웹페이지 구조를 만들 수 있습니다.</p>
+                    
+                    <p>HTML은 웹페이지의 뼈대 역할을 하며, 내용을 구조화하여 표현합니다. 
+                    CSS로 디자인을 꾸미고, JavaScript로 동적 기능을 추가하는 것이 웹 개발의 기본 과정입니다.</p>
+                    
+                    <h3>HTML5 기본 구조 이해하기</h3>
+                    <p>모든 HTML5 문서는 다음과 같은 기본 구조를 가집니다:</p>
+                    <div class="code-example">
+                        <pre>&lt;!DOCTYPE html&gt;
+&lt;html lang="ko"&gt;
+&lt;head&gt;
+    &lt;meta charset="UTF-8"&gt;
+    &lt;title&gt;제목&lt;/title&gt;
+&lt;/head&gt;
+&lt;body&gt;
+    &lt;!-- 내용 --&gt;
+&lt;/body&gt;
+&lt;/html&gt;</pre>
+                    </div>
+                    
+                    <p><strong>각 요소의 역할:</strong></p>
+                    <ul style="margin-left: 20px; margin-top: 10px;">
+                        <li><code>&lt;!DOCTYPE html&gt;</code>: HTML5 문서임을 선언합니다. 반드시 첫 줄에 작성해야 합니다.</li>
+                        <li><code>&lt;html lang="ko"&gt;</code>: 문서의 루트 요소이며, lang 속성으로 언어를 지정합니다.</li>
+                        <li><code>&lt;head&gt;</code>: 문서의 메타 정보를 담는 영역입니다. 브라우저에는 표시되지 않습니다.</li>
+                        <li><code>&lt;meta charset="UTF-8"&gt;</code>: 한글 등 다양한 문자를 올바르게 표시하기 위한 인코딩 설정입니다.</li>
+                        <li><code>&lt;title&gt;</code>: 브라우저 탭에 표시되는 제목입니다. SEO에 중요한 요소입니다.</li>
+                        <li><code>&lt;body&gt;</code>: 실제로 화면에 표시되는 내용을 작성하는 영역입니다.</li>
+                    </ul>
+                    
+                    <h3>시맨틱 태그(Semantic Tags)의 중요성</h3>
+                    <p>HTML5에서는 의미를 가진 시맨틱 태그를 제공합니다. 이전에는 모든 영역을 <code>&lt;div&gt;</code>로 구분했지만, 
+                    시맨틱 태그를 사용하면 코드의 가독성이 향상되고, 검색 엔진이 웹페이지를 더 잘 이해할 수 있습니다.</p>
+                    
+                    <p><strong>주요 시맨틱 태그:</strong></p>
+                    <ul style="margin-left: 20px; margin-top: 10px;">
+                        <li><code>&lt;header&gt;</code>: 페이지 상단의 헤더 영역 (로고, 검색창 등)</li>
+                        <li><code>&lt;nav&gt;</code>: 네비게이션 메뉴 영역</li>
+                        <li><code>&lt;main&gt;</code>: 문서의 주요 내용 영역 (한 페이지에 하나만 사용)</li>
+                        <li><code>&lt;section&gt;</code>: 주제별로 구분되는 섹션 영역</li>
+                        <li><code>&lt;article&gt;</code>: 독립적인 본문 영역 (게시글, 뉴스 기사 등)</li>
+                        <li><code>&lt;aside&gt;</code>: 사이드바 영역 (광고, 관련 링크 등)</li>
+                        <li><code>&lt;footer&gt;</code>: 페이지 하단의 푸터 영역 (저작권 정보, 연락처 등)</li>
+                    </ul>
+                    
+                    <p>시맨틱 태그를 사용하면 <strong>코드의 가독성 향상, SEO 최적화, 접근성 향상, 유지보수 용이</strong> 등의 장점이 있습니다.</p>
+                    
+                    <h3>기본 태그와 속성 이해하기</h3>
+                    <p>HTML에서 자주 사용하는 기본 태그들을 알아봅니다:</p>
+                    <div class="code-example">
+                        <pre>&lt;h1&gt;제목 1&lt;/h1&gt;  &lt;!-- 가장 큰 제목 --&gt;
+&lt;h2&gt;제목 2&lt;/h2&gt;  &lt;!-- 두 번째로 큰 제목 --&gt;
+&lt;p&gt;단락 텍스트&lt;/p&gt;  &lt;!-- 문단 --&gt;
+&lt;img src="image.jpg" alt="이미지 설명"&gt;  &lt;!-- 이미지 --&gt;
+&lt;a href="link.html"&gt;링크 텍스트&lt;/a&gt;  &lt;!-- 하이퍼링크 --&gt;
+&lt;div&gt;영역 구분&lt;/div&gt;  &lt;!-- 블록 영역 --&gt;
+&lt;span&gt;인라인 영역&lt;/span&gt;  &lt;!-- 인라인 영역 --&gt;
+&lt;ul&gt;&lt;li&gt;리스트 항목&lt;/li&gt;&lt;/ul&gt;  &lt;!-- 순서 없는 리스트 --&gt;
+&lt;ol&gt;&lt;li&gt;리스트 항목&lt;/li&gt;&lt;/ol&gt;  &lt;!-- 순서 있는 리스트 --&gt;</pre>
+                    </div>
+                    
+                    <p><strong>태그 사용 시 주의사항:</strong></p>
+                    <ul style="margin-left: 20px; margin-top: 10px;">
+                        <li>모든 태그는 여는 태그와 닫는 태그가 쌍을 이룹니다 (<code>&lt;태그&gt;내용&lt;/태그&gt;</code>)</li>
+                        <li>일부 태그는 닫는 태그가 없습니다 (<code>&lt;img&gt;</code>, <code>&lt;br&gt;</code>, <code>&lt;hr&gt;</code> 등)</li>
+                        <li>태그는 중첩하여 사용할 수 있지만, 올바른 순서로 닫아야 합니다</li>
+                        <li>속성은 항상 쌍따옴표("")로 감싸야 합니다</li>
+                    </ul>
+                    
+                    <h3>웹디자인개발기능사 시험에서의 HTML 작성 팁</h3>
+                    <ul style="margin-left: 20px; margin-top: 10px;">
+                        <li>시맨틱 태그를 적극 활용하여 구조를 명확하게 만듭니다</li>
+                        <li>id와 class 속성을 적절히 사용하여 CSS 선택자와 연결합니다</li>
+                        <li>이미지 파일 경로와 링크 경로를 정확히 작성합니다 (상대 경로 사용 권장)</li>
+                        <li>모든 태그를 올바르게 닫아 구문 오류를 방지합니다</li>
+                        <li>들여쓰기를 일관되게 사용하여 코드 가독성을 높입니다</li>
+                    </ul>
+                `,
+                problem: "HTML5 기본 구조를 작성하세요. DOCTYPE, html, head, body 태그를 포함하세요.",
+                solution: "<!DOCTYPE html>\n<html lang=\"ko\">\n<head>\n    <meta charset=\"UTF-8\">\n    <title>제목</title>\n</head>\n<body>\n</body>\n</html>",
+                test: (code) => {
+                    try {
+                        return code.includes("<!DOCTYPE html>") &&
+                               code.includes("<html") &&
+                               code.includes("<head>") &&
+                               code.includes("<body>");
+                    } catch (e) {
+                        return false;
+                    }
+                }
+            },
+            {
+                title: "CSS3 기본 문법",
+                content: `
+                    <h3>CSS란?</h3>
+                    <p>CSS(Cascading Style Sheets)는 HTML 요소의 스타일을 꾸미는 스타일시트 언어입니다. 
+                    HTML이 웹페이지의 구조를 담당한다면, CSS는 디자인과 레이아웃을 담당합니다. 
+                    CSS3는 CSS의 최신 버전으로, 다양한 스타일링 기능과 애니메이션 효과를 제공합니다.</p>
+                    
+                    <p>CSS의 주요 역할은 <strong>색상, 크기, 위치, 정렬, 애니메이션</strong> 등을 제어하여 
+                    웹페이지를 시각적으로 아름답게 만드는 것입니다. HTML과 CSS를 분리하여 작성하면 
+                    코드의 유지보수가 쉬워지고, 여러 페이지에 동일한 스타일을 적용할 수 있습니다.</p>
+                    
+                    <h3>CSS 선택자 완벽 이해</h3>
+                    <p>CSS 선택자는 스타일을 적용할 HTML 요소를 선택하는 방법입니다. 
+                    정확한 선택자를 사용하는 것이 CSS의 핵심입니다:</p>
+                    
+                    <ul style="margin-left: 20px; margin-top: 10px;">
+                        <li><code>태그명</code>: 태그 선택자 - 해당 태그를 모두 선택합니다 (예: <code>p</code>, <code>div</code>)</li>
+                        <li><code>.클래스명</code>: 클래스 선택자 - class 속성이 일치하는 요소를 선택합니다 (예: <code>.box</code>, <code>.header</code>)</li>
+                        <li><code>#아이디명</code>: ID 선택자 - id 속성이 일치하는 요소를 선택합니다 (예: <code>#logo</code>, <code>#menu</code>)</li>
+                        <li><code>선택자1 선택자2</code>: 자손 선택자 - 선택자1 안에 있는 모든 선택자2를 선택합니다</li>
+                        <li><code>선택자1 > 선택자2</code>: 자식 선택자 - 선택자1의 직접 자식인 선택자2만 선택합니다</li>
+                        <li><code>선택자1, 선택자2</code>: 그룹 선택자 - 여러 선택자를 동시에 선택합니다</li>
+                        <li><code>선택자:hover</code>: 가상 클래스 - 마우스를 올렸을 때의 상태를 선택합니다</li>
+                    </ul>
+                    
+                    <p><strong>선택자 우선순위:</strong> ID 선택자 > 클래스 선택자 > 태그 선택자 순으로 우선순위가 높습니다. 
+                    같은 우선순위일 경우 나중에 작성된 스타일이 적용됩니다.</p>
+                    
+                    <h3>CSS 기본 문법 구조</h3>
+                    <p>CSS는 다음과 같은 구조로 작성합니다:</p>
+                    <div class="code-example">
+                        <pre>선택자 {
+    속성: 값;
+    속성: 값;
+}</pre>
+                    </div>
+                    <ul style="margin-left: 20px; margin-top: 10px;">
+                        <li>선택자 뒤에 중괄호 <code>{}</code>를 작성합니다</li>
+                        <li>속성과 값은 콜론 <code>:</code>으로 구분합니다</li>
+                        <li>각 속성은 세미콜론 <code>;</code>으로 끝냅니다</li>
+                        <li>들여쓰기를 사용하여 가독성을 높입니다</li>
+                    </ul>
+                    
+                    <h3>주요 CSS 속성 완벽 가이드</h3>
+                    <p><strong>크기 관련 속성:</strong></p>
+                    <ul style="margin-left: 20px; margin-top: 10px;">
+                        <li><code>width</code>: 너비 (px, %, em 단위 사용)</li>
+                        <li><code>height</code>: 높이 (px, %, em 단위 사용)</li>
+                        <li><code>max-width</code>: 최대 너비 (반응형 웹에서 유용)</li>
+                        <li><code>min-height</code>: 최소 높이</li>
+                    </ul>
+                    
+                    <p><strong>여백 관련 속성:</strong></p>
+                    <ul style="margin-left: 20px; margin-top: 10px;">
+                        <li><code>margin</code>: 외부 여백 (상하좌우 또는 개별 지정: margin-top, margin-right 등)</li>
+                        <li><code>padding</code>: 내부 여백 (요소 내부 공간, margin과 유사하게 사용)</li>
+                        <li><code>margin: 10px 20px;</code>: 상하 10px, 좌우 20px</li>
+                        <li><code>margin: 10px 20px 30px 40px;</code>: 상 우 하 좌 순서</li>
+                    </ul>
+                    
+                    <p><strong>색상 관련 속성:</strong></p>
+                    <ul style="margin-left: 20px; margin-top: 10px;">
+                        <li><code>color</code>: 텍스트 색상</li>
+                        <li><code>background-color</code>: 배경 색상</li>
+                        <li>색상 표현: 색상명 (red, blue), HEX (#ff0000), RGB (rgb(255,0,0))</li>
+                    </ul>
+                    
+                    <p><strong>텍스트 관련 속성:</strong></p>
+                    <ul style="margin-left: 20px; margin-top: 10px;">
+                        <li><code>font-size</code>: 글자 크기 (px, em, rem 단위)</li>
+                        <li><code>font-weight</code>: 글자 굵기 (normal, bold, 100~900)</li>
+                        <li><code>font-family</code>: 글꼴 (예: "Arial", "맑은 고딕")</li>
+                        <li><code>text-align</code>: 텍스트 정렬 (left, center, right, justify)</li>
+                        <li><code>line-height</code>: 줄 간격 (1.5, 24px 등)</li>
+                    </ul>
+                    
+                    <p><strong>레이아웃 관련 속성:</strong></p>
+                    <ul style="margin-left: 20px; margin-top: 10px;">
+                        <li><code>display</code>: 요소 표시 방식 (block, inline, inline-block, flex, none)</li>
+                        <li><code>position</code>: 요소 위치 (static, relative, absolute, fixed)</li>
+                        <li><code>float</code>: 요소를 좌우로 배치 (left, right, none)</li>
+                        <li><code>clear</code>: float 해제 (left, right, both)</li>
+                    </ul>
+                    
+                    <h3>Flexbox 레이아웃 완벽 이해</h3>
+                    <p>Flexbox는 최신 CSS 레이아웃 방식으로, 요소를 유연하게 배치할 수 있습니다. 
+                    웹디자인개발기능사 시험에서 자주 사용되는 중요한 개념입니다.</p>
+                    
+                    <div class="code-example">
+                        <pre>.container {
+    display: flex;  /* Flexbox 레이아웃 활성화 */
+    justify-content: center;  /* 주축(가로) 정렬: start, center, end, space-between, space-around */
+    align-items: center;  /* 교차축(세로) 정렬: start, center, end, stretch */
+    flex-direction: row;  /* 주축 방향: row(가로), column(세로) */
+    flex-wrap: nowrap;  /* 줄바꿈: nowrap, wrap */
+}
+
+.item {
+    flex: 1;  /* 남은 공간을 균등하게 분배 */
+}</pre>
+                    </div>
+                    
+                    <p><strong>Flexbox 주요 속성:</strong></p>
+                    <ul style="margin-left: 20px; margin-top: 10px;">
+                        <li><code>justify-content</code>: 주축(메인 축) 방향 정렬을 제어합니다. 가로 정렬에 사용됩니다.</li>
+                        <li><code>align-items</code>: 교차축 방향 정렬을 제어합니다. 세로 정렬에 사용됩니다.</li>
+                        <li><code>flex-direction</code>: 주축의 방향을 설정합니다. 기본값은 row(가로)입니다.</li>
+                        <li><code>flex-wrap</code>: 줄바꿈 여부를 설정합니다. nowrap이 기본값입니다.</li>
+                    </ul>
+                    
+                    <h3>웹디자인개발기능사 시험에서의 CSS 작성 팁</h3>
+                    <ul style="margin-left: 20px; margin-top: 10px;">
+                        <li>선택자를 정확히 작성하여 원하는 요소만 선택합니다 (특히 자손/자식 선택자 구분)</li>
+                        <li>박스 모델을 이해하고 margin과 padding을 적절히 사용합니다</li>
+                        <li>Flexbox를 활용하여 레이아웃을 쉽고 정확하게 구성합니다</li>
+                        <li>색상 코드를 정확히 입력합니다 (대소문자, # 기호 등)</li>
+                        <li>속성 값 뒤에 세미콜론(;)을 빼먹지 않습니다</li>
+                        <li>중괄호의 열고 닫기가 정확한지 확인합니다</li>
+                    </ul>
+                `,
+                problem: "클래스명이 'box'인 요소의 너비를 300px, 높이를 200px, 배경색을 #ff0000으로 설정하는 CSS를 작성하세요.",
+                solution: ".box {\n    width: 300px;\n    height: 200px;\n    background-color: #ff0000;\n}",
+                test: (code) => {
+                    try {
+                        return code.includes(".box") &&
+                               code.includes("width: 300px") &&
+                               code.includes("height: 200px") &&
+                               code.includes("background-color: #ff0000");
+                    } catch (e) {
+                        return false;
+                    }
+                }
+            },
+            {
+                title: "자바스크립트/jQuery 기초",
+                content: `
+                    <h3>JavaScript란?</h3>
+                    <p>JavaScript는 웹페이지에 동적인 기능을 추가하는 프로그래밍 언어입니다. 
+                    HTML이 웹페이지의 구조를, CSS가 디자인을 담당한다면, JavaScript는 상호작용 기능을 담당합니다. 
+                    버튼 클릭, 메뉴 전환, 애니메이션, 데이터 처리 등 웹페이지의 모든 동적 기능은 JavaScript로 구현됩니다.</p>
+                    
+                    <p>웹디자인개발기능사 시험에서는 JavaScript와 jQuery를 활용하여 슬라이드, 드롭다운 메뉴, 
+                    탭 전환, 팝업 등의 기능을 구현해야 합니다.</p>
+                    
+                    <h3>JavaScript 기본 문법 완벽 이해</h3>
+                    <p><strong>변수 선언:</strong></p>
+                    <div class="code-example">
+                        <pre>// 변수 선언 방법
+var name = "홍길동";  // 전역 변수 (예전 방식)
+let age = 20;         // 지역 변수 (값 변경 가능)
+const PI = 3.14;      // 상수 (값 변경 불가)
+
+// 웹디자인개발기능사 시험에서는 주로 var나 let을 사용합니다
+var current = 0;  // 슬라이드 인덱스
+let isOpen = true;  // 메뉴 열림 상태</pre>
+                    </div>
+                    
+                    <p><strong>함수 정의:</strong></p>
+                    <div class="code-example">
+                        <pre>// 함수 정의 방법
+function greet() {
+    console.log("안녕하세요");
+}
+
+// 함수 호출
+greet();  // "안녕하세요" 출력</pre>
+                    </div>
+                    
+                    <p><strong>DOM 요소 선택 및 조작:</strong></p>
+                    <div class="code-example">
+                        <pre>// ID로 요소 선택
+var element = document.getElementById("btn");
+
+// 클래스로 요소 선택
+var elements = document.getElementsByClassName("menu");
+
+// 요소 속성 변경
+element.style.display = "none";  // 숨기기
+element.style.display = "block";  // 보이기
+element.innerHTML = "새로운 내용";  // 내용 변경</pre>
+                    </div>
+                    
+                    <p><strong>이벤트 처리:</strong></p>
+                    <div class="code-example">
+                        <pre>// 클릭 이벤트
+document.getElementById("btn").onclick = function() {
+    alert("클릭되었습니다");
+};
+
+// 마우스 오버 이벤트
+document.getElementById("menu").onmouseover = function() {
+    this.style.backgroundColor = "#ff0000";
+};</pre>
+                    </div>
+                    
+                    <h3>jQuery란? 왜 사용하는가?</h3>
+                    <p>jQuery는 JavaScript를 더 쉽게 사용할 수 있게 해주는 라이브러리입니다. 
+                    복잡한 JavaScript 코드를 간단하게 작성할 수 있으며, 다양한 브라우저 호환성 문제를 해결해줍니다. 
+                    웹디자인개발기능사 시험에서는 jQuery를 활용하여 기능을 구현하는 것이 일반적입니다.</p>
+                    
+                    <p><strong>jQuery의 주요 장점:</strong></p>
+                    <ul style="margin-left: 20px; margin-top: 10px;">
+                        <li>간결한 문법으로 코드 작성이 쉬워집니다</li>
+                        <li>애니메이션 효과(fadeIn, slideDown 등)를 쉽게 구현할 수 있습니다</li>
+                        <li>브라우저 호환성 문제를 자동으로 해결해줍니다</li>
+                        <li>DOM 조작과 이벤트 처리가 간단합니다</li>
+                    </ul>
+                    
+                    <h3>jQuery 기본 문법 완벽 가이드</h3>
+                    <p><strong>jQuery 시작하기:</strong></p>
+                    <p>jQuery를 사용하기 전에 HTML 파일에 jQuery 라이브러리를 연결해야 합니다:</p>
+                    <div class="code-example">
+                        <pre>&lt;script src="https://code.jquery.com/jquery-3.6.0.min.js"&gt;&lt;/script&gt;</pre>
+                    </div>
+                    
+                    <p><strong>jQuery 문서 준비:</strong></p>
+                    <p>jQuery 코드는 문서가 완전히 로드된 후 실행되어야 합니다:</p>
+                    <div class="code-example">
+                        <pre>// jQuery 기본 문법
+$(document).ready(function() {
+    // 여기에 jQuery 코드 작성
+    // HTML이 모두 로드된 후 실행됩니다
+});</pre>
+                    </div>
+                    
+                    <p><strong>요소 선택 (선택자):</strong></p>
+                    <p>jQuery는 CSS 선택자 문법을 사용하여 요소를 선택합니다:</p>
+                    <div class="code-example">
+                        <pre>// ID로 요소 선택
+$("#id명")  // 예: $("#btn"), $("#menu")
+
+// 클래스로 요소 선택
+$(".클래스명")  // 예: $(".box"), $(".menu-item")
+
+// 태그로 요소 선택
+$("태그명")  // 예: $("div"), $("p"), $("a")
+
+// 자식 선택자
+$(".parent > .child")  // 직접 자식만 선택
+
+// 자손 선택자
+$(".parent .child")  // 모든 자손 선택
+
+// 속성 선택자
+$("[href]")  // href 속성이 있는 요소</pre>
+                    </div>
+                    
+                    <p><strong>이벤트 처리:</strong></p>
+                    <p>jQuery로 이벤트를 처리하는 방법:</p>
+                    <div class="code-example">
+                        <pre>// 클릭 이벤트
+$("#btn").click(function() {
+    alert("클릭되었습니다");
+});
+
+// 마우스 오버/아웃 이벤트
+$("#menu").hover(
+    function() {
+        // 마우스 오버 시 실행
+        $(this).css("background-color", "#ff0000");
+    },
+    function() {
+        // 마우스 아웃 시 실행
+        $(this).css("background-color", "#ffffff");
+    }
+);
+
+// 이벤트 체이닝 (메서드를 연속으로 사용)
+$("#btn").click(function() {
+    $("#menu").slideDown().css("display", "block");
+});</pre>
+                    </div>
+                    
+                    <p><strong>요소 조작 (표시/숨김):</strong></p>
+                    <div class="code-example">
+                        <pre>// 즉시 표시/숨김
+$("#element").show();    // 보이기
+$("#element").hide();    // 숨기기
+
+// 애니메이션 효과
+$("#element").fadeIn();   // 페이드 인 (서서히 나타남)
+$("#element").fadeOut();  // 페이드 아웃 (서서히 사라짐)
+$("#element").slideDown(); // 슬라이드 다운 (위에서 아래로)
+$("#element").slideUp();   // 슬라이드 업 (아래에서 위로)
+$("#element").slideToggle(); // 슬라이드 토글
+
+// 시간 설정 (밀리초)
+$("#element").fadeIn(500);  // 0.5초 동안 페이드 인</pre>
+                    </div>
+                    
+                    <p><strong>CSS 속성 변경:</strong></p>
+                    <div class="code-example">
+                        <pre>// CSS 속성 변경
+$("#element").css("color", "red");
+$("#element").css({
+    "background-color": "#ff0000",
+    "font-size": "20px"
+});
+
+// 클래스 추가/제거
+$("#element").addClass("active");      // 클래스 추가
+$("#element").removeClass("active");   // 클래스 제거
+$("#element").toggleClass("active");   // 클래스 토글</pre>
+                    </div>
+                    
+                    <h3>웹디자인개발기능사 시험에서 자주 사용하는 jQuery 패턴</h3>
+                    <p><strong>슬라이드 배너 패턴:</strong></p>
+                    <div class="code-example">
+                        <pre>var current = 0;
+var slideCount = $('.slide-list li').length;
+
+setInterval(function() {
+    current = (current + 1) % slideCount;
+    $('.slide-list').css('transform', 'translateX(-' + (current * 33.333) + '%)');
+}, 3000);</pre>
+                    </div>
+                    
+                    <p><strong>드롭다운 메뉴 패턴:</strong></p>
+                    <div class="code-example">
+                        <pre>$('.gnb > ul > li').hover(
+    function() {
+        $(this).find('.sub-menu').stop().slideDown();
+    },
+    function() {
+        $(this).find('.sub-menu').stop().slideUp();
+    }
+);</pre>
+                    </div>
+                    
+                    <p><strong>탭 메뉴 패턴:</strong></p>
+                    <div class="code-example">
+                        <pre>$('.tab-list li').click(function() {
+    var index = $(this).index();
+    $('.tab-list li').removeClass('active');
+    $(this).addClass('active');
+    $('.tab-item').removeClass('active');
+    $('.tab-item').eq(index).addClass('active');
+});</pre>
+                    </div>
+                    
+                    <h3>시험에서 주의해야 할 JavaScript/jQuery 오류</h3>
+                    <ul style="margin-left: 20px; margin-top: 10px;">
+                        <li><strong>jQuery 라이브러리 연결 누락:</strong> HTML에 jQuery 라이브러리를 연결하지 않으면 jQuery 함수가 작동하지 않습니다</li>
+                        <li><strong>$(document).ready() 누락:</strong> DOM이 로드되기 전에 코드가 실행되면 요소를 찾지 못합니다</li>
+                        <li><strong>선택자 오류:</strong> ID는 #, 클래스는 .을 빼먹으면 선택되지 않습니다</li>
+                        <li><strong>세미콜론 누락:</strong> 문장 끝에 세미콜론(;)을 빼먹으면 오류가 발생할 수 있습니다</li>
+                        <li><strong>중괄호/소괄호 불일치:</strong> 열고 닫는 괄호가 일치하지 않으면 문법 오류가 발생합니다</li>
+                    </ul>
+                `,
+                problem: "jQuery를 사용하여 ID가 'btn'인 버튼을 클릭하면 alert로 '안녕하세요'를 출력하는 코드를 작성하세요.",
+                solution: "$(document).ready(function() {\n    $('#btn').click(function() {\n        alert('안녕하세요');\n    });\n});",
+                test: (code) => {
+                    try {
+                        return code.includes("$('#btn')") &&
+                               code.includes("click") &&
+                               code.includes("alert('안녕하세요')");
+                    } catch (e) {
+                        return false;
+                    }
+                }
+            },
+            {
+                title: "작업 환경 설정",
+                content: `
+                    <h3>작업 환경 설정의 중요성</h3>
+                    <p>웹디자인개발기능사 시험에서 올바른 작업 환경을 설정하는 것은 성공의 첫 단계입니다. 
+                    올바른 파일 구조, 정확한 파일 연결, 적절한 에디터 사용은 작업 효율을 높이고 실수를 줄입니다.</p>
+                    
+                    <p>시험 환경에서는 제한된 시간 내에 정확하게 작업해야 하므로, 
+                    미리 파일 구조와 연결 방법을 숙지하고 있어야 합니다.</p>
+                    
+                    <h3>필요한 프로그램 완벽 가이드</h3>
+                    <p><strong>코드 에디터 (필수):</strong></p>
+                    <ul style="margin-left: 20px; margin-top: 10px;">
+                        <li><strong>Visual Studio Code (VS Code):</strong> 가장 추천하는 에디터입니다. 
+                        무료이며, HTML/CSS/JavaScript 문법 강조, 자동 완성, 파일 탐색기 등 다양한 기능을 제공합니다. 
+                        웹 개발에 최적화되어 있습니다</li>
+                        <li><strong>Sublime Text:</strong> 가볍고 빠른 에디터입니다. 여러 파일을 탭으로 열어서 작업할 수 있습니다</li>
+                        <li><strong>Notepad++:</strong> 간단한 텍스트 에디터입니다. 기본적인 편집 기능만 필요할 때 사용합니다</li>
+                        <li><strong>시험 환경:</strong> 시험장에서는 제공되는 에디터를 사용해야 하므로, 
+                        다양한 에디터에 익숙해지는 것이 좋습니다</li>
+                    </ul>
+                    
+                    <p><strong>웹 브라우저 (필수):</strong></p>
+                    <ul style="margin-left: 20px; margin-top: 10px;">
+                        <li><strong>Chrome:</strong> 개발자 도구(F12)가 우수하여 가장 많이 사용됩니다. 
+                        시험에서도 Chrome을 권장합니다</li>
+                        <li><strong>Firefox:</strong> 개발자 도구가 강력하며, 웹 표준을 잘 준수합니다</li>
+                        <li><strong>Edge:</strong> Windows 10 이상에서 기본 제공되며, Chrome과 유사한 개발자 도구를 제공합니다</li>
+                        <li><strong>여러 브라우저 테스트:</strong> 시험 전에 여러 브라우저에서 테스트하여 호환성을 확인합니다</li>
+                    </ul>
+                    
+                    <p><strong>이미지 편집 프로그램 (선택):</strong></p>
+                    <ul style="margin-left: 20px; margin-top: 10px;">
+                        <li><strong>Photoshop:</strong> 전문적인 이미지 편집 프로그램입니다. 
+                        이미지 크기 조정, 포맷 변환 등에 사용합니다</li>
+                        <li><strong>GIMP:</strong> 무료 이미지 편집 프로그램입니다. Photoshop의 대안으로 사용할 수 있습니다</li>
+                        <li><strong>시험 환경:</strong> 시험에서는 보통 이미지가 제공되므로 편집이 필요 없을 수 있습니다</li>
+                    </ul>
+                    
+                    <h3>파일 구조 완벽 이해</h3>
+                    <p>웹디자인개발기능사 시험에서는 다음과 같은 표준 파일 구조를 사용합니다:</p>
+                    <div class="code-example">
+                        <pre>프로젝트 폴더/
+├── index.html       (메인 HTML 파일)
+├── css/
+│   └── style.css    (CSS 스타일시트)
+├── js/
+│   └── script.js    (JavaScript 파일, 선택 사항)
+└── images/
+    ├── logo.jpg     (로고 이미지)
+    ├── banner1.jpg  (배너 이미지들)
+    └── ...          (기타 이미지 파일들)</pre>
+                    </div>
+                    
+                    <p><strong>파일 구조 설명:</strong></p>
+                    <ul style="margin-left: 20px; margin-top: 10px;">
+                        <li><strong>index.html:</strong> 웹페이지의 메인 HTML 파일입니다. 프로젝트 루트에 위치합니다</li>
+                        <li><strong>css/ 폴더:</strong> 모든 CSS 파일을 모아두는 폴더입니다. 
+                        파일을 분류하여 관리하기 쉽게 만듭니다</li>
+                        <li><strong>css/style.css:</strong> 메인 CSS 파일입니다. 모든 스타일을 여기에 작성하거나, 
+                        여러 파일로 나누어 작성할 수도 있습니다</li>
+                        <li><strong>js/ 폴더:</strong> JavaScript 파일을 모아두는 폴더입니다 (선택 사항)</li>
+                        <li><strong>js/script.js:</strong> JavaScript 파일입니다. 
+                        HTML 파일 내에 직접 작성할 수도 있습니다</li>
+                        <li><strong>images/ 폴더:</strong> 모든 이미지 파일을 모아두는 폴더입니다</li>
+                        <li><strong>폴더 구조의 장점:</strong> 파일을 체계적으로 관리할 수 있고, 경로가 명확해집니다</li>
+                    </ul>
+                    
+                    <p><strong>왜 이렇게 구조를 만들어야 하나요?</strong></p>
+                    <ul style="margin-left: 20px; margin-top: 10px;">
+                        <li><strong>체계적 관리:</strong> 파일을 용도별로 분류하여 관리가 쉽습니다</li>
+                        <li><strong>경로 명확화:</strong> 파일 경로가 명확하여 오류를 줄입니다</li>
+                        <li><strong>시험 요구사항:</strong> 시험에서 제시하는 폴더 구조를 따라야 합니다</li>
+                        <li><strong>유지보수 용이:</strong> 파일을 찾기 쉬워 작업 효율이 높아집니다</li>
+                    </ul>
+                    
+                    <h3>HTML 파일에 외부 파일 연결 완벽 가이드</h3>
+                    <p><strong>CSS 파일 연결:</strong></p>
+                    <p>CSS 파일은 HTML의 <code>&lt;head&gt;</code> 태그 안에 연결합니다:</p>
+                    <div class="code-example">
+                        <pre>&lt;head&gt;
+    &lt;meta charset="UTF-8"&gt;
+    &lt;title&gt;제목&lt;/title&gt;
+    &lt;link rel="stylesheet" href="css/style.css"&gt;
+&lt;/head&gt;</pre>
+                    </div>
+                    
+                    <p><strong>각 속성 설명:</strong></p>
+                    <ul style="margin-left: 20px; margin-top: 10px;">
+                        <li><strong>link 태그:</strong> 외부 리소스를 연결하는 태그입니다</li>
+                        <li><strong>rel="stylesheet":</strong> 연결할 파일이 CSS 스타일시트임을 명시합니다</li>
+                        <li><strong>href="css/style.css":</strong> CSS 파일의 경로를 지정합니다. 
+                        <code>css/</code>는 프로젝트 루트의 css 폴더를 의미합니다 (상대 경로)</li>
+                        <li><strong>경로 주의:</strong> 파일 구조에 맞게 정확한 경로를 작성해야 합니다. 
+                        대소문자도 구분되므로 정확히 입력합니다</li>
+                    </ul>
+                    
+                    <p><strong>jQuery 라이브러리 연결:</strong></p>
+                    <p>jQuery는 CDN(Content Delivery Network)을 통해 연결합니다. 
+                    <code>&lt;head&gt;</code> 또는 <code>&lt;body&gt;</code> 끝에 연결할 수 있지만, 
+                    보통 <code>&lt;/body&gt;</code> 앞에 연결합니다:</p>
+                    <div class="code-example">
+                        <pre>&lt;body&gt;
+    &lt;!-- HTML 내용 --&gt;
+    
+    &lt;!-- jQuery 라이브러리 연결 --&gt;
+    &lt;script src="https://code.jquery.com/jquery-3.6.0.min.js"&gt;&lt;/script&gt;
+    
+    &lt;!-- 사용자 JavaScript 파일 (jQuery 이후에 연결) --&gt;
+    &lt;script src="js/script.js"&gt;&lt;/script&gt;
+&lt;/body&gt;</pre>
+                    </div>
+                    
+                    <p><strong>연결 순서의 중요성:</strong></p>
+                    <ul style="margin-left: 20px; margin-top: 10px;">
+                        <li><strong>jQuery 먼저:</strong> jQuery를 사용하는 코드가 있으면 반드시 jQuery 라이브러리를 먼저 연결해야 합니다</li>
+                        <li><strong>그 다음 사용자 코드:</strong> jQuery 라이브러리 연결 후에 사용자가 작성한 JavaScript 파일을 연결합니다</li>
+                        <li><strong>위치:</strong> <code>&lt;/body&gt;</code> 태그 바로 앞에 배치하면 페이지 로딩 속도를 향상시킬 수 있습니다</li>
+                        <li><strong>CDN 사용:</strong> 인터넷 연결이 필요한 CDN 방식과, 파일을 다운로드하여 사용하는 방식이 있습니다</li>
+                    </ul>
+                    
+                    <p><strong>JavaScript 파일 연결:</strong></p>
+                    <div class="code-example">
+                        <pre>&lt;script src="js/script.js"&gt;&lt;/script&gt;</pre>
+                    </div>
+                    <ul style="margin-left: 20px; margin-top: 10px;">
+                        <li><strong>script 태그:</strong> JavaScript 파일을 연결하는 태그입니다</li>
+                        <li><strong>src 속성:</strong> JavaScript 파일의 경로를 지정합니다</li>
+                        <li><strong>주의:</strong> script 태그 사이에 내용을 작성하면 안 됩니다. 
+                        외부 파일을 연결할 때는 src 속성만 사용합니다</li>
+                    </ul>
+                    
+                    <h3>파일 경로 이해하기 (매우 중요!)</h3>
+                    <p><strong>상대 경로:</strong></p>
+                    <ul style="margin-left: 20px; margin-top: 10px;">
+                        <li><code>css/style.css</code>: 현재 폴더의 css 폴더 안의 style.css (프로젝트 루트 기준)</li>
+                        <li><code>./css/style.css</code>: 위와 동일 (./는 현재 폴더를 의미)</li>
+                        <li><code>../css/style.css</code>: 상위 폴더의 css 폴더 안의 style.css</li>
+                        <li><code>images/logo.jpg</code>: 현재 폴더의 images 폴더 안의 logo.jpg</li>
+                    </ul>
+                    
+                    <p><strong>절대 경로:</strong></p>
+                    <ul style="margin-left: 20px; margin-top: 10px;">
+                        <li><code>https://code.jquery.com/jquery-3.6.0.min.js</code>: 인터넷 URL (CDN)</li>
+                        <li><code>/css/style.css</code>: 웹사이트 루트의 css/style.css (서버 기준)</li>
+                    </ul>
+                    
+                    <p><strong>시험에서 사용하는 경로:</strong></p>
+                    <p>웹디자인개발기능사 시험에서는 주로 <strong>상대 경로</strong>를 사용합니다. 
+                    모든 파일이 같은 프로젝트 폴더 안에 있으므로, 상대 경로로 연결하는 것이 일반적입니다.</p>
+                    
+                    <h3>완성된 HTML 기본 구조 (예시)</h3>
+                    <div class="code-example">
+                        <pre>&lt;!DOCTYPE html&gt;
+&lt;html lang="ko"&gt;
+&lt;head&gt;
+    &lt;meta charset="UTF-8"&gt;
+    &lt;meta name="viewport" content="width=device-width, initial-scale=1.0"&gt;
+    &lt;title&gt;웹사이트 제목&lt;/title&gt;
+    &lt;link rel="stylesheet" href="css/style.css"&gt;
+&lt;/head&gt;
+&lt;body&gt;
+    &lt;!-- HTML 내용 --&gt;
+    
+    &lt;script src="https://code.jquery.com/jquery-3.6.0.min.js"&gt;&lt;/script&gt;
+    &lt;script src="js/script.js"&gt;&lt;/script&gt;
+&lt;/body&gt;
+&lt;/html&gt;</pre>
+                    </div>
+                    
+                    <h3>웹디자인개발기능사 시험에서의 작업 환경 설정 팁</h3>
+                    <ul style="margin-left: 20px; margin-top: 10px;">
+                        <li><strong>폴더 구조 미리 숙지:</strong> 시험 전에 표준 폴더 구조를 암기합니다</li>
+                        <li><strong>파일 경로 정확히 입력:</strong> 대소문자, 슬래시(/) 방향, 폴더명을 정확히 입력합니다</li>
+                        <li><strong>파일 연결 순서:</strong> CSS는 head에, JavaScript는 body 끝에, jQuery는 사용자 코드보다 먼저</li>
+                        <li><strong>브라우저 개발자 도구 활용:</strong> F12로 파일이 제대로 로드되었는지 확인합니다</li>
+                        <li><strong>문법 검사:</strong> 에디터의 문법 강조 기능으로 오타를 미리 발견합니다</li>
+                        <li><strong>파일 저장 습관:</strong> 코드 수정 후 항상 저장(Ctrl+S)하는 습관을 기릅니다</li>
+                    </ul>
+                    
+                    <h3>시험에서 자주 하는 실수</h3>
+                    <ul style="margin-left: 20px; margin-top: 10px;">
+                        <li><strong>경로 오류:</strong> css/style.css를 css\style.css로 작성하거나, 대소문자를 잘못 입력</li>
+                        <li><strong>파일 연결 순서 오류:</strong> jQuery 라이브러리를 사용자 코드보다 나중에 연결</li>
+                        <li><strong>태그 닫기 누락:</strong> link나 script 태그를 제대로 닫지 않음</li>
+                        <li><strong>폴더 구조 오류:</strong> css 폴더를 만들지 않고 CSS 파일만 생성</li>
+                        <li><strong>파일명 오류:</strong> style.css를 style.CSS로 저장하거나, 대소문자 불일치</li>
+                    </ul>
+                `,
+                problem: "HTML 파일에 CSS 파일(css/style.css)과 jQuery 라이브러리를 연결하는 코드를 작성하세요.",
+                solution: "<link rel=\"stylesheet\" href=\"css/style.css\">\n&lt;script src=\"https://code.jquery.com/jquery-3.6.0.min.js\"&gt;&lt;/script&gt;",
+                test: (code) => {
+                    try {
+                        return code.includes("css/style.css") &&
+                               code.includes("jquery");
+                    } catch (e) {
+                        return false;
+                    }
+                }
+            },
+            {
+                title: "레이아웃 구조 이해",
+                content: `
+                    <h3>웹페이지 레이아웃이란?</h3>
+                    <p>웹페이지 레이아웃은 웹페이지의 전체적인 구조와 각 영역의 배치를 의미합니다. 
+                    사용자가 정보를 쉽게 찾을 수 있도록 논리적이고 일관된 구조를 만드는 것이 중요합니다. 
+                    웹디자인개발기능사 시험에서는 올바른 레이아웃 구조를 만드는 것이 기본이며, 
+                    모든 기능 구현의 기초가 됩니다.</p>
+                    
+                    <p>좋은 레이아웃은 <strong>명확한 구조, 일관된 디자인, 사용자 경험 향상</strong>을 제공합니다. 
+                    시맨틱 HTML5 태그를 사용하여 의미 있는 구조를 만들고, CSS의 Flexbox를 활용하여 
+                    유연하고 반응형인 레이아웃을 구성합니다.</p>
+                    
+                    <h3>기본 레이아웃 구조 완벽 이해</h3>
+                    <p>일반적인 웹페이지는 다음과 같은 구조를 가집니다:</p>
+                    
+                    <h4>와이어프레임 구조 시각화</h4>
+                    <div style="background: #f5f5f5; padding: 30px; border-radius: 10px; margin: 20px 0; border: 2px solid #ddd;">
+                        <div style="max-width: 800px; margin: 0 auto;">
+                            <!-- Wrap 컨테이너 -->
+                            <div style="border: 2px dashed #999; padding: 10px; background: #fff;">
+                                <div style="text-align: center; color: #666; font-size: 12px; margin-bottom: 10px; font-weight: bold;">.wrap (1200px, 가운데 정렬)</div>
+                                
+                                <!-- Header -->
+                                <div style="background: #667eea; color: white; padding: 20px; text-align: center; margin-bottom: 10px; border-radius: 5px; font-weight: bold;">
+                                    &lt;header&gt; 헤더 (로고, 네비게이션)
+                                </div>
+                                
+                                <!-- Nav -->
+                                <div style="background: #764ba2; color: white; padding: 15px; text-align: center; margin-bottom: 10px; border-radius: 5px; font-weight: bold;">
+                                    &lt;nav&gt; 네비게이션 메뉴
+                                </div>
+                                
+                                <!-- Main -->
+                                <div style="display: flex; gap: 10px; margin-bottom: 10px;">
+                                    <!-- Section -->
+                                    <div style="flex: 2; background: #4CAF50; color: white; padding: 40px 20px; text-align: center; border-radius: 5px; font-weight: bold;">
+                                        &lt;section&gt;<br>본문 내용<br>(flex: 2)
+                                    </div>
+                                    <!-- Aside -->
+                                    <div style="flex: 1; background: #FF9800; color: white; padding: 40px 20px; text-align: center; border-radius: 5px; font-weight: bold;">
+                                        &lt;aside&gt;<br>사이드바<br>(flex: 1)
+                                    </div>
+                                </div>
+                                
+                                <!-- Footer -->
+                                <div style="background: #333; color: white; padding: 20px; text-align: center; border-radius: 5px; font-weight: bold;">
+                                    &lt;footer&gt; 푸터 (저작권, 연락처)
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="code-example">
+                        <pre>&lt;div class="wrap"&gt;
+    &lt;header&gt;헤더&lt;/header&gt;
+    &lt;nav&gt;네비게이션&lt;/nav&gt;
+    &lt;main&gt;
+        &lt;section&gt;섹션&lt;/section&gt;
+        &lt;aside&gt;사이드바&lt;/aside&gt;
+    &lt;/main&gt;
+    &lt;footer&gt;푸터&lt;/footer&gt;
+&lt;/div&gt;</pre>
+                    </div>
+                    
+                    <p><strong>각 영역의 역할:</strong></p>
+                    <ul style="margin-left: 20px; margin-top: 10px;">
+                        <li><code>&lt;header&gt;</code>: 페이지 상단 영역으로, 로고와 네비게이션 메뉴가 위치합니다</li>
+                        <li><code>&lt;nav&gt;</code>: 네비게이션 메뉴 영역입니다 (헤더 안에 포함될 수도 있습니다)</li>
+                        <li><code>&lt;main&gt;</code>: 페이지의 주요 내용이 들어가는 영역입니다. 한 페이지에 하나만 사용합니다</li>
+                        <li><code>&lt;section&gt;</code>: 주제별로 구분되는 내용 영역입니다. main 안에 여러 개가 있을 수 있습니다</li>
+                        <li><code>&lt;aside&gt;</code>: 사이드바 영역으로, 보조 정보나 광고가 위치합니다</li>
+                        <li><code>&lt;footer&gt;</code>: 페이지 하단 영역으로, 저작권 정보나 연락처가 위치합니다</li>
+                        <li><code>class="wrap"</code>: 전체 레이아웃을 감싸는 컨테이너로, 너비 제한과 가운데 정렬을 담당합니다</li>
+                    </ul>
+                    
+                    <h3>CSS로 레이아웃 구성 완벽 가이드</h3>
+                    <p><strong>전체 컨테이너 (.wrap):</strong></p>
+                    <div class="code-example">
+                        <pre>.wrap {
+    width: 1200px;  /* 레이아웃 너비 제한 */
+    margin: 0 auto;  /* 가운데 정렬 (가장 중요!) */
+    /* 또는 max-width 사용하여 반응형 */
+    max-width: 1200px;
+    margin: 0 auto;
+}</pre>
+                    </div>
+                    
+                    <p><strong>width vs max-width:</strong></p>
+                    <ul style="margin-left: 20px; margin-top: 10px;">
+                        <li><strong>width: 1200px:</strong> 항상 1200px 너비로 고정됩니다. 화면이 작아도 1200px 유지</li>
+                        <li><strong>max-width: 1200px:</strong> 최대 1200px이지만, 화면이 작으면 자동으로 줄어듭니다 (반응형)</li>
+                        <li><strong>margin: 0 auto:</strong> 가운데 정렬의 핵심입니다. 상하 0, 좌우 자동으로 가운데 배치</li>
+                    </ul>
+                    
+                    <p><strong>각 영역의 스타일:</strong></p>
+                    <div class="code-example">
+                        <pre>header {
+    height: 100px;  /* 헤더 높이 */
+    background: #333;  /* 배경색 */
+    /* 또는 header-inner 구조 사용 (권장) */
+}
+
+nav {
+    height: 50px;  /* 네비게이션 높이 */
+    background: #666;
+}</pre>
+                    </div>
+                    
+                    <p><strong>본문 영역 (Flexbox 활용):</strong></p>
+                    <div class="code-example">
+                        <pre>main {
+    display: flex;  /* section과 aside를 가로로 배치 */
+    min-height: 600px;  /* 최소 높이 */
+}
+
+section {
+    flex: 2;  /* 2배 비율로 공간 차지 */
+    background: #fff;
+    padding: 20px;
+}
+
+aside {
+    flex: 1;  /* 1배 비율로 공간 차지 (section의 절반) */
+    background: #f5f5f5;
+    padding: 20px;
+}</pre>
+                    </div>
+                    
+                    <p><strong>Flexbox 비율 이해:</strong></p>
+                    <ul style="margin-left: 20px; margin-top: 10px;">
+                        <li><strong>flex: 2:</strong> section이 2배 비율로 공간을 차지합니다</li>
+                        <li><strong>flex: 1:</strong> aside가 1배 비율로 공간을 차지합니다</li>
+                        <li><strong>비율:</strong> 전체를 3등분해서 section은 2/3, aside는 1/3을 차지합니다</li>
+                        <li><strong>동적 크기:</strong> 화면 크기가 변해도 비율을 유지합니다</li>
+                    </ul>
+                    
+                    <p><strong>푸터 영역:</strong></p>
+                    <div class="code-example">
+                        <pre>footer {
+    height: 100px;  /* 푸터 높이 */
+    background: #333;
+    /* 또는 footer-inner 구조 사용 (권장) */
+}</pre>
+                    </div>
+                    
+                    <h3>왜 이 구조를 사용하는가?</h3>
+                    <p><strong>시맨틱 태그의 장점:</strong></p>
+                    <ul style="margin-left: 20px; margin-top: 10px;">
+                        <li><strong>의미 명확화:</strong> 각 영역의 역할이 태그 이름으로 명확하게 전달됩니다</li>
+                        <li><strong>검색 엔진 최적화:</strong> 검색 엔진이 웹페이지 구조를 더 잘 이해할 수 있습니다</li>
+                        <li><strong>접근성 향상:</strong> 스크린 리더가 각 영역을 구분하여 읽을 수 있습니다</li>
+                        <li><strong>코드 가독성:</strong> 개발자가 코드를 이해하기 쉬워집니다</li>
+                    </ul>
+                    
+                    <p><strong>Flexbox 레이아웃의 장점:</strong></p>
+                    <ul style="margin-left: 20px; margin-top: 10px;">
+                        <li><strong>간단한 가로 배치:</strong> float나 inline-block 없이도 쉽게 가로 배치가 가능합니다</li>
+                        <li><strong>유연한 비율:</strong> flex 비율로 공간을 동적으로 분배할 수 있습니다</li>
+                        <li><strong>정렬 용이:</strong> justify-content와 align-items로 쉽게 정렬할 수 있습니다</li>
+                        <li><strong>반응형:</strong> 화면 크기에 따라 자동으로 조정됩니다</li>
+                    </ul>
+                    
+                    <h3>실전 레이아웃 예제 (A유형 기준)</h3>
+                    <p>웹디자인개발기능사 A유형에서는 다음과 같은 레이아웃을 만듭니다:</p>
+                    <div class="code-example">
+                        <pre>&lt;div class="wrap"&gt;
+    &lt;header&gt;
+        &lt;div class="header-inner"&gt;
+            &lt;h1 class="logo"&gt;로고&lt;/h1&gt;
+            &lt;nav class="gnb"&gt;&lt;!-- 메뉴 --&gt;&lt;/nav&gt;
+        &lt;/div&gt;
+    &lt;/header&gt;
+    
+    &lt;main&gt;
+        &lt;section class="content"&gt;
+            &lt;!-- 본문 내용 --&gt;
+        &lt;/section&gt;
+    &lt;/main&gt;
+    
+    &lt;footer&gt;
+        &lt;div class="footer-inner"&gt;
+            &lt;p&gt;Copyright &copy; 2024&lt;/p&gt;
+        &lt;/div&gt;
+    &lt;/footer&gt;
+&lt;/div&gt;</pre>
+                    </div>
+                    
+                    <p><strong>레이아웃 CSS (완성본):</strong></p>
+                    <div class="code-example">
+                        <pre>.wrap {
+    width: 1200px;
+    margin: 0 auto;
+}
+
+header, footer {
+    width: 100%;
+}
+
+.header-inner, .footer-inner {
+    width: 1200px;
+    margin: 0 auto;
+}
+
+main {
+    min-height: 500px;
+    padding: 40px 0;
+}</pre>
+                    </div>
+                    
+                    <h3>웹디자인개발기능사 시험에서의 레이아웃 작성 팁</h3>
+                    <ul style="margin-left: 20px; margin-top: 10px;">
+                        <li><strong>wrap 컨테이너 필수:</strong> 전체 레이아웃을 감싸는 컨테이너를 만들어 구조를 명확히 합니다</li>
+                        <li><strong>margin: 0 auto 활용:</strong> 가운데 정렬의 핵심입니다. width와 함께 사용해야 합니다</li>
+                        <li><strong>시맨틱 태그 사용:</strong> header, nav, main, section, aside, footer를 적절히 사용합니다</li>
+                        <li><strong>Flexbox 활용:</strong> 가로 배치가 필요할 때 display: flex를 적극 활용합니다</li>
+                        <li><strong>일관된 너비:</strong> wrap, header-inner, footer-inner의 너비를 동일하게 설정합니다 (1200px)</li>
+                        <li><strong>순서 유지:</strong> header → nav → main → footer 순서로 배치합니다</li>
+                    </ul>
+                    
+                    <h3>시험에서 자주 하는 실수</h3>
+                    <ul style="margin-left: 20px; margin-top: 10px;">
+                        <li><strong>margin: 0 auto 누락:</strong> 이게 없으면 레이아웃이 왼쪽으로 치우칩니다</li>
+                        <li><strong>width 누락:</strong> width가 없으면 margin: 0 auto가 작동하지 않습니다</li>
+                        <li><strong>wrap 컨테이너 누락:</strong> 전체를 감싸는 컨테이너가 없으면 구조가 불명확해집니다</li>
+                        <li><strong>시맨틱 태그 오용:</strong> 역할에 맞지 않는 태그를 사용하면 의미가 전달되지 않습니다</li>
+                        <li><strong>Flexbox 비율 오류:</strong> flex 값이 잘못되면 레이아웃이 원하는 대로 배치되지 않습니다</li>
+                    </ul>
+                `,
+                problem: "너비 1200px, 가운데 정렬되는 wrap 클래스의 CSS를 작성하세요.",
+                solution: ".wrap {\n    width: 1200px;\n    margin: 0 auto;\n}",
+                test: (code) => {
+                    try {
+                        return code.includes(".wrap") &&
+                               code.includes("width: 1200px") &&
+                               code.includes("margin: 0 auto");
+                    } catch (e) {
+                        return false;
+                    }
+                }
+            },
+            {
+                title: "헤더/푸터 영역 만들기",
+                content: `
+                    <h3>헤더와 푸터란?</h3>
+                    <p>헤더(Header)는 웹페이지의 상단 영역으로, 로고, 네비게이션 메뉴, 검색창 등이 위치합니다. 
+                    사용자가 페이지의 정체성을 인식하고 다른 페이지로 이동할 수 있는 중요한 영역입니다. 
+                    푸터(Footer)는 웹페이지의 하단 영역으로, 저작권 정보, 연락처, 사이트맵 등이 위치합니다.</p>
+                    
+                    <p>헤더와 푸터는 웹페이지의 모든 페이지에서 공통으로 사용되므로, 
+                    일관성 있는 디자인과 구조를 만드는 것이 중요합니다. 
+                    웹디자인개발기능사 A유형에서 필수적으로 구현해야 하는 요소입니다.</p>
+                    
+                    <h3>헤더 영역 구조 완벽 이해</h3>
+                    <p>헤더의 기본 구조는 다음과 같습니다:</p>
+                    
+                    <h4>헤더 구조 시각화</h4>
+                    <div style="background: #f5f5f5; padding: 30px; border-radius: 10px; margin: 20px 0; border: 2px solid #ddd;">
+                        <div style="max-width: 800px; margin: 0 auto;">
+                            <div style="background: #fff; border: 2px solid #667eea; padding: 15px; border-radius: 5px;">
+                                <div style="text-align: center; color: #666; font-size: 12px; margin-bottom: 10px; font-weight: bold;">&lt;header&gt;</div>
+                                
+                                <div style="background: #f0f0f0; border: 2px dashed #999; padding: 10px; border-radius: 5px;">
+                                    <div style="text-align: center; color: #666; font-size: 11px; margin-bottom: 10px;">.header-inner (1200px, 가운데 정렬)</div>
+                                    
+                                    <div style="display: flex; justify-content: space-between; align-items: center; gap: 20px;">
+                                        <!-- 로고 -->
+                                        <div style="background: #667eea; color: white; padding: 15px 30px; border-radius: 5px; font-weight: bold; flex-shrink: 0;">
+                                            &lt;h1 class="logo"&gt;<br>로고
+                                        </div>
+                                        
+                                        <!-- 네비게이션 -->
+                                        <div style="background: #764ba2; color: white; padding: 10px 20px; border-radius: 5px; flex-grow: 1; text-align: center;">
+                                            <div style="font-size: 11px; margin-bottom: 5px;">&lt;nav class="gnb"&gt;</div>
+                                            <div style="display: flex; gap: 10px; justify-content: center;">
+                                                <span style="background: rgba(255,255,255,0.3); padding: 5px 10px; border-radius: 3px; font-size: 12px;">홈</span>
+                                                <span style="background: rgba(255,255,255,0.3); padding: 5px 10px; border-radius: 3px; font-size: 12px;">소개</span>
+                                                <span style="background: rgba(255,255,255,0.3); padding: 5px 10px; border-radius: 3px; font-size: 12px;">서비스</span>
+                                                <span style="background: rgba(255,255,255,0.3); padding: 5px 10px; border-radius: 3px; font-size: 12px;">연락처</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="code-example">
+                        <pre>&lt;header&gt;
+    &lt;div class="header-inner"&gt;
+        &lt;h1 class="logo"&gt;로고&lt;/h1&gt;
+        &lt;nav class="gnb"&gt;
+            &lt;ul&gt;
+                &lt;li&gt;&lt;a href="#"&gt;홈&lt;/a&gt;&lt;/li&gt;
+                &lt;li&gt;&lt;a href="#"&gt;소개&lt;/a&gt;&lt;/li&gt;
+                &lt;li&gt;&lt;a href="#"&gt;서비스&lt;/a&gt;&lt;/li&gt;
+                &lt;li&gt;&lt;a href="#"&gt;연락처&lt;/a&gt;&lt;/li&gt;
+            &lt;/ul&gt;
+        &lt;/nav&gt;
+    &lt;/div&gt;
+&lt;/header&gt;</pre>
+                    </div>
+                    
+                    <p><strong>구조 설명:</strong></p>
+                    <ul style="margin-left: 20px; margin-top: 10px;">
+                        <li><code>&lt;header&gt;</code>: 시맨틱 태그로, 헤더 영역임을 명확히 표시합니다</li>
+                        <li><code>class="header-inner"</code>: 헤더의 내부 컨테이너로, 너비 제한과 가운데 정렬을 위한 래퍼입니다</li>
+                        <li><code>class="logo"</code>: 웹사이트의 로고나 제목이 들어가는 영역입니다</li>
+                        <li><code>&lt;nav class="gnb"&gt;</code>: 네비게이션 메뉴 영역입니다 (이전 강의 참고)</li>
+                        <li><strong>두 단계 구조:</strong> header와 header-inner를 분리하여 전체 너비(header)와 내용 너비(header-inner)를 따로 제어합니다</li>
+                    </ul>
+                    
+                    <h3>헤더 CSS 스타일 완벽 가이드</h3>
+                    <p><strong>외부 헤더 컨테이너:</strong></p>
+                    <div class="code-example">
+                        <pre>header {
+    background: #fff;  /* 배경색 */
+    border-bottom: 1px solid #ddd;  /* 하단 경계선 (선택 사항) */
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);  /* 그림자 효과 (선택 사항) */
+}</pre>
+                    </div>
+                    
+                    <p><strong>내부 헤더 컨테이너 (핵심!):</strong></p>
+                    <div class="code-example">
+                        <pre>.header-inner {
+    width: 1200px;  /* 내용 너비 제한 */
+    margin: 0 auto;  /* 가운데 정렬 (가장 중요!) */
+    display: flex;  /* 로고와 메뉴를 가로로 배치 */
+    justify-content: space-between;  /* 로고는 왼쪽, 메뉴는 오른쪽 */
+    align-items: center;  /* 세로 중앙 정렬 */
+    height: 80px;  /* 헤더 높이 */
+}</pre>
+                    </div>
+                    
+                    <p><strong>각 속성 상세 설명:</strong></p>
+                    <ul style="margin-left: 20px; margin-top: 10px;">
+                        <li><strong>width: 1200px:</strong> 헤더 내용의 너비를 제한합니다. 
+                        화면이 커도 1200px 너비로 고정되어 가독성을 높입니다</li>
+                        <li><strong>margin: 0 auto:</strong> 상하 여백은 0, 좌우 여백은 자동(auto)으로 설정하여 가운데 정렬합니다. 
+                        이게 없으면 헤더가 왼쪽으로 치우칩니다. 헤더 레이아웃에서 가장 중요한 속성입니다!</li>
+                        <li><strong>display: flex:</strong> 로고와 네비게이션 메뉴를 가로로 배치합니다</li>
+                        <li><strong>justify-content: space-between:</strong> 주축(가로) 방향으로 양쪽 끝에 배치합니다. 
+                        로고는 왼쪽, 메뉴는 오른쪽에 자동으로 배치됩니다</li>
+                        <li><strong>align-items: center:</strong> 교차축(세로) 방향으로 중앙 정렬합니다. 
+                        로고와 메뉴가 수직으로 중앙에 정렬됩니다</li>
+                        <li><strong>height: 80px:</strong> 헤더의 높이를 지정합니다. 로고와 메뉴가 이 높이 안에서 정렬됩니다</li>
+                    </ul>
+                    
+                    <p><strong>로고 스타일:</strong></p>
+                    <div class="code-example">
+                        <pre>.logo {
+    font-size: 24px;  /* 로고 크기 */
+    font-weight: bold;  /* 글자 굵기 */
+    color: #333;  /* 글자 색상 */
+    text-decoration: none;  /* 밑줄 제거 (링크인 경우) */
+}
+
+/* 또는 이미지 로고인 경우 */
+.logo img {
+    height: 50px;  /* 이미지 높이 */
+    width: auto;  /* 비율 유지 */
+}</pre>
+                    </div>
+                    
+                    <h3>푸터 영역 구조 완벽 이해</h3>
+                    <p>푸터의 기본 구조는 다음과 같습니다:</p>
+                    <div class="code-example">
+                        <pre>&lt;footer&gt;
+    &lt;div class="footer-inner"&gt;
+        &lt;p&gt;Copyright &copy; 2024 회사명&lt;/p&gt;
+        &lt;address&gt;
+            주소: 서울시 강남구&lt;br&gt;
+            전화: 02-1234-5678
+        &lt;/address&gt;
+    &lt;/div&gt;
+&lt;/footer&gt;</pre>
+                    </div>
+                    
+                    <p><strong>구조 설명:</strong></p>
+                    <ul style="margin-left: 20px; margin-top: 10px;">
+                        <li><code>&lt;footer&gt;</code>: 시맨틱 태그로, 푸터 영역임을 명확히 표시합니다</li>
+                        <li><code>class="footer-inner"</code>: 헤더와 동일하게 내부 컨테이너를 만들어 너비 제한과 가운데 정렬을 합니다</li>
+                        <li><code>&copy;</code>: 저작권 기호(©)를 HTML 엔티티로 표현합니다</li>
+                        <li><code>&lt;address&gt;</code>: 연락처 정보를 담는 시맨틱 태그입니다</li>
+                    </ul>
+                    
+                    <p><strong>푸터 CSS 스타일:</strong></p>
+                    <div class="code-example">
+                        <pre>footer {
+    background: #333;  /* 어두운 배경색 */
+    color: #fff;  /* 밝은 텍스트 색상 */
+    padding: 30px 0;  /* 상하 여백 */
+    border-top: 1px solid #555;  /* 상단 경계선 */
+}
+
+.footer-inner {
+    width: 1200px;
+    margin: 0 auto;  /* 가운데 정렬 (헤더와 동일) */
+    text-align: center;  /* 텍스트 가운데 정렬 */
+}
+
+.footer-inner p {
+    margin-bottom: 10px;
+}
+
+.footer-inner address {
+    font-style: normal;  /* 이탤릭체 제거 */
+}</pre>
+                    </div>
+                    
+                    <h3>헤더와 푸터를 레이아웃에 통합하기</h3>
+                    <p>헤더와 푸터는 웹페이지의 전체 구조 안에 포함됩니다:</p>
+                    <div class="code-example">
+                        <pre>&lt;div class="wrap"&gt;
+    &lt;header&gt;
+        &lt;div class="header-inner"&gt;
+            &lt;!-- 헤더 내용 --&gt;
+        &lt;/div&gt;
+    &lt;/header&gt;
+    
+    &lt;main&gt;
+        &lt;!-- 본문 내용 --&gt;
+    &lt;/main&gt;
+    
+    &lt;footer&gt;
+        &lt;div class="footer-inner"&gt;
+            &lt;!-- 푸터 내용 --&gt;
+        &lt;/div&gt;
+    &lt;/footer&gt;
+&lt;/div&gt;</pre>
+                    </div>
+                    
+                    <p><strong>레이아웃 CSS:</strong></p>
+                    <div class="code-example">
+                        <pre>.wrap {
+    width: 1200px;
+    margin: 0 auto;  /* 전체 레이아웃 가운데 정렬 */
+}
+
+/* 또는 header-inner, footer-inner를 사용하는 경우 */
+header, footer {
+    width: 100%;  /* 전체 너비 */
+}
+
+.header-inner, .footer-inner {
+    width: 1200px;
+    margin: 0 auto;  /* 내용만 가운데 정렬 */
+}</pre>
+                    </div>
+                    
+                    <h3>웹디자인개발기능사 시험에서의 헤더/푸터 작성 팁</h3>
+                    <ul style="margin-left: 20px; margin-top: 10px;">
+                        <li><strong>margin: 0 auto 필수:</strong> 가운데 정렬을 위해 반드시 필요합니다</li>
+                        <li><strong>두 단계 구조:</strong> header와 header-inner를 분리하여 전체 너비와 내용 너비를 따로 제어합니다</li>
+                        <li><strong>display: flex 활용:</strong> 로고와 메뉴를 가로로 배치하기 위해 필수입니다</li>
+                        <li><strong>justify-content: space-between:</strong> 로고와 메뉴를 양쪽 끝에 배치하는 가장 쉬운 방법입니다</li>
+                        <li><strong>align-items: center:</strong> 세로 중앙 정렬로 깔끔한 헤더를 만듭니다</li>
+                        <li><strong>일관된 너비:</strong> header-inner와 footer-inner, wrap의 너비를 동일하게 설정합니다 (1200px)</li>
+                    </ul>
+                    
+                    <h3>시험에서 자주 하는 실수</h3>
+                    <ul style="margin-left: 20px; margin-top: 10px;">
+                        <li><strong>margin: 0 auto 누락:</strong> 이게 없으면 헤더와 푸터가 왼쪽으로 치우칩니다</li>
+                        <li><strong>width 누락:</strong> width가 없으면 margin: 0 auto가 작동하지 않습니다</li>
+                        <li><strong>display: flex 누락:</strong> 로고와 메뉴가 세로로 배치되어 레이아웃이 이상해집니다</li>
+                        <li><strong>justify-content 누락:</strong> 로고와 메뉴가 왼쪽에 몰려 배치됩니다</li>
+                        <li><strong>header-inner 구조 누락:</strong> header에 직접 width를 설정하면 전체 너비 제한이 어렵습니다</li>
+                    </ul>
+                `,
+                problem: "헤더 영역에 로고와 네비게이션을 가로로 배치하는 CSS를 작성하세요. (flex 사용)",
+                solution: "header {\n    display: flex;\n    justify-content: space-between;\n    align-items: center;\n}",
+                test: (code) => {
+                    try {
+                        return code.includes("display: flex") &&
+                               code.includes("justify-content: space-between");
+                    } catch (e) {
+                        return false;
+                    }
+                }
+            },
+            {
+                title: "네비게이션 메뉴 제작",
+                content: `
+                    <h3>네비게이션 메뉴란?</h3>
+                    <p>네비게이션 메뉴는 웹사이트의 주요 페이지로 이동할 수 있도록 만든 메뉴입니다. 
+                    웹사이트의 구조를 사용자에게 보여주고, 원하는 페이지로 쉽게 이동할 수 있게 해주는 핵심 요소입니다. 
+                    웹디자인개발기능사 시험에서 A유형의 필수 구현 사항입니다.</p>
+                    
+                    <p>네비게이션 메뉴는 주로 웹페이지 상단(헤더 영역)에 가로로 배치되며, 
+                    HTML의 <code>&lt;nav&gt;</code> 태그와 리스트(<code>ul</code>, <code>li</code>)를 사용하여 구조화합니다. 
+                    CSS의 Flexbox를 활용하여 가로 배치하고, 호버 효과를 추가하여 사용자 경험을 향상시킵니다.</p>
+                    
+                    <h3>네비게이션 메뉴 HTML 구조 완벽 이해</h3>
+                    <p>네비게이션 메뉴의 기본 구조는 다음과 같습니다:</p>
+                    
+                    <h4>네비게이션 메뉴 구조 시각화</h4>
+                    <div style="background: #f5f5f5; padding: 30px; border-radius: 10px; margin: 20px 0; border: 2px solid #ddd;">
+                        <div style="max-width: 800px; margin: 0 auto;">
+                            <div style="background: #fff; border: 2px solid #667eea; padding: 15px; border-radius: 5px;">
+                                <div style="text-align: center; color: #666; font-size: 12px; margin-bottom: 15px; font-weight: bold;">&lt;nav class="gnb"&gt;</div>
+                                
+                                <div style="background: #f0f0f0; border: 2px dashed #999; padding: 10px; border-radius: 5px;">
+                                    <div style="text-align: center; color: #666; font-size: 11px; margin-bottom: 10px;">&lt;ul&gt; (display: flex 적용 후)</div>
+                                    
+                                    <div style="display: flex; gap: 15px; justify-content: center; align-items: center;">
+                                        <div style="background: #667eea; color: white; padding: 10px 20px; border-radius: 5px; font-weight: bold; font-size: 14px;">
+                                            &lt;li&gt;<br>&lt;a&gt;홈&lt;/a&gt;
+                                        </div>
+                                        <div style="background: #667eea; color: white; padding: 10px 20px; border-radius: 5px; font-weight: bold; font-size: 14px;">
+                                            &lt;li&gt;<br>&lt;a&gt;소개&lt;/a&gt;
+                                        </div>
+                                        <div style="background: #667eea; color: white; padding: 10px 20px; border-radius: 5px; font-weight: bold; font-size: 14px;">
+                                            &lt;li&gt;<br>&lt;a&gt;서비스&lt;/a&gt;
+                                        </div>
+                                        <div style="background: #667eea; color: white; padding: 10px 20px; border-radius: 5px; font-weight: bold; font-size: 14px;">
+                                            &lt;li&gt;<br>&lt;a&gt;연락처&lt;/a&gt;
+                                        </div>
+                                    </div>
+                                    
+                                    <div style="text-align: center; color: #999; font-size: 10px; margin-top: 10px;">
+                                        ⬆ display: flex로 가로 배치, list-style: none으로 불릿 제거
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="code-example">
+                        <pre>&lt;nav class="gnb"&gt;
+    &lt;ul&gt;
+        &lt;li&gt;&lt;a href="#"&gt;홈&lt;/a&gt;&lt;/li&gt;
+        &lt;li&gt;&lt;a href="#"&gt;소개&lt;/a&gt;&lt;/li&gt;
+        &lt;li&gt;&lt;a href="#"&gt;서비스&lt;/a&gt;&lt;/li&gt;
+        &lt;li&gt;&lt;a href="#"&gt;연락처&lt;/a&gt;&lt;/li&gt;
+    &lt;/ul&gt;
+&lt;/nav&gt;</pre>
+                    </div>
+                    
+                    <p><strong>구조 설명:</strong></p>
+                    <ul style="margin-left: 20px; margin-top: 10px;">
+                        <li><code>&lt;nav&gt;</code>: 시맨틱 태그로, 네비게이션 영역임을 명확히 표시합니다. 
+                        검색 엔진과 스크린 리더가 이 영역을 메뉴로 인식할 수 있습니다</li>
+                        <li><code>class="gnb"</code>: Global Navigation Bar의 약자로, 메인 네비게이션 메뉴를 의미합니다. 
+                        CSS 선택자로 사용됩니다</li>
+                        <li><code>&lt;ul&gt;</code>: 순서 없는 리스트로, 메뉴 항목들을 담는 컨테이너입니다</li>
+                        <li><code>&lt;li&gt;</code>: 리스트 항목으로, 각 메뉴 항목을 의미합니다</li>
+                        <li><code>&lt;a href="#"&gt;</code>: 링크 태그로, 클릭하면 해당 페이지로 이동합니다. 
+                        <code>#</code>은 현재 페이지를 의미합니다 (실제 페이지 링크로 변경 가능)</li>
+                    </ul>
+                    
+                    <p><strong>왜 ul과 li를 사용하는가?</strong></p>
+                    <p>ul과 li는 리스트를 의미하는 시맨틱 태그입니다. 메뉴는 본질적으로 리스트이므로, 
+                    ul과 li를 사용하는 것이 의미론적으로 올바릅니다. 또한 리스트의 기본 스타일(불릿 포인트, 세로 배치)을 
+                    CSS로 쉽게 변경할 수 있어 활용도가 높습니다.</p>
+                    
+                    <h3>가로 메뉴 스타일 완벽 가이드</h3>
+                    <p><strong>리스트 스타일 제거 및 가로 배치:</strong></p>
+                    <div class="code-example">
+                        <pre>.gnb ul {
+    display: flex;  /* 가로 배치 (가장 중요!) */
+    list-style: none;  /* 불릿 포인트 제거 (중요!) */
+    margin: 0;  /* 브라우저 기본 여백 제거 */
+    padding: 0;  /* 브라우저 기본 패딩 제거 */
+}</pre>
+                    </div>
+                    
+                    <p><strong>각 속성 설명:</strong></p>
+                    <ul style="margin-left: 20px; margin-top: 10px;">
+                        <li><strong>display: flex:</strong> Flexbox 레이아웃을 활성화하여 li 요소들을 가로로 배치합니다. 
+                        이게 없으면 메뉴 항목들이 세로로 배치됩니다. 네비게이션 메뉴에서 가장 중요한 CSS 속성입니다</li>
+                        <li><strong>list-style: none:</strong> ul과 li의 기본 불릿 포인트(•)를 제거합니다. 
+                        이게 없으면 각 메뉴 항목 앞에 점이 표시됩니다</li>
+                        <li><strong>margin: 0; padding: 0:</strong> 브라우저마다 ul과 li에 기본 여백이 설정되어 있는데, 
+                        이를 제거하여 정확한 레이아웃을 구현합니다. 이게 없으면 예상치 못한 여백이 생길 수 있습니다</li>
+                    </ul>
+                    
+                    <p><strong>메뉴 항목 간격 조정:</strong></p>
+                    <div class="code-example">
+                        <pre>.gnb li {
+    margin-right: 30px;  /* 오른쪽 여백 (메뉴 항목 간 간격) */
+}
+
+/* 또는 gap 속성 사용 (더 모던한 방법) */
+.gnb ul {
+    display: flex;
+    gap: 30px;  /* 모든 항목 사이에 균등한 간격 */
+    list-style: none;
+}</pre>
+                    </div>
+                    
+                    <p><strong>링크 스타일 설정:</strong></p>
+                    <div class="code-example">
+                        <pre>.gnb a {
+    text-decoration: none;  /* 밑줄 제거 (중요!) */
+    color: #333;  /* 텍스트 색상 */
+    font-size: 16px;  /* 글자 크기 */
+    display: block;  /* 클릭 영역 확대 (선택 사항) */
+    padding: 10px 15px;  /* 클릭 영역 확대 및 여백 (선택 사항) */
+}
+
+.gnb a:hover {
+    color: #667eea;  /* 마우스 오버 시 색상 변경 */
+    text-decoration: underline;  /* 마우스 오버 시 밑줄 (선택 사항) */
+}</pre>
+                    </div>
+                    
+                    <p><strong>각 속성 설명:</strong></p>
+                    <ul style="margin-left: 20px; margin-top: 10px;">
+                        <li><strong>text-decoration: none:</strong> 링크의 기본 밑줄을 제거합니다. 
+                        링크 태그는 기본적으로 밑줄이 있는데, 메뉴에서는 깔끔한 디자인을 위해 제거합니다</li>
+                        <li><strong>color: #333:</strong> 링크 텍스트의 색상을 설정합니다. 
+                        기본 파란색(#0000ff) 대신 회색 계열을 사용하면 더 세련된 느낌입니다</li>
+                        <li><strong>font-size:</strong> 메뉴 항목의 글자 크기를 설정합니다</li>
+                        <li><strong>display: block:</strong> 인라인 요소인 a 태그를 블록 요소로 만들어 
+                        padding을 적용할 수 있게 합니다. 클릭 영역을 넓히기 위해 사용합니다</li>
+                        <li><strong>padding:</strong> 링크의 클릭 영역을 넓히고, 텍스트 주변에 여백을 줍니다</li>
+                        <li><strong>:hover 가상 클래스:</strong> 마우스를 올렸을 때의 스타일을 지정합니다. 
+                        사용자에게 인터랙티브한 느낌을 줍니다</li>
+                    </ul>
+                    
+                    <h3>네비게이션 메뉴를 헤더에 배치하기</h3>
+                    <p>네비게이션 메뉴는 보통 헤더 영역에 로고와 함께 배치됩니다:</p>
+                    <div class="code-example">
+                        <pre>&lt;header&gt;
+    &lt;div class="header-inner"&gt;
+        &lt;h1 class="logo"&gt;로고&lt;/h1&gt;
+        &lt;nav class="gnb"&gt;
+            &lt;ul&gt;
+                &lt;li&gt;&lt;a href="#"&gt;홈&lt;/a&gt;&lt;/li&gt;
+                &lt;li&gt;&lt;a href="#"&gt;소개&lt;/a&gt;&lt;/li&gt;
+                &lt;li&gt;&lt;a href="#"&gt;서비스&lt;/a&gt;&lt;/li&gt;
+                &lt;li&gt;&lt;a href="#"&gt;연락처&lt;/a&gt;&lt;/li&gt;
+            &lt;/ul&gt;
+        &lt;/nav&gt;
+    &lt;/div&gt;
+&lt;/header&gt;</pre>
+                    </div>
+                    
+                    <p><strong>로고와 메뉴를 가로로 배치:</strong></p>
+                    <div class="code-example">
+                        <pre>.header-inner {
+    display: flex;  /* 로고와 메뉴를 가로로 배치 */
+    justify-content: space-between;  /* 로고는 왼쪽, 메뉴는 오른쪽 */
+    align-items: center;  /* 세로 중앙 정렬 */
+    width: 1200px;
+    margin: 0 auto;
+    height: 80px;
+}
+
+.logo {
+    font-size: 24px;
+    font-weight: bold;
+}
+
+.gnb {
+    /* 네비게이션 메뉴 스타일은 위와 동일 */
+}</pre>
+                    </div>
+                    
+                    <h3>세로 메뉴 만들기 (참고)</h3>
+                    <p>가로 메뉴는 Flexbox로 만들었는데, 세로 메뉴는 어떻게 만들까요?</p>
+                    <div class="code-example">
+                        <pre>.gnb ul {
+    display: block;  /* 또는 flex-direction: column */
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+.gnb li {
+    margin-bottom: 10px;  /* 세로 간격 */
+}</pre>
+                    </div>
+                    <p>display: flex를 사용하지 않으면 기본적으로 세로 배치됩니다. 
+                    또는 <code>display: flex; flex-direction: column;</code>을 사용해도 됩니다.</p>
+                    
+                    <h3>웹디자인개발기능사 시험에서의 네비게이션 메뉴 작성 팁</h3>
+                    <ul style="margin-left: 20px; margin-top: 10px;">
+                        <li><strong>display: flex 필수:</strong> 가로 메뉴를 만들려면 반드시 display: flex를 사용해야 합니다</li>
+                        <li><strong>list-style: none 필수:</strong> 불릿 포인트를 제거하지 않으면 점이 표시됩니다</li>
+                        <li><strong>margin, padding 초기화:</strong> 브라우저 기본 스타일을 제거하여 정확한 레이아웃을 만듭니다</li>
+                        <li><strong>text-decoration: none:</strong> 링크의 밑줄을 제거하여 깔끔한 메뉴를 만듭니다</li>
+                        <li><strong>호버 효과:</strong> 사용자 경험 향상을 위해 호버 효과를 추가합니다</li>
+                        <li><strong>클릭 영역:</strong> padding을 사용하여 클릭하기 쉬운 영역을 만듭니다</li>
+                    </ul>
+                    
+                    <h3>시험에서 자주 하는 실수</h3>
+                    <ul style="margin-left: 20px; margin-top: 10px;">
+                        <li><strong>display: flex 누락:</strong> 이게 없으면 메뉴가 세로로 배치되어 가로 메뉴가 되지 않습니다</li>
+                        <li><strong>list-style: none 누락:</strong> 불릿 포인트가 그대로 표시되어 깔끔하지 않습니다</li>
+                        <li><strong>margin, padding 초기화 누락:</strong> 예상치 못한 여백이 생겨 정확한 레이아웃이 어렵습니다</li>
+                        <li><strong>text-decoration 누락:</strong> 링크에 밑줄이 그대로 있어 깔끔하지 않습니다</li>
+                        <li><strong>클래스명 오류:</strong> .gnb를 .nav로 잘못 작성하거나 선택자를 정확히 사용하지 않으면 스타일이 적용되지 않습니다</li>
+                    </ul>
+                `,
+                problem: "네비게이션 메뉴를 가로로 배치하고, 리스트 스타일을 제거하는 CSS를 작성하세요.",
+                solution: ".gnb ul {\n    display: flex;\n    list-style: none;\n}",
+                test: (code) => {
+                    try {
+                        return code.includes("display: flex") &&
+                               code.includes("list-style: none");
+                    } catch (e) {
+                        return false;
+                    }
+                }
+            },
+            {
+                title: "슬라이드 배너 만들기",
+                content: `
+                    <h3>슬라이드 배너란?</h3>
+                    <p>슬라이드 배너는 여러 이미지나 콘텐츠를 순환하며 보여주는 배너입니다. 
+                    주로 웹사이트의 메인 영역에 배치되어 중요한 정보나 광고를 효과적으로 전달합니다. 
+                    웹디자인개발기능사 B유형에서 필수적으로 구현해야 하는 기능입니다.</p>
+                    
+                    <p>슬라이드 배너의 핵심은 <strong>여러 이미지를 가로로 배치하고, transform 속성을 사용하여 
+                    이동시키는 것</strong>입니다. jQuery의 setInterval을 사용하여 일정 시간마다 자동으로 전환되도록 구현합니다.</p>
+                    
+                    <h3>슬라이드 배너 HTML 구조 완벽 이해</h3>
+                    <p>슬라이드 배너의 기본 구조는 다음과 같습니다:</p>
+                    
+                    <h4>슬라이드 배너 구조 시각화</h4>
+                    <div style="background: #f5f5f5; padding: 30px; border-radius: 10px; margin: 20px 0; border: 2px solid #ddd;">
+                        <div style="max-width: 800px; margin: 0 auto;">
+                            <div style="background: #fff; border: 2px solid #667eea; padding: 15px; border-radius: 5px; overflow: hidden; position: relative;">
+                                <div style="text-align: center; color: #666; font-size: 12px; margin-bottom: 10px; font-weight: bold;">&lt;div class="slide-banner"&gt; (overflow: hidden)</div>
+                                
+                                <div style="background: #f0f0f0; border: 2px dashed #999; padding: 5px; border-radius: 5px; position: relative; width: 300%; display: flex; transition: transform 0.5s;">
+                                    <div style="text-align: center; color: #666; font-size: 10px; margin-bottom: 5px; width: 100%;">&lt;ul class="slide-list"&gt; (width: 300%, display: flex)</div>
+                                    
+                                    <div style="flex: 0 0 33.333%; background: #4CAF50; color: white; padding: 40px 20px; text-align: center; border-radius: 5px; margin-right: 5px; font-weight: bold;">
+                                        &lt;li&gt;<br>&lt;img&gt; 이미지1<br>(width: 33.333%)
+                                    </div>
+                                    
+                                    <div style="flex: 0 0 33.333%; background: #2196F3; color: white; padding: 40px 20px; text-align: center; border-radius: 5px; margin-right: 5px; font-weight: bold;">
+                                        &lt;li&gt;<br>&lt;img&gt; 이미지2<br>(width: 33.333%)
+                                    </div>
+                                    
+                                    <div style="flex: 0 0 33.333%; background: #FF9800; color: white; padding: 40px 20px; text-align: center; border-radius: 5px; font-weight: bold;">
+                                        &lt;li&gt;<br>&lt;img&gt; 이미지3<br>(width: 33.333%)
+                                    </div>
+                                </div>
+                                
+                                <div style="text-align: center; color: #999; font-size: 10px; margin-top: 10px;">
+                                    ⬆ transform: translateX()로 이동하여 한 번에 하나씩만 보임
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="code-example">
+                        <pre>&lt;div class="slide-banner"&gt;
+    &lt;ul class="slide-list"&gt;
+        &lt;li&gt;&lt;img src="image1.jpg" alt="이미지1"&gt;&lt;/li&gt;
+        &lt;li&gt;&lt;img src="image2.jpg" alt="이미지2"&gt;&lt;/li&gt;
+        &lt;li&gt;&lt;img src="image3.jpg" alt="이미지3"&gt;&lt;/li&gt;
+    &lt;/ul&gt;
+&lt;/div&gt;</pre>
+                    </div>
+                    
+                    <p><strong>구조 설명:</strong></p>
+                    <ul style="margin-left: 20px; margin-top: 10px;">
+                        <li><code>.slide-banner</code>: 슬라이드 배너의 외부 컨테이너로, overflow: hidden으로 넘치는 부분을 숨깁니다</li>
+                        <li><code>.slide-list</code>: ul 태그로, 모든 슬라이드를 담는 컨테이너입니다. display: flex로 가로 배치됩니다</li>
+                        <li><code>li</code>: 각 슬라이드 이미지를 담는 요소입니다</li>
+                        <li>이미지가 3개인 경우, .slide-list의 width는 300%가 되어야 합니다 (100% × 3)</li>
+                    </ul>
+                    
+                    <h3>슬라이드 배너 CSS 완벽 가이드</h3>
+                    <p><strong>외부 컨테이너 스타일:</strong></p>
+                    <div class="code-example">
+                        <pre>.slide-banner {
+    width: 100%;  /* 전체 너비 */
+    height: 400px;  /* 배너 높이 */
+    overflow: hidden;  /* 넘치는 부분 숨김 (가장 중요!) */
+    position: relative;  /* 내부 요소의 absolute 위치 기준 */
+}</pre>
+                    </div>
+                    
+                    <p><strong>슬라이드 리스트 스타일:</strong></p>
+                    <div class="code-example">
+                        <pre>.slide-list {
+    display: flex;  /* 가로 배치 */
+    width: 300%;  /* 이미지 3개 = 300% (이미지 개수 × 100%) */
+    transition: transform 0.5s;  /* 이동 애니메이션 효과 (부드러운 전환) */
+}
+
+.slide-list li {
+    width: 33.333%;  /* 각 슬라이드 너비 (100% ÷ 3) */
+    flex-shrink: 0;  /* 축소 방지 */
+}
+
+.slide-list img {
+    width: 100%;  /* 부모 요소 너비에 맞춤 */
+    height: 400px;  /* 배너 높이와 동일 */
+    object-fit: cover;  /* 이미지 비율 유지하며 영역 채움 */
+}</pre>
+                    </div>
+                    
+                    <p><strong>핵심 개념 설명:</strong></p>
+                    <ul style="margin-left: 20px; margin-top: 10px;">
+                        <li><strong>overflow: hidden:</strong> 슬라이드 배너 외부 컨테이너에 반드시 설정해야 합니다. 
+                        이렇게 해야 한 번에 하나의 이미지만 보이고 나머지는 숨겨집니다</li>
+                        <li><strong>width: 300%:</strong> 이미지가 3개면 300%, 4개면 400%로 설정합니다. 
+                        모든 이미지를 한 줄에 배치하기 위한 너비입니다</li>
+                        <li><strong>transition: transform 0.5s:</strong> transform 속성 변경 시 0.5초 동안 부드럽게 전환됩니다. 
+                        이게 없으면 이미지가 순간적으로 이동하여 어색합니다</li>
+                        <li><strong>transform: translateX():</strong> X축(가로) 방향으로 이동시킵니다. 
+                        음수 값으로 왼쪽으로, 양수 값으로 오른쪽으로 이동합니다</li>
+                    </ul>
+                    
+                    <h3>jQuery로 슬라이드 구현 완벽 가이드</h3>
+                    <p><strong>자동 슬라이드 구현:</strong></p>
+                    <div class="code-example">
+                        <pre>$(document).ready(function() {
+    var current = 0;  // 현재 슬라이드 인덱스 (0부터 시작)
+    var slideCount = $('.slide-list li').length;  // 슬라이드 개수
+    
+    setInterval(function() {
+        current = (current + 1) % slideCount;  // 다음 슬라이드로 이동 (마지막이면 처음으로)
+        var moveX = current * (100 / slideCount);  // 이동할 거리 계산
+        $('.slide-list').css('transform', 'translateX(-' + moveX + '%)');
+    }, 3000);  // 3초마다 실행
+});</pre>
+                    </div>
+                    
+                    <p><strong>코드 설명:</strong></p>
+                    <ul style="margin-left: 20px; margin-top: 10px;">
+                        <li><strong>current 변수:</strong> 현재 보여지는 슬라이드의 인덱스를 저장합니다 (0, 1, 2...)</li>
+                        <li><strong>slideCount:</strong> 슬라이드 전체 개수를 저장합니다</li>
+                        <li><strong>setInterval:</strong> 지정된 시간(밀리초)마다 함수를 반복 실행합니다. 3000 = 3초</li>
+                        <li><strong>current = (current + 1) % slideCount:</strong> 다음 슬라이드 인덱스로 이동합니다. 
+                        % 연산자로 마지막 슬라이드 다음에는 0으로 돌아갑니다 (무한 루프)</li>
+                        <li><strong>moveX 계산:</strong> 이미지 3개인 경우 각각 33.333%씩 이동해야 합니다 (100% ÷ 3)</li>
+                        <li><strong>translateX(-moveX%):</strong> 음수 값으로 왼쪽으로 이동시켜 다음 이미지를 보여줍니다</li>
+                    </ul>
+                    
+                    <p><strong>이미지 3개인 경우 계산 예시:</strong></p>
+                    <ul style="margin-left: 20px; margin-top: 10px;">
+                        <li>current = 0 → moveX = 0% → translateX(0%) → 첫 번째 이미지 표시</li>
+                        <li>current = 1 → moveX = 33.333% → translateX(-33.333%) → 두 번째 이미지 표시</li>
+                        <li>current = 2 → moveX = 66.666% → translateX(-66.666%) → 세 번째 이미지 표시</li>
+                        <li>current = 0 → 다시 처음으로 (무한 루프)</li>
+                    </ul>
+                    
+                    <h3>시험에서 주의해야 할 슬라이드 배너 오류</h3>
+                    <ul style="margin-left: 20px; margin-top: 10px;">
+                        <li><strong>overflow: hidden 누락:</strong> 외부 컨테이너에 반드시 설정해야 여러 이미지가 동시에 보이지 않습니다</li>
+                        <li><strong>width 계산 오류:</strong> 이미지 개수에 따라 .slide-list의 width를 정확히 계산해야 합니다 (개수 × 100%)</li>
+                        <li><strong>transform 값 오류:</strong> translateX의 값은 음수여야 왼쪽으로 이동합니다</li>
+                        <li><strong>transition 누락:</strong> transition이 없으면 슬라이드 전환이 부드럽지 않습니다</li>
+                        <li><strong>setInterval 위치 오류:</strong> $(document).ready() 안에 작성해야 DOM이 로드된 후 실행됩니다</li>
+                    </ul>
+                `,
+                problem: "jQuery를 사용하여 3초마다 슬라이드가 자동으로 넘어가도록 setInterval을 사용한 코드를 작성하세요. (current 변수 사용)",
+                solution: "var current = 0;\nsetInterval(function() {\n    current = (current + 1) % 3;\n    $('.slide-list').css('transform', 'translateX(-' + (current * 33.333) + '%)');\n}, 3000);",
+                test: (code) => {
+                    try {
+                        return code.includes("setInterval") &&
+                               code.includes("current") &&
+                               code.includes("3000");
+                    } catch (e) {
+                        return false;
+                    }
+                }
+            },
+            {
+                title: "드롭다운 메뉴 구현",
+                content: `
+                    <h3>드롭다운 메뉴란?</h3>
+                    <p>드롭다운 메뉴는 메인 메뉴에 마우스를 올리면 서브 메뉴가 아래로 펼쳐지는 메뉴 구조입니다. 
+                    웹사이트에서 많이 사용되는 네비게이션 방식으로, 많은 메뉴를 공간 효율적으로 배치할 수 있습니다. 
+                    웹디자인개발기능사 B유형에서 필수적으로 구현해야 하는 기능입니다.</p>
+                    
+                    <p>드롭다운 메뉴의 핵심은 <strong>서브 메뉴를 숨겨두고, 메인 메뉴에 마우스를 올리면 
+                    서브 메뉴를 보여주는 것</strong>입니다. CSS의 position: absolute와 jQuery의 hover 이벤트를 활용합니다.</p>
+                    
+                    <h3>드롭다운 메뉴 HTML 구조 완벽 이해</h3>
+                    <p>드롭다운 메뉴의 기본 구조는 다음과 같습니다:</p>
+                    
+                    <h4>드롭다운 메뉴 구조 시각화</h4>
+                    <div style="background: #f5f5f5; padding: 30px; border-radius: 10px; margin: 20px 0; border: 2px solid #ddd;">
+                        <div style="max-width: 800px; margin: 0 auto;">
+                            <div style="background: #fff; border: 2px solid #667eea; padding: 15px; border-radius: 5px;">
+                                <div style="text-align: center; color: #666; font-size: 12px; margin-bottom: 15px; font-weight: bold;">&lt;nav class="gnb"&gt;</div>
+                                
+                                <div style="background: #f0f0f0; border: 2px dashed #999; padding: 10px; border-radius: 5px;">
+                                    <div style="text-align: center; color: #666; font-size: 11px; margin-bottom: 10px;">&lt;ul&gt; (메인 메뉴)</div>
+                                    
+                                    <div style="display: flex; gap: 15px; justify-content: center; align-items: flex-start;">
+                                        <!-- 메뉴1 (서브메뉴 있음) -->
+                                        <div style="position: relative;">
+                                            <div style="background: #667eea; color: white; padding: 10px 20px; border-radius: 5px; font-weight: bold; font-size: 14px; margin-bottom: 5px;">
+                                                &lt;li&gt;<br>&lt;a&gt;메뉴1&lt;/a&gt;
+                                            </div>
+                                            <!-- 서브 메뉴 -->
+                                            <div style="background: #764ba2; color: white; padding: 8px; border-radius: 5px; margin-top: 5px; min-width: 120px;">
+                                                <div style="font-size: 10px; margin-bottom: 5px; text-align: center;">&lt;ul class="sub-menu"&gt;</div>
+                                                <div style="background: rgba(255,255,255,0.2); padding: 5px 10px; border-radius: 3px; margin-bottom: 3px; font-size: 12px;">
+                                                    &lt;li&gt;&lt;a&gt;서브메뉴1&lt;/a&gt;
+                                                </div>
+                                                <div style="background: rgba(255,255,255,0.2); padding: 5px 10px; border-radius: 3px; font-size: 12px;">
+                                                    &lt;li&gt;&lt;a&gt;서브메뉴2&lt;/a&gt;
+                                                </div>
+                                            </div>
+                                            <div style="text-align: center; color: #999; font-size: 9px; margin-top: 5px;">
+                                                ⬇ hover 시 표시
+                                            </div>
+                                        </div>
+                                        
+                                        <!-- 메뉴2 (서브메뉴 없음) -->
+                                        <div>
+                                            <div style="background: #667eea; color: white; padding: 10px 20px; border-radius: 5px; font-weight: bold; font-size: 14px;">
+                                                &lt;li&gt;<br>&lt;a&gt;메뉴2&lt;/a&gt;
+                                            </div>
+                                        </div>
+                                    </div>
+                                    
+                                    <div style="text-align: center; color: #999; font-size: 10px; margin-top: 15px;">
+                                        ⬆ 메인 메뉴 li 안에 서브 메뉴 ul이 중첩되는 구조
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="code-example">
+                        <pre>&lt;nav class="gnb"&gt;
+    &lt;ul&gt;
+        &lt;li&gt;
+            &lt;a href="#"&gt;메뉴1&lt;/a&gt;
+            &lt;ul class="sub-menu"&gt;
+                &lt;li&gt;&lt;a href="#"&gt;서브메뉴1&lt;/a&gt;&lt;/li&gt;
+                &lt;li&gt;&lt;a href="#"&gt;서브메뉴2&lt;/a&gt;&lt;/li&gt;
+            &lt;/ul&gt;
+        &lt;/li&gt;
+        &lt;li&gt;
+            &lt;a href="#"&gt;메뉴2&lt;/a&gt;
+        &lt;/li&gt;
+    &lt;/ul&gt;
+&lt;/nav&gt;</pre>
+                    </div>
+                    
+                    <p><strong>구조 설명:</strong></p>
+                    <ul style="margin-left: 20px; margin-top: 10px;">
+                        <li><code>.gnb</code>: 메인 네비게이션 영역입니다 (Global Navigation Bar)</li>
+                        <li><code>ul > li</code>: 메인 메뉴 항목들입니다</li>
+                        <li><code>.sub-menu</code>: 서브 메뉴 ul로, 메인 메뉴 li 안에 중첩됩니다</li>
+                        <li>중첩 구조: 메인 메뉴 li 안에 서브 메뉴 ul이 들어가는 것이 핵심입니다</li>
+                    </ul>
+                    
+                    <h3>드롭다운 메뉴 CSS 완벽 가이드</h3>
+                    <p><strong>메인 메뉴 스타일:</strong></p>
+                    <div class="code-example">
+                        <pre>.gnb ul {
+    display: flex;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+.gnb > ul > li {
+    position: relative;  /* 서브 메뉴 위치 기준점 (가장 중요!) */
+    margin-right: 30px;
+}
+
+.gnb a {
+    text-decoration: none;
+    color: #333;
+    display: block;
+    padding: 10px 20px;
+}</pre>
+                    </div>
+                    
+                    <p><strong>서브 메뉴 스타일:</strong></p>
+                    <div class="code-example">
+                        <pre>.sub-menu {
+    display: none;  /* 기본적으로 숨김 */
+    position: absolute;  /* 부모 요소 기준 절대 위치 (핵심!) */
+    top: 100%;  /* 부모 요소 아래에 위치 */
+    left: 0;  /* 왼쪽 정렬 */
+    background: #fff;
+    min-width: 150px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.2);  /* 그림자 효과 */
+    z-index: 1000;  /* 다른 요소 위에 표시 */
+}
+
+.sub-menu li {
+    border-bottom: 1px solid #eee;
+}
+
+.sub-menu a {
+    padding: 10px 15px;
+}
+
+/* 호버 시 서브 메뉴 표시 (CSS만으로도 가능) */
+.gnb li:hover .sub-menu {
+    display: block;
+}</pre>
+                    </div>
+                    
+                    <p><strong>핵심 개념 설명:</strong></p>
+                    <ul style="margin-left: 20px; margin-top: 10px;">
+                        <li><strong>position: relative (부모):</strong> 메인 메뉴 li에 설정하여 서브 메뉴의 위치 기준점을 만듭니다</li>
+                        <li><strong>position: absolute (자식):</strong> 서브 메뉴에 설정하여 부모 요소를 기준으로 절대 위치를 지정합니다</li>
+                        <li><strong>top: 100%:</strong> 부모 요소의 100% 아래에 위치시킵니다 (바로 아래에 붙음)</li>
+                        <li><strong>left: 0:</strong> 부모 요소의 왼쪽 끝에 맞춥니다</li>
+                        <li><strong>display: none → block:</strong> 기본적으로 숨기고, 호버 시 보여줍니다</li>
+                        <li><strong>z-index:</strong> 다른 요소 위에 표시하기 위해 설정합니다</li>
+                    </ul>
+                    
+                    <h3>jQuery로 드롭다운 구현 완벽 가이드</h3>
+                    <p><strong>hover 이벤트로 구현:</strong></p>
+                    <p>jQuery의 hover 메서드는 마우스 오버와 마우스 아웃 두 가지 함수를 받습니다:</p>
+                    <div class="code-example">
+                        <pre>$(document).ready(function() {
+    $('.gnb > ul > li').hover(
+        function() {
+            // 마우스 오버 시 실행
+            $(this).find('.sub-menu').stop().slideDown();
+        },
+        function() {
+            // 마우스 아웃 시 실행
+            $(this).find('.sub-menu').stop().slideUp();
+        }
+    );
+});</pre>
+                    </div>
+                    
+                    <p><strong>코드 설명:</strong></p>
+                    <ul style="margin-left: 20px; margin-top: 10px;">
+                        <li><strong>$('.gnb > ul > li'):</strong> 직접 자식 선택자(>)를 사용하여 메인 메뉴 li만 선택합니다</li>
+                        <li><strong>$(this):</strong> 현재 호버된 li 요소를 가리킵니다</li>
+                        <li><strong>.find('.sub-menu'):</strong> 현재 li 안에서 .sub-menu를 찾습니다</li>
+                        <li><strong>.stop():</strong> 진행 중인 애니메이션을 중지합니다. 빠른 마우스 이동 시 중복 애니메이션을 방지합니다</li>
+                        <li><strong>.slideDown():</strong> 서브 메뉴를 위에서 아래로 슬라이드하며 보여줍니다</li>
+                        <li><strong>.slideUp():</strong> 서브 메뉴를 아래에서 위로 슬라이드하며 숨깁니다</li>
+                    </ul>
+                    
+                    <p><strong>애니메이션 시간 설정:</strong></p>
+                    <div class="code-example">
+                        <pre>// 애니메이션 시간 지정 (밀리초)
+$(this).find('.sub-menu').stop().slideDown(300);  // 0.3초 동안
+$(this).find('.sub-menu').stop().slideUp(200);    // 0.2초 동안</pre>
+                    </div>
+                    
+                    <h3>CSS만으로 드롭다운 구현하기</h3>
+                    <p>jQuery 없이 CSS의 :hover 가상 클래스만으로도 드롭다운을 구현할 수 있습니다:</p>
+                    <div class="code-example">
+                        <pre>.gnb li:hover .sub-menu {
+    display: block;
+}</pre>
+                    </div>
+                    <p>하지만 jQuery를 사용하면 더 부드러운 애니메이션 효과(slideDown, slideUp)를 구현할 수 있어 
+                    시험에서는 jQuery 사용을 권장합니다.</p>
+                    
+                    <h3>시험에서 주의해야 할 드롭다운 메뉴 오류</h3>
+                    <ul style="margin-left: 20px; margin-top: 10px;">
+                        <li><strong>position: relative 누락:</strong> 부모 li에 position: relative가 없으면 서브 메뉴 위치가 이상해집니다</li>
+                        <li><strong>position: absolute 누락:</strong> 서브 메뉴에 position: absolute가 없으면 정확한 위치를 지정할 수 없습니다</li>
+                        <li><strong>직접 자식 선택자(>) 오류:</strong> $('.gnb > ul > li')로 정확히 메인 메뉴만 선택해야 합니다</li>
+                        <li><strong>.stop() 누락:</strong> stop()이 없으면 빠른 마우스 이동 시 애니메이션이 중첩됩니다</li>
+                        <li><strong>z-index 누락:</strong> z-index가 낮으면 다른 요소에 가려질 수 있습니다</li>
+                    </ul>
+                `,
+                problem: "jQuery를 사용하여 메뉴에 마우스를 올리면 서브메뉴가 slideDown으로 나타나고, 마우스를 떼면 slideUp으로 사라지도록 hover 이벤트를 작성하세요.",
+                solution: "$('.gnb > ul > li').hover(\n    function() {\n        $(this).find('.sub-menu').slideDown();\n    },\n    function() {\n        $(this).find('.sub-menu').slideUp();\n    }\n);",
+                test: (code) => {
+                    try {
+                        return code.includes("hover") &&
+                               code.includes("slideDown") &&
+                               code.includes("slideUp");
+                    } catch (e) {
+                        return false;
+                    }
+                }
+            },
+            {
+                title: "탭 메뉴 구현",
+                content: `
+                    <h3>탭 메뉴란?</h3>
+                    <p>탭 메뉴는 여러 내용을 하나의 공간에 배치하고, 탭을 클릭하면 해당 내용만 보여주는 UI 패턴입니다. 
+                    공간을 효율적으로 활용할 수 있어 웹사이트에서 많이 사용됩니다. 
+                    웹디자인개발기능사 C유형에서 필수적으로 구현해야 하는 기능입니다.</p>
+                    
+                    <p>탭 메뉴의 핵심은 <strong>클릭한 탭에 active 클래스를 추가하고, 
+                    해당하는 내용에 active 클래스를 추가하여 보여주는 것</strong>입니다. 
+                    jQuery의 index() 메서드를 사용하여 클릭한 탭의 순서를 찾아 같은 순서의 내용을 보여줍니다.</p>
+                    
+                    <h3>탭 메뉴 HTML 구조 완벽 이해</h3>
+                    <p>탭 메뉴의 기본 구조는 다음과 같습니다:</p>
+                    
+                    <h4>탭 메뉴 구조 시각화</h4>
+                    <div style="background: #f5f5f5; padding: 30px; border-radius: 10px; margin: 20px 0; border: 2px solid #ddd;">
+                        <div style="max-width: 800px; margin: 0 auto;">
+                            <div style="background: #fff; border: 2px solid #667eea; padding: 15px; border-radius: 5px;">
+                                <div style="text-align: center; color: #666; font-size: 12px; margin-bottom: 15px; font-weight: bold;">&lt;div class="tab-menu"&gt;</div>
+                                
+                                <!-- 탭 리스트 -->
+                                <div style="background: #f0f0f0; border: 2px dashed #999; padding: 10px; border-radius: 5px; margin-bottom: 10px;">
+                                    <div style="text-align: center; color: #666; font-size: 11px; margin-bottom: 10px;">&lt;ul class="tab-list"&gt; (display: flex)</div>
+                                    
+                                    <div style="display: flex; gap: 5px;">
+                                        <div style="background: #667eea; color: white; padding: 10px 20px; border-radius: 5px 5px 0 0; font-weight: bold; font-size: 14px; border-bottom: 3px solid #5568d3;">
+                                            &lt;li class="active"&gt;<br>탭1 (활성)
+                                        </div>
+                                        <div style="background: #ccc; color: #666; padding: 10px 20px; border-radius: 5px 5px 0 0; font-weight: bold; font-size: 14px;">
+                                            &lt;li&gt;<br>탭2
+                                        </div>
+                                        <div style="background: #ccc; color: #666; padding: 10px 20px; border-radius: 5px 5px 0 0; font-weight: bold; font-size: 14px;">
+                                            &lt;li&gt;<br>탭3
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <!-- 탭 내용 -->
+                                <div style="background: #f0f0f0; border: 2px dashed #999; padding: 20px; border-radius: 5px;">
+                                    <div style="text-align: center; color: #666; font-size: 11px; margin-bottom: 10px;">&lt;div class="tab-content"&gt;</div>
+                                    
+                                    <div style="background: #667eea; color: white; padding: 40px; border-radius: 5px; text-align: center; font-weight: bold;">
+                                        &lt;div class="tab-item active"&gt;<br>내용1 (표시됨)
+                                    </div>
+                                    
+                                    <div style="text-align: center; color: #999; font-size: 10px; margin-top: 10px;">
+                                        ⬆ active 클래스가 있는 항목만 display: block, 나머지는 display: none
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="code-example">
+                        <pre>&lt;div class="tab-menu"&gt;
+    &lt;ul class="tab-list"&gt;
+        &lt;li class="active"&gt;&lt;a href="#"&gt;탭1&lt;/a&gt;&lt;/li&gt;
+        &lt;li&gt;&lt;a href="#"&gt;탭2&lt;/a&gt;&lt;/li&gt;
+        &lt;li&gt;&lt;a href="#"&gt;탭3&lt;/a&gt;&lt;/li&gt;
+    &lt;/ul&gt;
+    &lt;div class="tab-content"&gt;
+        &lt;div class="tab-item active"&gt;내용1&lt;/div&gt;
+        &lt;div class="tab-item"&gt;내용2&lt;/div&gt;
+        &lt;div class="tab-item"&gt;내용3&lt;/div&gt;
+    &lt;/div&gt;
+&lt;/div&gt;</pre>
+                    </div>
+                    
+                    <p><strong>구조 설명:</strong></p>
+                    <ul style="margin-left: 20px; margin-top: 10px;">
+                        <li><code>.tab-menu</code>: 탭 메뉴 전체를 감싸는 컨테이너입니다</li>
+                        <li><code>.tab-list</code>: 탭 버튼들을 담는 ul입니다</li>
+                        <li><code>li.active</code>: 현재 활성화된 탭에 active 클래스를 추가합니다 (기본값: 첫 번째 탭)</li>
+                        <li><code>.tab-content</code>: 탭 내용들을 담는 컨테이너입니다</li>
+                        <li><code>.tab-item.active</code>: 현재 보여지는 내용에 active 클래스를 추가합니다 (기본값: 첫 번째 내용)</li>
+                        <li>탭과 내용의 순서가 일치해야 합니다 (첫 번째 탭 = 첫 번째 내용)</li>
+                    </ul>
+                    
+                    <h3>탭 메뉴 CSS 완벽 가이드</h3>
+                    <p><strong>탭 리스트 스타일:</strong></p>
+                    <div class="code-example">
+                        <pre>.tab-list {
+    display: flex;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    border-bottom: 2px solid #ddd;
+}
+
+.tab-list li {
+    margin-right: 5px;
+}
+
+.tab-list a {
+    display: block;
+    padding: 10px 20px;
+    text-decoration: none;
+    color: #333;
+    background: #f5f5f5;
+    border: 1px solid #ddd;
+    border-bottom: none;
+}
+
+.tab-list li.active a {
+    background: #667eea;
+    color: #fff;
+    border-color: #667eea;
+}</pre>
+                    </div>
+                    
+                    <p><strong>탭 내용 스타일:</strong></p>
+                    <div class="code-example">
+                        <pre>.tab-item {
+    display: none;  /* 기본적으로 숨김 */
+    padding: 20px;
+    background: #fff;
+    border: 1px solid #ddd;
+    border-top: none;
+}
+
+.tab-item.active {
+    display: block;  /* active 클래스가 있을 때만 표시 */
+}</pre>
+                    </div>
+                    
+                    <p><strong>핵심 개념 설명:</strong></p>
+                    <ul style="margin-left: 20px; margin-top: 10px;">
+                        <li><strong>display: flex:</strong> 탭 버튼들을 가로로 배치합니다</li>
+                        <li><strong>display: none → block:</strong> 기본적으로 내용을 숨기고, active 클래스가 있을 때만 보여줍니다</li>
+                        <li><strong>active 클래스:</strong> 현재 선택된 탭과 내용을 나타내는 클래스입니다</li>
+                        <li><strong>순서 일치:</strong> 탭의 순서와 내용의 순서가 정확히 일치해야 합니다</li>
+                    </ul>
+                    
+                    <h3>jQuery로 탭 전환 구현 완벽 가이드</h3>
+                    <p><strong>기본 구현 방법:</strong></p>
+                    <div class="code-example">
+                        <pre>$(document).ready(function() {
+    $('.tab-list li').click(function() {
+        var index = $(this).index();  // 클릭한 탭의 인덱스 (0부터 시작)
+        
+        // 모든 탭의 active 클래스 제거
+        $('.tab-list li').removeClass('active');
+        // 클릭한 탭에 active 클래스 추가
+        $(this).addClass('active');
+        
+        // 모든 내용의 active 클래스 제거
+        $('.tab-item').removeClass('active');
+        // 해당 순서의 내용에 active 클래스 추가
+        $('.tab-item').eq(index).addClass('active');
+    });
+});</pre>
+                    </div>
+                    
+                    <p><strong>코드 설명:</strong></p>
+                    <ul style="margin-left: 20px; margin-top: 10px;">
+                        <li><strong>$('.tab-list li').click():</strong> 탭 버튼을 클릭했을 때 실행되는 함수입니다</li>
+                        <li><strong>$(this):</strong> 클릭한 탭 li 요소를 가리킵니다</li>
+                        <li><strong>.index():</strong> 부모 요소 내에서의 순서를 반환합니다 (0부터 시작). 
+                        첫 번째 탭은 0, 두 번째 탭은 1, 세 번째 탭은 2입니다</li>
+                        <li><strong>.removeClass('active'):</strong> 모든 탭/내용에서 active 클래스를 제거합니다</li>
+                        <li><strong>.addClass('active'):</strong> 선택한 탭과 해당 내용에 active 클래스를 추가합니다</li>
+                        <li><strong>.eq(index):</strong> jQuery 객체에서 특정 인덱스의 요소를 선택합니다. 
+                        eq(0)은 첫 번째, eq(1)은 두 번째 요소입니다</li>
+                    </ul>
+                    
+                    <p><strong>동작 순서:</strong></p>
+                    <ol style="margin-left: 20px; margin-top: 10px;">
+                        <li>사용자가 두 번째 탭을 클릭합니다</li>
+                        <li>index()로 클릭한 탭의 순서를 찾습니다 (1)</li>
+                        <li>모든 탭의 active 클래스를 제거합니다</li>
+                        <li>클릭한 탭에 active 클래스를 추가합니다</li>
+                        <li>모든 내용의 active 클래스를 제거합니다</li>
+                        <li>eq(1)로 두 번째 내용을 찾아 active 클래스를 추가합니다</li>
+                        <li>두 번째 내용만 display: block이 되어 보입니다</li>
+                    </ol>
+                    
+                    <h3>애니메이션 효과 추가하기</h3>
+                    <p>탭 전환 시 부드러운 효과를 추가할 수 있습니다:</p>
+                    <div class="code-example">
+                        <pre>$('.tab-list li').click(function() {
+    var index = $(this).index();
+    
+    // 현재 활성화된 내용을 페이드 아웃
+    $('.tab-item.active').fadeOut(200, function() {
+        // 페이드 아웃 완료 후
+        $('.tab-list li').removeClass('active');
+        $(this).addClass('active');
+        
+        $('.tab-item').removeClass('active');
+        // 새로운 내용을 페이드 인
+        $('.tab-item').eq(index).fadeIn(200);
+    });
+});</pre>
+                    </div>
+                    
+                    <h3>시험에서 주의해야 할 탭 메뉴 오류</h3>
+                    <ul style="margin-left: 20px; margin-top: 10px;">
+                        <li><strong>index() 메서드 오류:</strong> index()는 0부터 시작하므로 eq(0)이 첫 번째입니다</li>
+                        <li><strong>순서 불일치:</strong> 탭과 내용의 순서가 일치하지 않으면 잘못된 내용이 표시됩니다</li>
+                        <li><strong>active 클래스 관리:</strong> 모든 항목에서 active를 제거한 후 선택한 항목에만 추가해야 합니다</li>
+                        <li><strong>display: none/block:</strong> active 클래스에 따라 display를 제어해야 합니다</li>
+                        <li><strong>eq() 인덱스 오류:</strong> eq(0)은 첫 번째, eq(1)은 두 번째입니다</li>
+                    </ul>
+                `,
+                problem: "jQuery를 사용하여 탭을 클릭하면 해당 탭에 active 클래스를 추가하고, 다른 탭의 active 클래스를 제거하는 코드를 작성하세요.",
+                solution: "$('.tab-list li').click(function() {\n    $('.tab-list li').removeClass('active');\n    $(this).addClass('active');\n});",
+                test: (code) => {
+                    try {
+                        return code.includes("click") &&
+                               code.includes("removeClass('active')") &&
+                               code.includes("addClass('active')");
+                    } catch (e) {
+                        return false;
+                    }
+                }
+            },
+            {
+                title: "레이어 팝업 만들기",
+                content: `
+                    <h3>레이어 팝업이란?</h3>
+                    <p>레이어 팝업(모달 팝업)은 기존 페이지 위에 떠 있는 팝업 창입니다. 
+                    중요한 알림, 확인 창, 추가 정보 등을 보여줄 때 사용합니다. 
+                    팝업이 열리면 배경이 어두워지고(overlay), 사용자는 팝업을 닫기 전까지 다른 작업을 할 수 없습니다.</p>
+                    
+                    <p>웹디자인개발기능사 C유형에서 필수적으로 구현해야 하는 기능입니다. 
+                    팝업의 핵심은 <strong>position: fixed로 화면 전체를 덮는 오버레이를 만들고, 
+                    그 위에 가운데 정렬된 팝업 내용을 표시하는 것</strong>입니다.</p>
+                    
+                    <h3>팝업 HTML 구조 완벽 이해</h3>
+                    <p>레이어 팝업의 기본 구조는 다음과 같습니다:</p>
+                    
+                    <h4>팝업 구조 시각화</h4>
+                    <div style="background: #f5f5f5; padding: 30px; border-radius: 10px; margin: 20px 0; border: 2px solid #ddd; position: relative;">
+                        <div style="max-width: 800px; margin: 0 auto;">
+                            <!-- 팝업 열기 버튼 -->
+                            <div style="text-align: center; margin-bottom: 20px;">
+                                <div style="background: #667eea; color: white; padding: 10px 30px; border-radius: 5px; display: inline-block; font-weight: bold;">
+                                    &lt;button id="popup-open"&gt; 팝업 열기
+                                </div>
+                            </div>
+                            
+                            <!-- 팝업 오버레이 (시각화용) -->
+                            <div style="position: relative; background: rgba(0,0,0,0.5); padding: 50px; border-radius: 10px; min-height: 200px;">
+                                <div style="text-align: center; color: rgba(255,255,255,0.8); font-size: 11px; margin-bottom: 10px; font-weight: bold;">
+                                    &lt;div class="popup-overlay"&gt; (position: fixed, 화면 전체 덮음)
+                                </div>
+                                
+                                <!-- 팝업 내용 -->
+                                <div style="background: white; padding: 20px; border-radius: 10px; max-width: 400px; margin: 0 auto; position: relative; box-shadow: 0 5px 15px rgba(0,0,0,0.3);">
+                                    <div style="position: absolute; top: 10px; right: 10px; background: #f44336; color: white; padding: 5px 10px; border-radius: 3px; font-size: 12px; font-weight: bold;">
+                                        &lt;button class="popup-close"&gt; ✕ 닫기
+                                    </div>
+                                    
+                                    <div style="text-align: center; color: #666; font-size: 11px; margin-bottom: 15px; font-weight: bold;">
+                                        &lt;div class="popup-content"&gt; (가운데 정렬)
+                                    </div>
+                                    
+                                    <div style="background: #f0f0f0; padding: 15px; border-radius: 5px; margin-top: 20px;">
+                                        <div style="font-weight: bold; margin-bottom: 10px;">&lt;h2&gt; 팝업 제목</div>
+                                        <div>&lt;p&gt; 팝업 내용</div>
+                                    </div>
+                                    
+                                    <div style="text-align: center; color: #999; font-size: 9px; margin-top: 10px;">
+                                        ⬆ top: 50%, left: 50%, transform: translate(-50%, -50%)로 가운데 정렬
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="code-example">
+                        <pre>&lt;button id="popup-open"&gt;팝업 열기&lt;/button&gt;
+
+&lt;div class="popup-overlay"&gt;
+    &lt;div class="popup-content"&gt;
+        &lt;button class="popup-close"&gt;닫기&lt;/button&gt;
+        &lt;h2&gt;팝업 제목&lt;/h2&gt;
+        &lt;p&gt;팝업 내용&lt;/p&gt;
+    &lt;/div&gt;
+&lt;/div&gt;</pre>
+                    </div>
+                    
+                    <p><strong>구조 설명:</strong></p>
+                    <ul style="margin-left: 20px; margin-top: 10px;">
+                        <li><code>id="popup-open"</code>: 팝업을 여는 버튼입니다. 클릭하면 팝업이 표시됩니다</li>
+                        <li><code>class="popup-overlay"</code>: 화면 전체를 덮는 반투명 배경 레이어입니다. 
+                        팝업의 배경 역할을 하며, 기본적으로 숨겨져 있습니다 (display: none)</li>
+                        <li><code>class="popup-content"</code>: 실제 팝업 내용이 들어가는 영역입니다. 
+                        오버레이 위에 가운데 정렬되어 표시됩니다</li>
+                        <li><code>class="popup-close"</code>: 팝업을 닫는 버튼입니다. 클릭하면 팝업이 숨겨집니다</li>
+                        <li><strong>두 단계 구조:</strong> overlay(배경)와 content(내용)를 분리하여 구조를 명확히 합니다</li>
+                    </ul>
+                    
+                    <h3>팝업 CSS 완벽 가이드</h3>
+                    <p><strong>오버레이 스타일 (핵심!):</strong></p>
+                    <div class="code-example">
+                        <pre>.popup-overlay {
+    display: none;  /* 기본적으로 숨김 */
+    position: fixed;  /* 화면 기준 고정 위치 (가장 중요!) */
+    top: 0;  /* 화면 상단 */
+    left: 0;  /* 화면 왼쪽 */
+    width: 100%;  /* 화면 전체 너비 */
+    height: 100%;  /* 화면 전체 높이 */
+    background: rgba(0,0,0,0.5);  /* 반투명 검은 배경 */
+    z-index: 9999;  /* 다른 요소 위에 표시 (매우 중요!) */
+}</pre>
+                    </div>
+                    
+                    <p><strong>각 속성 상세 설명:</strong></p>
+                    <ul style="margin-left: 20px; margin-top: 10px;">
+                        <li><strong>display: none:</strong> 기본적으로 팝업을 숨깁니다. jQuery의 fadeIn()으로 보여줍니다</li>
+                        <li><strong>position: fixed:</strong> 화면(뷰포트) 기준으로 고정 위치를 지정합니다. 
+                        스크롤해도 항상 같은 위치에 있습니다. 팝업에서 가장 중요한 속성입니다!</li>
+                        <li><strong>top: 0; left: 0:</strong> 화면의 왼쪽 상단 모서리에 위치시킵니다</li>
+                        <li><strong>width: 100%; height: 100%:</strong> 화면 전체를 덮도록 합니다</li>
+                        <li><strong>background: rgba(0,0,0,0.5):</strong> 반투명 검은 배경입니다. 
+                        rgba의 마지막 값(0.5)은 투명도를 의미합니다 (0=투명, 1=불투명)</li>
+                        <li><strong>z-index: 9999:</strong> 다른 모든 요소보다 위에 표시되도록 합니다. 
+                        값이 클수록 위에 표시됩니다. 이게 없으면 팝업이 다른 요소에 가려질 수 있습니다</li>
+                    </ul>
+                    
+                    <p><strong>팝업 내용 스타일 (가운데 정렬):</strong></p>
+                    <div class="code-example">
+                        <pre>.popup-content {
+    position: absolute;  /* 오버레이 기준 절대 위치 */
+    top: 50%;  /* 오버레이 높이의 50% 지점 */
+    left: 50%;  /* 오버레이 너비의 50% 지점 */
+    transform: translate(-50%, -50%);  /* 자신 크기의 50%만큼 이동하여 정확히 가운데 정렬 */
+    background: #fff;  /* 흰 배경 */
+    padding: 30px;  /* 내부 여백 */
+    border-radius: 10px;  /* 둥근 모서리 */
+    width: 500px;  /* 팝업 너비 */
+    max-width: 90%;  /* 화면이 작을 때 너비 제한 (반응형) */
+    box-shadow: 0 5px 15px rgba(0,0,0,0.3);  /* 그림자 효과 */
+}</pre>
+                    </div>
+                    
+                    <p><strong>가운데 정렬 원리 (매우 중요!):</strong></p>
+                    <ul style="margin-left: 20px; margin-top: 10px;">
+                        <li><strong>top: 50%; left: 50%:</strong> 요소의 왼쪽 상단 모서리를 화면 정중앙에 위치시킵니다</li>
+                        <li><strong>transform: translate(-50%, -50%):</strong> 요소 자신의 크기만큼 각각 -50%씩 이동시켜 
+                        요소의 정중앙이 화면 정중앙에 오도록 합니다. 이게 없으면 팝업의 왼쪽 상단 모서리가 가운데에 있습니다!</li>
+                        <li><strong>왜 이렇게 복잡한가?</strong> 요소의 정확한 크기를 모르기 때문에 이런 방법을 사용합니다</li>
+                    </ul>
+                    
+                    <p><strong>닫기 버튼 스타일:</strong></p>
+                    <div class="code-example">
+                        <pre>.popup-close {
+    position: absolute;  /* 팝업 내용 기준 절대 위치 */
+    top: 10px;  /* 위에서 10px */
+    right: 10px;  /* 오른쪽에서 10px */
+    background: #333;
+    color: #fff;
+    border: none;
+    padding: 5px 10px;
+    cursor: pointer;
+    border-radius: 5px;
+}
+
+.popup-close:hover {
+    background: #555;
+}</pre>
+                    </div>
+                    
+                    <h3>jQuery로 팝업 제어 완벽 가이드</h3>
+                    <p><strong>팝업 열기:</strong></p>
+                    <div class="code-example">
+                        <pre>$(document).ready(function() {
+    $('#popup-open').click(function() {
+        $('.popup-overlay').fadeIn(300);  // 0.3초 동안 페이드 인
+    });
+});</pre>
+                    </div>
+                    
+                    <p><strong>팝업 닫기 (여러 방법):</strong></p>
+                    <div class="code-example">
+                        <pre>// 닫기 버튼 클릭
+$('.popup-close').click(function() {
+    $('.popup-overlay').fadeOut(300);  // 0.3초 동안 페이드 아웃
+});
+
+// 오버레이 클릭 시 닫기 (선택 사항)
+$('.popup-overlay').click(function(e) {
+    if (e.target === this) {  // 오버레이를 직접 클릭한 경우만
+        $('.popup-overlay').fadeOut(300);
+    }
+});
+
+// ESC 키로 닫기 (선택 사항)
+$(document).keydown(function(e) {
+    if (e.keyCode === 27) {  // ESC 키
+        $('.popup-overlay').fadeOut(300);
+    }
+});</pre>
+                    </div>
+                    
+                    <p><strong>코드 설명:</strong></p>
+                    <ul style="margin-left: 20px; margin-top: 10px;">
+                        <li><strong>fadeIn(300):</strong> 0.3초 동안 서서히 나타나게 합니다. 시간을 지정하지 않으면 기본값이 적용됩니다</li>
+                        <li><strong>fadeOut(300):</strong> 0.3초 동안 서서히 사라지게 합니다</li>
+                        <li><strong>e.target === this:</strong> 클릭한 요소가 정확히 .popup-overlay인지 확인합니다. 
+                        팝업 내용을 클릭했을 때는 닫히지 않도록 하기 위한 조건입니다</li>
+                        <li><strong>e.keyCode === 27:</strong> ESC 키의 키 코드는 27입니다</li>
+                    </ul>
+                    
+                    <h3>팝업 내용 동적으로 변경하기</h3>
+                    <p>같은 팝업을 여러 곳에서 사용하되, 내용만 다르게 표시할 수 있습니다:</p>
+                    <div class="code-example">
+                        <pre>$('.btn-detail').click(function() {
+    var title = $(this).data('title');  // data-title 속성 값 가져오기
+    var content = $(this).data('content');  // data-content 속성 값 가져오기
+    
+    $('.popup-content h2').text(title);  // 제목 변경
+    $('.popup-content p').text(content);  // 내용 변경
+    $('.popup-overlay').fadeIn();
+});</pre>
+                    </div>
+                    
+                    <h3>웹디자인개발기능사 시험에서의 팝업 작성 팁</h3>
+                    <ul style="margin-left: 20px; margin-top: 10px;">
+                        <li><strong>position: fixed 필수:</strong> 오버레이에 반드시 설정해야 화면 전체를 덮습니다</li>
+                        <li><strong>z-index 높게 설정:</strong> 다른 요소 위에 표시되도록 큰 값을 설정합니다 (9999)</li>
+                        <li><strong>가운데 정렬:</strong> top: 50%, left: 50%, transform: translate(-50%, -50%) 조합을 사용합니다</li>
+                        <li><strong>display: none → fadeIn:</strong> 기본적으로 숨기고, jQuery로 보여줍니다</li>
+                        <li><strong>fadeIn/fadeOut 활용:</strong> 부드러운 애니메이션 효과를 위해 fadeIn/fadeOut을 사용합니다</li>
+                        <li><strong>닫기 기능:</strong> 닫기 버튼뿐만 아니라 오버레이 클릭, ESC 키로도 닫을 수 있게 합니다</li>
+                    </ul>
+                    
+                    <h3>시험에서 자주 하는 실수</h3>
+                    <ul style="margin-left: 20px; margin-top: 10px;">
+                        <li><strong>position: fixed 누락:</strong> absolute를 사용하면 스크롤 시 팝업이 같이 움직입니다</li>
+                        <li><strong>z-index 누락:</strong> 팝업이 다른 요소에 가려져 보이지 않습니다</li>
+                        <li><strong>transform: translate(-50%, -50%) 누락:</strong> 팝업이 정확히 가운데 정렬되지 않습니다</li>
+                        <li><strong>width: 100%; height: 100% 누락:</strong> 오버레이가 화면 전체를 덮지 않습니다</li>
+                        <li><strong>display: none 누락:</strong> 페이지 로드 시 팝업이 이미 보여 있습니다</li>
+                    </ul>
+                `,
+                problem: "jQuery를 사용하여 ID가 'popup-open'인 버튼을 클릭하면 팝업이 fadeIn으로 나타나고, 'popup-close' 버튼을 클릭하면 fadeOut으로 사라지도록 작성하세요.",
+                solution: "$('#popup-open').click(function() {\n    $('.popup-overlay').fadeIn();\n});\n\n$('.popup-close').click(function() {\n    $('.popup-overlay').fadeOut();\n});",
+                test: (code) => {
+                    try {
+                        return code.includes("$('#popup-open')") &&
+                               code.includes("fadeIn") &&
+                               code.includes("fadeOut");
+                    } catch (e) {
+                        return false;
+                    }
+                }
+            },
+            {
+                title: "A유형 완벽 분석",
+                content: `
+                    <h3>A유형이란?</h3>
+                    <p>A유형은 웹디자인개발기능사 시험의 세 가지 유형 중 가장 기본적인 유형입니다. 
+                    HTML 구조 작성과 CSS 스타일링이 중심이며, JavaScript 기능은 최소한으로 사용됩니다. 
+                    기본 레이아웃 구성과 네비게이션 메뉴 구현이 주된 과제입니다.</p>
+                    
+                    <p>A유형은 <strong>기초적인 웹페이지 제작 능력</strong>을 평가하는 유형으로, 
+                    시맨틱 HTML 태그의 이해와 CSS 레이아웃 구현 능력을 중점적으로 평가합니다. 
+                    JavaScript나 jQuery는 거의 사용하지 않으며, 순수 CSS만으로 스타일링을 완성합니다.</p>
+                    
+                    <h3>A유형 특징 상세 분석</h3>
+                    <p><strong>주요 구현 사항:</strong></p>
+                    <ul style="margin-left: 20px; margin-top: 10px;">
+                        <li><strong>헤더 영역:</strong> 로고와 네비게이션 메뉴를 포함한 상단 영역을 만듭니다. 
+                        Flexbox를 활용하여 로고와 메뉴를 가로로 배치합니다</li>
+                        <li><strong>네비게이션 메뉴:</strong> 가로 메뉴를 구현합니다. 
+                        ul, li를 사용하고 CSS의 display: flex와 list-style: none을 활용합니다</li>
+                        <li><strong>본문 영역:</strong> main 태그 안에 주요 내용을 배치합니다. 
+                        시맨틱 태그를 적절히 사용하여 구조화합니다</li>
+                        <li><strong>푸터 영역:</strong> 하단 영역에 저작권 정보 등을 배치합니다</li>
+                        <li><strong>레이아웃 구성:</strong> 전체 레이아웃을 1200px 너비로 제한하고 가운데 정렬합니다</li>
+                    </ul>
+                    
+                    <p><strong>평가 비중:</strong></p>
+                    <ul style="margin-left: 20px; margin-top: 10px;">
+                        <li><strong>HTML 구조 작성:</strong> 30점 - 시맨틱 태그 사용, 올바른 구조</li>
+                        <li><strong>CSS 스타일링:</strong> 40점 - 레이아웃 구성, 스타일 적용</li>
+                        <li><strong>네비게이션 메뉴:</strong> 20점 - 가로 메뉴 구현</li>
+                        <li><strong>전체 완성도:</strong> 10점 - 디자인, 파일 관리 등</li>
+                    </ul>
+                    
+                    <h3>A유형 작업 순서 완벽 가이드</h3>
+                    <p><strong>1단계: HTML 구조 작성 (30분 예상)</strong></p>
+                    <ol style="margin-left: 20px; margin-top: 10px;">
+                        <li><strong>기본 구조 작성:</strong> DOCTYPE, html, head, body 태그를 먼저 작성합니다</li>
+                        <li><strong>메타 태그 추가:</strong> charset, viewport 설정을 추가합니다</li>
+                        <li><strong>외부 파일 연결:</strong> CSS 파일을 head에 연결합니다</li>
+                        <li><strong>wrap 컨테이너:</strong> 전체 레이아웃을 감싸는 div.wrap을 만듭니다</li>
+                        <li><strong>헤더 구조:</strong> header 태그 안에 header-inner, logo, nav.gnb를 작성합니다</li>
+                        <li><strong>네비게이션 메뉴:</strong> ul과 li를 사용하여 메뉴 항목을 작성합니다</li>
+                        <li><strong>본문 구조:</strong> main 태그 안에 section, article 등을 배치합니다</li>
+                        <li><strong>푸터 구조:</strong> footer 태그 안에 footer-inner와 내용을 작성합니다</li>
+                    </ol>
+                    
+                    <p><strong>2단계: CSS 레이아웃 구성 (60분 예상)</strong></p>
+                    <ol style="margin-left: 20px; margin-top: 10px;">
+                        <li><strong>기본 스타일 리셋:</strong> margin, padding 초기화 (* 선택자 사용)</li>
+                        <li><strong>wrap 스타일:</strong> width: 1200px, margin: 0 auto로 가운데 정렬</li>
+                        <li><strong>헤더 스타일:</strong> header-inner에 display: flex, justify-content: space-between 적용</li>
+                        <li><strong>네비게이션 스타일:</strong> ul에 display: flex, list-style: none 적용</li>
+                        <li><strong>본문 스타일:</strong> main에 적절한 padding과 min-height 설정</li>
+                        <li><strong>푸터 스타일:</strong> footer-inner에 width: 1200px, margin: 0 auto 적용</li>
+                        <li><strong>호버 효과:</strong> 메뉴 항목에 hover 효과 추가</li>
+                    </ol>
+                    
+                    <p><strong>3단계: 네비게이션 메뉴 스타일링 (30분 예상)</strong></p>
+                    <ol style="margin-left: 20px; margin-top: 10px;">
+                        <li><strong>리스트 스타일 제거:</strong> list-style: none으로 불릿 포인트 제거</li>
+                        <li><strong>가로 배치:</strong> display: flex로 메뉴 항목 가로 배치</li>
+                        <li><strong>간격 조정:</strong> margin-right로 메뉴 항목 간 간격 설정</li>
+                        <li><strong>링크 스타일:</strong> text-decoration: none으로 밑줄 제거</li>
+                        <li><strong>호버 효과:</strong> :hover로 색상 변경 효과 추가</li>
+                    </ol>
+                    
+                    <p><strong>4단계: 최종 점검 (30분 예상)</strong></p>
+                    <ol style="margin-left: 20px; margin-top: 10px;">
+                        <li><strong>브라우저 테스트:</strong> Chrome에서 레이아웃이 정상적으로 표시되는지 확인</li>
+                        <li><strong>파일 경로 확인:</strong> CSS 파일이 제대로 연결되었는지 확인</li>
+                        <li><strong>코드 검토:</strong> 문법 오류, 닫는 태그 누락 등 확인</li>
+                        <li><strong>파일 저장:</strong> 모든 파일을 올바른 위치에 저장</li>
+                    </ol>
+                    
+                    <h3>A유형 핵심 체크리스트</h3>
+                    <p><strong>HTML 체크리스트:</strong></p>
+                    <ul style="margin-left: 20px; margin-top: 10px;">
+                        <li>✅ DOCTYPE, html, head, body 태그 정확히 작성</li>
+                        <li>✅ 시맨틱 태그(header, nav, main, footer) 적절히 사용</li>
+                        <li>✅ wrap 컨테이너로 전체 레이아웃 감싸기</li>
+                        <li>✅ header-inner, footer-inner 구조 사용</li>
+                        <li>✅ 네비게이션 메뉴에 ul, li 사용</li>
+                        <li>✅ 모든 태그 올바르게 닫기</li>
+                    </ul>
+                    
+                    <p><strong>CSS 체크리스트:</strong></p>
+                    <ul style="margin-left: 20px; margin-top: 10px;">
+                        <li>✅ wrap에 width: 1200px, margin: 0 auto 설정</li>
+                        <li>✅ header-inner에 display: flex, justify-content: space-between 설정</li>
+                        <li>✅ 네비게이션 ul에 display: flex, list-style: none 설정</li>
+                        <li>✅ 링크에 text-decoration: none 설정</li>
+                        <li>✅ 호버 효과 추가</li>
+                        <li>✅ 모든 선택자 정확히 작성</li>
+                    </ul>
+                    
+                    <h3>A유형에서 주의해야 할 실수</h3>
+                    <ul style="margin-left: 20px; margin-top: 10px;">
+                        <li><strong>margin: 0 auto 누락:</strong> 가장 흔한 실수입니다. 가운데 정렬이 안 됩니다</li>
+                        <li><strong>display: flex 누락:</strong> 메뉴가 세로로 배치되어 가로 메뉴가 안 됩니다</li>
+                        <li><strong>list-style: none 누락:</strong> 불릿 포인트가 그대로 표시됩니다</li>
+                        <li><strong>text-decoration 누락:</strong> 링크에 밑줄이 그대로 있습니다</li>
+                        <li><strong>시맨틱 태그 오용:</strong> div만 사용하거나, 태그 역할에 맞지 않게 사용</li>
+                        <li><strong>파일 경로 오류:</strong> css/style.css 경로를 잘못 입력</li>
+                        <li><strong>태그 닫기 누락:</strong> 열린 태그를 닫지 않아 레이아웃이 깨짐</li>
+                    </ul>
+                    
+                    <h3>A유형 시험 전략</h3>
+                    <ul style="margin-left: 20px; margin-top: 10px;">
+                        <li><strong>시간 배분:</strong> HTML 30분, CSS 90분, 점검 60분으로 배분</li>
+                        <li><strong>기본부터:</strong> 레이아웃 구조를 먼저 만들고 세부 스타일을 나중에 적용</li>
+                        <li><strong>반복 확인:</strong> 각 단계마다 브라우저에서 확인하며 진행</li>
+                        <li><strong>템플릿 활용:</strong> 기본 구조는 미리 암기하여 빠르게 작성</li>
+                    </ul>
+                `,
+                problem: "A유형에서 가장 중요한 작업 순서를 작성하세요. (HTML 구조 작성, CSS 스타일링 순서)",
+                solution: "1. HTML 구조 작성\n2. CSS 스타일링",
+                test: (code) => {
+                    try {
+                        return code.includes("HTML") || code.includes("CSS");
+                    } catch (e) {
+                        return false;
+                    }
+                }
+            },
+            {
+                title: "B유형 완벽 분석",
+                content: `
+                    <h3>B유형이란?</h3>
+                    <p>B유형은 웹디자인개발기능사 시험의 세 가지 유형 중 중급 난이도의 유형입니다. 
+                    A유형의 기본 레이아웃과 메뉴 구현에 더하여, 슬라이드 배너와 드롭다운 메뉴 기능을 구현해야 합니다. 
+                    jQuery를 활용한 동적 기능 구현이 필수입니다.</p>
+                    
+                    <p>B유형은 <strong>HTML 구조, CSS 스타일링, JavaScript/jQuery 기능 구현</strong>을 모두 포함하는 유형으로, 
+                    실무에서 가장 많이 사용되는 기능들을 구현합니다. 
+                    슬라이드 배너와 드롭다운 메뉴 구현이 주된 과제이며, 자동 슬라이드 전환과 호버 효과 구현이 핵심입니다.</p>
+                    
+                    <h3>B유형 특징 상세 분석</h3>
+                    <p><strong>주요 구현 사항:</strong></p>
+                    <ul style="margin-left: 20px; margin-top: 10px;">
+                        <li><strong>기본 레이아웃:</strong> A유형과 동일하게 헤더, 네비게이션, 본문, 푸터 구조를 만듭니다</li>
+                        <li><strong>슬라이드 배너:</strong> 여러 이미지를 순환하며 자동으로 전환되는 배너를 구현합니다. 
+                        jQuery의 setInterval을 사용하여 3초마다 자동 전환되도록 만듭니다</li>
+                        <li><strong>드롭다운 메뉴:</strong> 메인 메뉴에 마우스를 올리면 서브 메뉴가 나타나는 기능을 구현합니다. 
+                        jQuery의 hover 이벤트와 slideDown/slideUp을 활용합니다</li>
+                        <li><strong>jQuery 라이브러리:</strong> CDN을 통해 jQuery를 연결하고, 동적 기능을 구현합니다</li>
+                    </ul>
+                    
+                    <p><strong>평가 비중:</strong></p>
+                    <ul style="margin-left: 20px; margin-top: 10px;">
+                        <li><strong>HTML 구조 작성:</strong> 20점 - 레이아웃 구조, 슬라이드/드롭다운 HTML 구조</li>
+                        <li><strong>CSS 스타일링:</strong> 30점 - 레이아웃 스타일, 슬라이드/드롭다운 CSS</li>
+                        <li><strong>슬라이드 배너 구현:</strong> 25점 - 자동 전환 기능, transform 활용</li>
+                        <li><strong>드롭다운 메뉴 구현:</strong> 15점 - hover 이벤트, slideDown/slideUp</li>
+                        <li><strong>전체 완성도:</strong> 10점 - 코드 정확성, 기능 작동</li>
+                    </ul>
+                    
+                    <h3>B유형 작업 순서 완벽 가이드</h3>
+                    <p><strong>1단계: HTML 구조 작성 (40분 예상)</strong></p>
+                    <ol style="margin-left: 20px; margin-top: 10px;">
+                        <li><strong>기본 레이아웃:</strong> A유형과 동일하게 헤더, 본문, 푸터 구조 작성</li>
+                        <li><strong>슬라이드 배너 HTML:</strong> slide-banner > slide-list > li 구조 작성</li>
+                        <li><strong>드롭다운 메뉴 HTML:</strong> 메인 메뉴 li 안에 서브 메뉴 ul.sub-menu 작성</li>
+                        <li><strong>jQuery 라이브러리 연결:</strong> body 끝에 jQuery CDN 연결</li>
+                        <li><strong>파일 구조 확인:</strong> CSS 파일, 이미지 파일 경로 확인</li>
+                    </ol>
+                    
+                    <p><strong>2단계: CSS 스타일링 (60분 예상)</strong></p>
+                    <ol style="margin-left: 20px; margin-top: 10px;">
+                        <li><strong>기본 레이아웃:</strong> A유형과 동일하게 레이아웃 스타일 작성</li>
+                        <li><strong>슬라이드 배너 CSS:</strong>
+                            <ul style="margin-left: 15px; margin-top: 5px;">
+                                <li>slide-banner에 overflow: hidden 설정</li>
+                                <li>slide-list에 display: flex, width: 300% 설정</li>
+                                <li>transition: transform 0.5s 설정</li>
+                                <li>각 li에 width: 33.333% 설정</li>
+                            </ul>
+                        </li>
+                        <li><strong>드롭다운 메뉴 CSS:</strong>
+                            <ul style="margin-left: 15px; margin-top: 5px;">
+                                <li>메인 메뉴 li에 position: relative 설정</li>
+                                <li>서브 메뉴에 display: none, position: absolute 설정</li>
+                                <li>top: 100%, left: 0으로 위치 지정</li>
+                                <li>z-index: 1000 설정</li>
+                            </ul>
+                        </li>
+                    </ol>
+                    
+                    <p><strong>3단계: jQuery 슬라이드 기능 구현 (40분 예상)</strong></p>
+                    <ol style="margin-left: 20px; margin-top: 10px;">
+                        <li><strong>$(document).ready():</strong> DOM 로드 후 실행되도록 설정</li>
+                        <li><strong>변수 선언:</strong> current(현재 인덱스), slideCount(슬라이드 개수) 변수 선언</li>
+                        <li><strong>setInterval 작성:</strong> 3초마다 실행되도록 설정</li>
+                        <li><strong>인덱스 계산:</strong> current = (current + 1) % slideCount로 다음 슬라이드 계산</li>
+                        <li><strong>이동 거리 계산:</strong> moveX = current * (100 / slideCount)로 이동 거리 계산</li>
+                        <li><strong>transform 적용:</strong> translateX(-moveX%)로 슬라이드 이동</li>
+                    </ol>
+                    
+                    <p><strong>4단계: jQuery 드롭다운 기능 구현 (30분 예상)</strong></p>
+                    <ol style="margin-left: 20px; margin-top: 10px;">
+                        <li><strong>hover 이벤트:</strong> .gnb > ul > li에 hover 이벤트 설정</li>
+                        <li><strong>slideDown 구현:</strong> 마우스 오버 시 .sub-menu.slideDown() 실행</li>
+                        <li><strong>slideUp 구현:</strong> 마우스 아웃 시 .sub-menu.slideUp() 실행</li>
+                        <li><strong>.stop() 추가:</strong> 빠른 마우스 이동 시 애니메이션 중복 방지</li>
+                    </ol>
+                    
+                    <p><strong>5단계: 테스트 및 수정 (30분 예상)</strong></p>
+                    <ol style="margin-left: 20px; margin-top: 10px;">
+                        <li><strong>슬라이드 테스트:</strong> 3초마다 자동으로 전환되는지 확인</li>
+                        <li><strong>드롭다운 테스트:</strong> 마우스 오버 시 서브 메뉴가 나타나는지 확인</li>
+                        <li><strong>브라우저 호환성:</strong> Chrome, Firefox에서 정상 작동하는지 확인</li>
+                        <li><strong>오류 수정:</strong> 개발자 도구(F12)로 오류 확인 및 수정</li>
+                    </ol>
+                    
+                    <h3>B유형 핵심 포인트 상세 설명</h3>
+                    <p><strong>슬라이드 배너 핵심:</strong></p>
+                    <ul style="margin-left: 20px; margin-top: 10px;">
+                        <li><strong>setInterval 사용:</strong> 일정 시간마다 함수를 반복 실행하는 메서드입니다. 
+                        3000 = 3초를 의미합니다</li>
+                        <li><strong>transform 활용:</strong> CSS의 transform: translateX()로 요소를 이동시킵니다. 
+                        transition과 함께 사용하여 부드러운 전환 효과를 만듭니다</li>
+                        <li><strong>% 연산자:</strong> current = (current + 1) % slideCount는 무한 루프를 만듭니다. 
+                        마지막 슬라이드 다음에는 0으로 돌아갑니다</li>
+                        <li><strong>음수 값:</strong> translateX(-33.333%)처럼 음수 값으로 왼쪽으로 이동시킵니다</li>
+                    </ul>
+                    
+                    <p><strong>드롭다운 메뉴 핵심:</strong></p>
+                    <ul style="margin-left: 20px; margin-top: 10px;">
+                        <li><strong>hover 이벤트:</strong> jQuery의 hover는 두 개의 함수를 받습니다. 
+                        첫 번째는 마우스 오버 시, 두 번째는 마우스 아웃 시 실행됩니다</li>
+                        <li><strong>position: relative/absolute:</strong> 부모에 relative, 자식에 absolute를 설정하여 
+                        자식 요소를 부모 기준으로 절대 위치 지정합니다</li>
+                        <li><strong>slideDown/slideUp:</strong> jQuery 애니메이션 메서드로 요소를 위에서 아래로 
+                        슬라이드하며 보여주거나 숨깁니다</li>
+                        <li><strong>.stop() 메서드:</strong> 진행 중인 애니메이션을 중지합니다. 
+                        빠른 마우스 이동 시 중복 애니메이션을 방지합니다</li>
+                    </ul>
+                    
+                    <h3>B유형 시험 전략</h3>
+                    <ul style="margin-left: 20px; margin-top: 10px;">
+                        <li><strong>시간 배분:</strong> HTML 40분, CSS 60분, jQuery 70분, 테스트 70분</li>
+                        <li><strong>우선순위:</strong> 기본 레이아웃 → 슬라이드 배너 → 드롭다운 메뉴 순서로 작업</li>
+                        <li><strong>기능별 테스트:</strong> 각 기능을 구현할 때마다 브라우저에서 테스트하며 진행</li>
+                        <li><strong>오류 대응:</strong> 개발자 도구 콘솔을 자주 확인하여 오류를 미리 발견</li>
+                    </ul>
+                    
+                    <h3>B유형에서 주의해야 할 실수</h3>
+                    <ul style="margin-left: 20px; margin-top: 10px;">
+                        <li><strong>jQuery 라이브러리 연결 누락:</strong> 가장 흔한 실수입니다. 
+                        jQuery를 연결하지 않으면 모든 jQuery 코드가 작동하지 않습니다</li>
+                        <li><strong>$(document).ready() 누락:</strong> DOM이 로드되기 전에 코드가 실행되어 요소를 찾지 못합니다</li>
+                        <li><strong>overflow: hidden 누락:</strong> 슬라이드 배너에서 여러 이미지가 동시에 보입니다</li>
+                        <li><strong>transform 음수 값 오류:</strong> 양수 값을 사용하면 반대 방향으로 이동합니다</li>
+                        <li><strong>position: relative 누락:</strong> 드롭다운 메뉴에서 서브 메뉴 위치가 이상합니다</li>
+                        <li><strong>setInterval 위치 오류:</strong> $(document).ready() 밖에 작성하면 작동하지 않습니다</li>
+                    </ul>
+                `,
+                problem: "B유형에서 슬라이드 배너를 구현할 때 사용하는 jQuery 메서드를 작성하세요. (setInterval 사용)",
+                solution: "setInterval",
+                test: (code) => {
+                    try {
+                        return code.includes("setInterval");
+                    } catch (e) {
+                        return false;
+                    }
+                }
+            },
+            {
+                title: "C유형 완벽 분석",
+                content: `
+                    <h3>C유형이란?</h3>
+                    <p>C유형은 웹디자인개발기능사 시험의 세 가지 유형 중 고급 난이도의 유형입니다. 
+                    A유형의 기본 레이아웃과 메뉴 구현에 더하여, 탭 메뉴 전환 기능과 레이어 팝업 창을 구현해야 합니다. 
+                    jQuery를 활용한 상호작용 기능 구현이 핵심입니다.</p>
+                    
+                    <p>C유형은 <strong>사용자 인터랙션 구현 능력</strong>을 평가하는 유형으로, 
+                    클릭 이벤트 처리, 상태 관리(active 클래스), 애니메이션 효과(fadeIn, fadeOut)를 모두 포함합니다. 
+                    탭 메뉴와 팝업 창 구현이 주된 과제이며, index() 메서드와 클래스 토글 기능 구현이 핵심입니다.</p>
+                    
+                    <h3>C유형 특징 상세 분석</h3>
+                    <p><strong>주요 구현 사항:</strong></p>
+                    <ul style="margin-left: 20px; margin-top: 10px;">
+                        <li><strong>기본 레이아웃:</strong> A유형과 동일하게 헤더, 네비게이션, 본문, 푸터 구조를 만듭니다</li>
+                        <li><strong>탭 메뉴:</strong> 여러 탭 버튼을 클릭하면 해당하는 내용만 보여주는 기능을 구현합니다. 
+                        jQuery의 index() 메서드를 사용하여 클릭한 탭의 순서를 찾고, 같은 순서의 내용을 표시합니다</li>
+                        <li><strong>레이어 팝업:</strong> 버튼을 클릭하면 화면 전체를 덮는 팝업 창이 나타나고, 
+                        닫기 버튼을 클릭하면 사라지는 기능을 구현합니다. position: fixed와 fadeIn/fadeOut을 활용합니다</li>
+                        <li><strong>상태 관리:</strong> active 클래스를 추가/제거하여 현재 활성화된 탭과 내용을 관리합니다</li>
+                    </ul>
+                    
+                    <p><strong>평가 비중:</strong></p>
+                    <ul style="margin-left: 20px; margin-top: 10px;">
+                        <li><strong>HTML 구조 작성:</strong> 20점 - 레이아웃 구조, 탭/팝업 HTML 구조</li>
+                        <li><strong>CSS 스타일링:</strong> 25점 - 레이아웃 스타일, 탭/팝업 CSS</li>
+                        <li><strong>탭 메뉴 구현:</strong> 25점 - 클릭 이벤트, index() 활용, active 클래스 관리</li>
+                        <li><strong>팝업 창 구현:</strong> 20점 - 열기/닫기 기능, position: fixed, fadeIn/fadeOut</li>
+                        <li><strong>전체 완성도:</strong> 10점 - 코드 정확성, 기능 작동</li>
+                    </ul>
+                    
+                    <h3>C유형 작업 순서 완벽 가이드</h3>
+                    <p><strong>1단계: HTML 구조 작성 (40분 예상)</strong></p>
+                    <ol style="margin-left: 20px; margin-top: 10px;">
+                        <li><strong>기본 레이아웃:</strong> A유형과 동일하게 헤더, 본문, 푸터 구조 작성</li>
+                        <li><strong>탭 메뉴 HTML:</strong>
+                            <ul style="margin-left: 15px; margin-top: 5px;">
+                                <li>tab-menu > tab-list > li 구조 작성</li>
+                                <li>첫 번째 탭에 active 클래스 추가</li>
+                                <li>tab-content > tab-item 구조 작성</li>
+                                <li>첫 번째 내용에 active 클래스 추가</li>
+                            </ul>
+                        </li>
+                        <li><strong>팝업 HTML:</strong>
+                            <ul style="margin-left: 15px; margin-top: 5px;">
+                                <li>팝업 열기 버튼 작성</li>
+                                <li>popup-overlay > popup-content 구조 작성</li>
+                                <li>팝업 닫기 버튼 작성</li>
+                            </ul>
+                        </li>
+                        <li><strong>jQuery 라이브러리 연결:</strong> body 끝에 jQuery CDN 연결</li>
+                    </ol>
+                    
+                    <p><strong>2단계: CSS 스타일링 (60분 예상)</strong></p>
+                    <ol style="margin-left: 20px; margin-top: 10px;">
+                        <li><strong>기본 레이아웃:</strong> A유형과 동일하게 레이아웃 스타일 작성</li>
+                        <li><strong>탭 메뉴 CSS:</strong>
+                            <ul style="margin-left: 15px; margin-top: 5px;">
+                                <li>tab-list에 display: flex 설정</li>
+                                <li>tab-item에 display: none 설정</li>
+                                <li>tab-item.active에 display: block 설정</li>
+                                <li>tab-list li.active에 활성화 스타일 적용</li>
+                            </ul>
+                        </li>
+                        <li><strong>팝업 CSS:</strong>
+                            <ul style="margin-left: 15px; margin-top: 5px;">
+                                <li>popup-overlay에 display: none, position: fixed 설정</li>
+                                <li>width: 100%, height: 100%로 화면 전체 덮기</li>
+                                <li>z-index: 9999 설정</li>
+                                <li>popup-content에 position: absolute, 가운데 정렬 설정</li>
+                                <li>transform: translate(-50%, -50%) 활용</li>
+                            </ul>
+                        </li>
+                    </ol>
+                    
+                    <p><strong>3단계: jQuery 탭 메뉴 기능 구현 (50분 예상)</strong></p>
+                    <ol style="margin-left: 20px; margin-top: 10px;">
+                        <li><strong>$(document).ready():</strong> DOM 로드 후 실행되도록 설정</li>
+                        <li><strong>click 이벤트:</strong> .tab-list li에 click 이벤트 설정</li>
+                        <li><strong>index() 메서드:</strong> $(this).index()로 클릭한 탭의 순서 찾기</li>
+                        <li><strong>active 클래스 제거:</strong> 모든 탭과 내용에서 active 클래스 제거</li>
+                        <li><strong>active 클래스 추가:</strong> 클릭한 탭과 해당 내용에 active 클래스 추가</li>
+                        <li><strong>eq() 메서드:</strong> .tab-item.eq(index)로 해당 순서의 내용 선택</li>
+                    </ol>
+                    
+                    <p><strong>4단계: jQuery 팝업 기능 구현 (40분 예상)</strong></p>
+                    <ol style="margin-left: 20px; margin-top: 10px;">
+                        <li><strong>팝업 열기:</strong> #popup-open에 click 이벤트 설정, .popup-overlay.fadeIn() 실행</li>
+                        <li><strong>팝업 닫기:</strong> .popup-close에 click 이벤트 설정, .popup-overlay.fadeOut() 실행</li>
+                        <li><strong>오버레이 클릭:</strong> 선택적으로 오버레이 클릭 시에도 닫히도록 구현</li>
+                        <li><strong>ESC 키:</strong> 선택적으로 ESC 키로도 닫히도록 구현</li>
+                    </ol>
+                    
+                    <p><strong>5단계: 테스트 및 수정 (50분 예상)</strong></p>
+                    <ol style="margin-left: 20px; margin-top: 10px;">
+                        <li><strong>탭 메뉴 테스트:</strong> 각 탭 클릭 시 해당 내용이 나타나는지 확인</li>
+                        <li><strong>팝업 테스트:</strong> 팝업 열기/닫기 버튼이 정상 작동하는지 확인</li>
+                        <li><strong>active 클래스 테스트:</strong> 올바른 요소에 active 클래스가 추가/제거되는지 확인</li>
+                        <li><strong>브라우저 호환성:</strong> Chrome, Firefox에서 정상 작동하는지 확인</li>
+                    </ol>
+                    
+                    <h3>C유형 핵심 포인트 상세 설명</h3>
+                    <p><strong>탭 메뉴 핵심:</strong></p>
+                    <ul style="margin-left: 20px; margin-top: 10px;">
+                        <li><strong>index() 메서드:</strong> 부모 요소 내에서의 순서(인덱스)를 반환합니다. 
+                        0부터 시작하므로 첫 번째 요소는 0, 두 번째는 1입니다</li>
+                        <li><strong>eq() 메서드:</strong> jQuery 객체에서 특정 인덱스의 요소를 선택합니다. 
+                        .eq(0)은 첫 번째, .eq(1)은 두 번째 요소입니다</li>
+                        <li><strong>active 클래스 관리:</strong> 현재 선택된 탭과 내용에만 active 클래스를 추가하고, 
+                        나머지에서는 제거합니다. display: none/block은 active 클래스에 따라 제어됩니다</li>
+                        <li><strong>순서 일치:</strong> 탭의 순서와 내용의 순서가 정확히 일치해야 합니다. 
+                        첫 번째 탭 = 첫 번째 내용, 두 번째 탭 = 두 번째 내용</li>
+                    </ul>
+                    
+                    <p><strong>팝업 창 핵심:</strong></p>
+                    <ul style="margin-left: 20px; margin-top: 10px;">
+                        <li><strong>position: fixed:</strong> 화면(뷰포트) 기준으로 고정 위치를 지정합니다. 
+                        스크롤해도 항상 같은 위치에 있습니다</li>
+                        <li><strong>가운데 정렬:</strong> top: 50%, left: 50%, transform: translate(-50%, -50%) 
+                        조합으로 정확히 가운데 정렬합니다</li>
+                        <li><strong>fadeIn/fadeOut:</strong> jQuery 애니메이션 메서드로 서서히 나타나거나 사라지게 합니다</li>
+                        <li><strong>z-index:</strong> 다른 모든 요소보다 위에 표시되도록 큰 값을 설정합니다 (9999)</li>
+                    </ul>
+                    
+                    <h3>C유형 시험 전략</h3>
+                    <ul style="margin-left: 20px; margin-top: 10px;">
+                        <li><strong>시간 배분:</strong> HTML 40분, CSS 60분, 탭 기능 50분, 팝업 기능 40분, 테스트 50분</li>
+                        <li><strong>우선순위:</strong> 기본 레이아웃 → 탭 메뉴 → 팝업 창 순서로 작업</li>
+                        <li><strong>기능별 테스트:</strong> 각 기능을 구현할 때마다 브라우저에서 테스트하며 진행</li>
+                        <li><strong>오류 대응:</strong> 개발자 도구 콘솔과 Elements 탭을 활용하여 오류와 스타일을 확인</li>
+                    </ul>
+                    
+                    <h3>C유형에서 주의해야 할 실수</h3>
+                    <ul style="margin-left: 20px; margin-top: 10px;">
+                        <li><strong>jQuery 라이브러리 연결 누락:</strong> 모든 jQuery 코드가 작동하지 않습니다</li>
+                        <li><strong>index() 메서드 오류:</strong> index()는 0부터 시작하므로 eq(0)이 첫 번째입니다</li>
+                        <li><strong>순서 불일치:</strong> 탭과 내용의 순서가 일치하지 않으면 잘못된 내용이 표시됩니다</li>
+                        <li><strong>active 클래스 관리 오류:</strong> 모든 항목에서 active를 제거한 후 선택한 항목에만 추가해야 합니다</li>
+                        <li><strong>position: fixed 누락:</strong> absolute를 사용하면 스크롤 시 팝업이 같이 움직입니다</li>
+                        <li><strong>transform: translate(-50%, -50%) 누락:</strong> 팝업이 정확히 가운데 정렬되지 않습니다</li>
+                        <li><strong>z-index 누락:</strong> 팝업이 다른 요소에 가려져 보이지 않습니다</li>
+                    </ul>
+                `,
+                problem: "C유형에서 탭 메뉴를 구현할 때 사용하는 jQuery 메서드를 작성하세요. (index, addClass, removeClass)",
+                solution: "index(), addClass(), removeClass()",
+                test: (code) => {
+                    try {
+                        return code.includes("index") || code.includes("addClass") || code.includes("removeClass");
+                    } catch (e) {
+                        return false;
+                    }
+                }
+            },
+            {
+                title: "1회차 모의고사",
+                content: `
+                    <h3>모의고사 문제</h3>
+                    <p>다음 요구사항에 맞는 웹페이지를 제작하세요:</p>
+                    <ul style="margin-left: 20px; margin-top: 10px;">
+                        <li>너비 1200px, 가운데 정렬되는 레이아웃</li>
+                        <li>헤더 영역 (높이 100px)</li>
+                        <li>네비게이션 메뉴 (홈, 소개, 서비스, 연락처)</li>
+                        <li>본문 영역</li>
+                        <li>푸터 영역 (높이 80px)</li>
+                    </ul>
+                    
+                    <h3>평가 기준</h3>
+                    <ul style="margin-left: 20px; margin-top: 10px;">
+                        <li>HTML 구조의 정확성 (30점)</li>
+                        <li>CSS 스타일링의 완성도 (40점)</li>
+                        <li>레이아웃의 정확성 (30점)</li>
+                    </ul>
+                    
+                    <h3>작업 시간</h3>
+                    <p>예상 소요 시간: 60분</p>
+                `,
+                problem: "너비 1200px, 가운데 정렬되는 레이아웃을 만드는 CSS를 작성하세요.",
+                solution: ".wrap {\n    width: 1200px;\n    margin: 0 auto;\n}",
+                test: (code) => {
+                    try {
+                        return code.includes("width: 1200px") &&
+                               code.includes("margin: 0 auto");
+                    } catch (e) {
+                        return false;
+                    }
+                }
+            },
+            {
+                title: "2회차 모의고사",
+                content: `
+                    <h3>모의고사 문제</h3>
+                    <p>다음 요구사항에 맞는 웹페이지를 제작하세요:</p>
+                    <ul style="margin-left: 20px; margin-top: 10px;">
+                        <li>슬라이드 배너 (3개 이미지, 자동 전환)</li>
+                        <li>드롭다운 메뉴 (서브메뉴 포함)</li>
+                        <li>jQuery를 활용한 동적 기능</li>
+                        <li>반응형 레이아웃</li>
+                    </ul>
+                    
+                    <h3>평가 기준</h3>
+                    <ul style="margin-left: 20px; margin-top: 10px;">
+                        <li>슬라이드 배너 구현 (30점)</li>
+                        <li>드롭다운 메뉴 구현 (30점)</li>
+                        <li>jQuery 코드 정확성 (30점)</li>
+                        <li>전체 완성도 (10점)</li>
+                    </ul>
+                    
+                    <h3>작업 시간</h3>
+                    <p>예상 소요 시간: 90분</p>
+                `,
+                problem: "3초마다 자동으로 슬라이드가 전환되도록 setInterval을 사용한 코드를 작성하세요.",
+                solution: "setInterval(function() {\n    // 슬라이드 전환 코드\n}, 3000);",
+                test: (code) => {
+                    try {
+                        return code.includes("setInterval") &&
+                               code.includes("3000");
+                    } catch (e) {
+                        return false;
+                    }
+                }
+            },
+            {
+                title: "3회차 모의고사",
+                content: `
+                    <h3>모의고사 문제</h3>
+                    <p>다음 요구사항에 맞는 웹페이지를 제작하세요:</p>
+                    <ul style="margin-left: 20px; margin-top: 10px;">
+                        <li>탭 메뉴 (3개 탭, 클릭 시 내용 전환)</li>
+                        <li>레이어 팝업 (열기/닫기 버튼)</li>
+                        <li>jQuery를 활용한 인터랙션</li>
+                        <li>애니메이션 효과</li>
+                    </ul>
+                    
+                    <h3>평가 기준</h3>
+                    <ul style="margin-left: 20px; margin-top: 10px;">
+                        <li>탭 메뉴 구현 (30점)</li>
+                        <li>팝업 창 구현 (30점)</li>
+                        <li>jQuery 코드 정확성 (30점)</li>
+                        <li>애니메이션 효과 (10점)</li>
+                    </ul>
+                    
+                    <h3>작업 시간</h3>
+                    <p>예상 소요 시간: 90분</p>
+                `,
+                problem: "탭을 클릭하면 해당 탭에 active 클래스를 추가하고 다른 탭의 active 클래스를 제거하는 jQuery 코드를 작성하세요.",
+                solution: "$('.tab-list li').click(function() {\n    $('.tab-list li').removeClass('active');\n    $(this).addClass('active');\n});",
+                test: (code) => {
+                    try {
+                        return code.includes("click") &&
+                               code.includes("removeClass('active')") &&
+                               code.includes("addClass('active')");
+                    } catch (e) {
+                        return false;
+                    }
+                }
+            },
+            {
+                title: "제출 전 필수 체크사항",
+                content: `
+                    <h3>파일 체크</h3>
+                    <ul style="margin-left: 20px; margin-top: 10px;">
+                        <li>✅ index.html 파일 존재 확인</li>
+                        <li>✅ css/style.css 파일 존재 확인</li>
+                        <li>✅ js/script.js 파일 존재 확인 (필요시)</li>
+                        <li>✅ 이미지 파일 경로 확인</li>
+                    </ul>
+                    
+                    <h3>코드 체크</h3>
+                    <ul style="margin-left: 20px; margin-top: 10px;">
+                        <li>✅ HTML 문법 오류 확인</li>
+                        <li>✅ CSS 선택자 정확성 확인</li>
+                        <li>✅ jQuery 라이브러리 연결 확인</li>
+                        <li>✅ 파일 경로 정확성 확인</li>
+                    </ul>
+                    
+                    <h3>기능 체크</h3>
+                    <ul style="margin-left: 20px; margin-top: 10px;">
+                        <li>✅ 레이아웃이 정상적으로 표시되는지</li>
+                        <li>✅ 메뉴가 정상 작동하는지</li>
+                        <li>✅ 슬라이드/탭/팝업이 정상 작동하는지</li>
+                        <li>✅ 브라우저 호환성 확인</li>
+                    </ul>
+                    
+                    <h3>최종 확인</h3>
+                    <ul style="margin-left: 20px; margin-top: 10px;">
+                        <li>✅ 파일명 정확성 (대소문자 구분)</li>
+                        <li>✅ 폴더 구조 정확성</li>
+                        <li>✅ 제출 파일 압축 확인</li>
+                    </ul>
+                `,
+                problem: "제출 전 확인해야 할 파일 3가지를 작성하세요. (index.html, css/style.css 등)",
+                solution: "index.html, css/style.css, js/script.js",
+                test: (code) => {
+                    try {
+                        return code.includes("html") || code.includes("css") || code.includes("js");
+                    } catch (e) {
+                        return false;
+                    }
+                }
+            },
+            {
+                title: "자주하는 실수 및 디버깅",
+                content: `
+                    <h3>자주하는 실수</h3>
+                    <ul style="margin-left: 20px; margin-top: 10px;">
+                        <li><strong>파일 경로 오류:</strong> 상대 경로와 절대 경로 구분</li>
+                        <li><strong>선택자 오류:</strong> 클래스와 ID 구분 (.과 #)</li>
+                        <li><strong>jQuery 연결 오류:</strong> 라이브러리 로드 순서 확인</li>
+                        <li><strong>CSS 우선순위:</strong> !important 남용 주의</li>
+                        <li><strong>닫는 태그 누락:</strong> 모든 태그 닫기 확인</li>
+                    </ul>
+                    
+                    <h3>디버깅 방법</h3>
+                    <ul style="margin-left: 20px; margin-top: 10px;">
+                        <li><strong>브라우저 개발자 도구:</strong> F12로 콘솔 확인</li>
+                        <li><strong>콘솔 에러 확인:</strong> JavaScript 오류 메시지 확인</li>
+                        <li><strong>요소 검사:</strong> Elements 탭에서 HTML/CSS 확인</li>
+                        <li><strong>네트워크 탭:</strong> 파일 로드 여부 확인</li>
+                    </ul>
+                    
+                    <h3>문제 해결 팁</h3>
+                    <ul style="margin-left: 20px; margin-top: 10px;">
+                        <li>코드를 단계별로 테스트</li>
+                        <li>console.log()로 변수 값 확인</li>
+                        <li>CSS는 하나씩 적용하며 확인</li>
+                        <li>jQuery는 $(document).ready() 확인</li>
+                    </ul>
+                `,
+                problem: "브라우저 개발자 도구를 여는 단축키를 작성하세요.",
+                solution: "F12",
+                test: (code) => {
+                    try {
+                        return code.includes("F12") || code.includes("f12");
+                    } catch (e) {
+                        return false;
+                    }
+                }
+            }
+        ];
+
+        // 메인 화면 표시
+        function showMainScreen() {
+            document.getElementById('mainScreen').style.display = 'block';
+            document.getElementById('lessonScreens').innerHTML = '';
+            window.scrollTo(0, 0);
+        }
+
+        // 강의 화면 표시
+        function showLesson(chapterNum) {
+            const lesson = lessons[chapterNum - 1];
+            if (!lesson) return;
+
+            document.getElementById('mainScreen').style.display = 'none';
+            
+            const lessonHTML = `
+                <div class="lesson-screen active">
+                    <div class="lesson-header">
+                        <h2>${lesson.title}</h2>
+                        <button class="back-button" onclick="showMainScreen()">← 목차로</button>
+                    </div>
+                    
+                    <div class="lesson-content">
+                        ${lesson.content}
+                    </div>
+                    
+                    <div class="practice-section">
+                        <h3>📝 실습 문제</h3>
+                        <div class="problem">
+                            <p>${lesson.problem}</p>
+                        </div>
+                        
+                        <textarea class="code-editor" id="codeEditor${chapterNum}" placeholder="여기에 코드를 작성하세요..."></textarea>
+                        
+                        <button class="run-button" onclick="runCode(${chapterNum})">코드 실행</button>
+                        
+                        <div class="output" id="output${chapterNum}">실행 결과가 여기에 표시됩니다...</div>
+                        
+                        <div class="success-message" id="success${chapterNum}">
+                            ✅ 정답입니다! 다음 장으로 넘어갈 수 있습니다.
+                        </div>
+                        
+                        <div class="error-message" id="error${chapterNum}">
+                            ❌ 아직 정답이 아닙니다. 다시 시도해보세요!
+                        </div>
+                        
+                        <button class="next-button" id="nextButton${chapterNum}" onclick="nextChapter(${chapterNum})">
+                            다음 장으로 →
+                        </button>
+                    </div>
+                </div>
+            `;
+            
+            document.getElementById('lessonScreens').innerHTML = lessonHTML;
+            window.scrollTo(0, 0);
+        }
+
+        // 코드 실행 (간단한 검증)
+        function runCode(chapterNum) {
+            const code = document.getElementById(`codeEditor${chapterNum}`).value;
+            const output = document.getElementById(`output${chapterNum}`);
+            const successMsg = document.getElementById(`success${chapterNum}`);
+            const errorMsg = document.getElementById(`error${chapterNum}`);
+            const nextBtn = document.getElementById(`nextButton${chapterNum}`);
+            const lesson = lessons[chapterNum - 1];
+
+            // 출력 초기화
+            output.textContent = '';
+            successMsg.classList.remove('show');
+            errorMsg.classList.remove('show');
+            nextBtn.classList.remove('show');
+
+            // 간단한 코드 실행 시뮬레이션
+            try {
+                const lines = code.split('\n').filter(line => line.trim() !== '');
+                
+                if (lines.length === 0) {
+                    output.textContent = '코드를 입력해주세요.';
+                    return;
+                }
+
+                // 코드 검증
+                if (lesson.test(code)) {
+                    successMsg.classList.add('show');
+                    nextBtn.classList.add('show');
+                    output.textContent = '✅ 코드가 올바르게 작성되었습니다!';
+                } else {
+                    errorMsg.classList.add('show');
+                    output.textContent = '코드를 실행했습니다. 정답을 확인해주세요.';
+                }
+            } catch (e) {
+                errorMsg.classList.add('show');
+                output.textContent = '오류: ' + e.message;
+            }
+        }
+
+        // 다음 장으로 이동
+        function nextChapter(currentChapter) {
+            if (currentChapter < lessons.length) {
+                showLesson(currentChapter + 1);
+            } else {
+                alert('모든 강의를 완료했습니다! 🎉');
+                showMainScreen();
+            }
+        }
+    </script>
+</body>
+</html>
+
