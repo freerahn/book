@@ -697,6 +697,34 @@
                     <h2>고급 성능 최적화</h2>
                     <p>벤치마킹과 프로파일링</p>
                 </div>
+                
+                <div class="chapter-box" onclick="showLesson(25)">
+                    <div class="chapter-icon">🔐</div>
+                    <div class="chapter-number">25</div>
+                    <h2>환경 변수 관리</h2>
+                    <p>dotenv와 환경별 설정 관리</p>
+                </div>
+                
+                <div class="chapter-box" onclick="showLesson(26)">
+                    <div class="chapter-icon">📤</div>
+                    <div class="chapter-number">26</div>
+                    <h2>파일 업로드 처리</h2>
+                    <p>multer를 활용한 파일 업로드</p>
+                </div>
+                
+                <div class="chapter-box" onclick="showLesson(27)">
+                    <div class="chapter-icon">📧</div>
+                    <div class="chapter-number">27</div>
+                    <h2>이메일 발송</h2>
+                    <p>Nodemailer를 사용한 이메일 전송</p>
+                </div>
+                
+                <div class="chapter-box" onclick="showLesson(28)">
+                    <div class="chapter-icon">⏰</div>
+                    <div class="chapter-number">28</div>
+                    <h2>작업 스케줄링</h2>
+                    <p>node-cron을 활용한 스케줄링</p>
+                </div>
             </div>
         </div>
 
@@ -2665,6 +2693,309 @@ if (cluster.isMaster) {
                                code.includes("fork") &&
                                code.includes("isMaster") ||
                                code.includes("isPrimary");
+                    } catch (e) {
+                        return false;
+                    }
+                }
+            },
+            {
+                title: "환경 변수 관리",
+                content: `
+                    <h3>환경 변수란?</h3>
+                    <p>환경 변수는 <strong>애플리케이션의 설정을 외부에서 관리</strong>하는 방법입니다. 
+                    개발, 스테이징, 프로덕션 환경별로 다른 설정을 사용할 수 있습니다.</p>
+                    
+                    <h3>dotenv 패키지 사용</h3>
+                    <div class="code-example">
+                        <pre>// npm install dotenv
+
+// .env 파일 생성
+// DB_HOST=localhost
+// DB_PORT=5432
+// DB_NAME=mydb
+// JWT_SECRET=your-secret-key
+// NODE_ENV=development
+
+// app.js
+require('dotenv').config();
+
+const dbHost = process.env.DB_HOST;
+const dbPort = process.env.DB_PORT;
+const dbName = process.env.DB_NAME;
+const jwtSecret = process.env.JWT_SECRET;
+
+console.log(\`Database: \${dbHost}:\${dbPort}/\${dbName}\`);
+
+// 환경별 설정
+const isDevelopment = process.env.NODE_ENV === 'development';
+if (isDevelopment) {
+    console.log('개발 모드');
+}</pre>
+                    </div>
+                    
+                    <h3>환경 변수 사용 예제</h3>
+                    <div class="code-example">
+                        <pre>// config/database.js
+require('dotenv').config();
+
+module.exports = {
+    host: process.env.DB_HOST || 'localhost',
+    port: parseInt(process.env.DB_PORT) || 5432,
+    database: process.env.DB_NAME || 'mydb',
+    username: process.env.DB_USER || 'postgres',
+    password: process.env.DB_PASSWORD || ''
+};
+
+// config/index.js
+require('dotenv').config();
+
+module.exports = {
+    port: process.env.PORT || 3000,
+    nodeEnv: process.env.NODE_ENV || 'development',
+    jwtSecret: process.env.JWT_SECRET,
+    apiKey: process.env.API_KEY
+};</pre>
+                    </div>
+                `,
+                problem: "dotenv를 사용하여 .env 파일에서 PORT와 NODE_ENV를 읽어서 사용하는 코드를 작성하세요.",
+                solution: "require('dotenv').config();\n\nconst port = process.env.PORT || 3000;\nconst nodeEnv = process.env.NODE_ENV || 'development';\n\nconsole.log(\`Port: \${port}, Environment: \${nodeEnv}\`);",
+                test: (code) => {
+                    try {
+                        return code.includes('dotenv') && 
+                               code.includes('process.env') &&
+                               (code.includes('PORT') || code.includes('NODE_ENV'));
+                    } catch (e) {
+                        return false;
+                    }
+                }
+            },
+            {
+                title: "파일 업로드 처리",
+                content: `
+                    <h3>multer란?</h3>
+                    <p>multer는 <strong>multipart/form-data를 처리하는 미들웨어</strong>입니다. 
+                    파일 업로드를 쉽게 처리할 수 있게 해줍니다.</p>
+                    
+                    <h3>기본 사용법</h3>
+                    <div class="code-example">
+                        <pre>// npm install multer
+
+const express = require('express');
+const multer = require('multer');
+const path = require('path');
+
+const app = express();
+
+// 저장소 설정
+const storage = multer.diskStorage({
+    destination: (req, file, cb) => {
+        cb(null, 'uploads/');  // 저장 경로
+    },
+    filename: (req, file, cb) => {
+        const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
+        cb(null, file.fieldname + '-' + uniqueSuffix + path.extname(file.originalname));
+    }
+});
+
+const upload = multer({ storage: storage });
+
+// 단일 파일 업로드
+app.post('/upload', upload.single('file'), (req, res) => {
+    res.json({
+        message: '파일 업로드 성공',
+        file: req.file
+    });
+});
+
+// 여러 파일 업로드
+app.post('/upload-multiple', upload.array('files', 5), (req, res) => {
+    res.json({
+        message: '파일 업로드 성공',
+        files: req.files
+    });
+});</pre>
+                    </div>
+                    
+                    <h3>파일 필터링</h3>
+                    <div class="code-example">
+                        <pre>const upload = multer({
+    storage: storage,
+    fileFilter: (req, file, cb) => {
+        // 이미지만 허용
+        if (file.mimetype.startsWith('image/')) {
+            cb(null, true);
+        } else {
+            cb(new Error('이미지 파일만 업로드 가능합니다'));
+        }
+    },
+    limits: {
+        fileSize: 5 * 1024 * 1024  // 5MB 제한
+    }
+});</pre>
+                    </div>
+                `,
+                problem: "multer를 사용하여 'avatar' 필드로 이미지 파일을 업로드하는 Express 라우트를 작성하세요.",
+                solution: "const express = require('express');\nconst multer = require('multer');\nconst app = express();\n\nconst upload = multer({ dest: 'uploads/' });\n\napp.post('/upload-avatar', upload.single('avatar'), (req, res) => {\n    res.json({ message: '업로드 성공', file: req.file });\n});",
+                test: (code) => {
+                    try {
+                        return code.includes('multer') && 
+                               code.includes('upload.single') &&
+                               code.includes('avatar');
+                    } catch (e) {
+                        return false;
+                    }
+                }
+            },
+            {
+                title: "이메일 발송",
+                content: `
+                    <h3>Nodemailer란?</h3>
+                    <p>Nodemailer는 <strong>Node.js에서 이메일을 보내는 라이브러리</strong>입니다. 
+                    SMTP 서버를 통해 이메일을 전송합니다.</p>
+                    
+                    <h3>기본 사용법</h3>
+                    <div class="code-example">
+                        <pre>// npm install nodemailer
+
+const nodemailer = require('nodemailer');
+
+// Gmail 사용 예제
+const transporter = nodemailer.createTransport({
+    service: 'gmail',
+    auth: {
+        user: 'your-email@gmail.com',
+        pass: 'your-app-password'  // Gmail 앱 비밀번호
+    }
+});
+
+// 이메일 전송
+const mailOptions = {
+    from: 'your-email@gmail.com',
+    to: 'recipient@example.com',
+    subject: '테스트 이메일',
+    text: '이것은 테스트 이메일입니다.',
+    html: '<h1>안녕하세요</h1><p>HTML 형식의 이메일입니다.</p>'
+};
+
+transporter.sendMail(mailOptions, (error, info) => {
+    if (error) {
+        console.error('에러:', error);
+    } else {
+        console.log('이메일 전송 성공:', info.response);
+    }
+});</pre>
+                    </div>
+                    
+                    <h3>SMTP 서버 설정</h3>
+                    <div class="code-example">
+                        <pre>// 일반 SMTP 서버
+const transporter = nodemailer.createTransport({
+    host: 'smtp.example.com',
+    port: 587,
+    secure: false,  // true for 465, false for other ports
+    auth: {
+        user: 'username',
+        pass: 'password'
+    }
+});
+
+// async/await 사용
+async function sendEmail(to, subject, text) {
+    try {
+        const info = await transporter.sendMail({
+            from: 'sender@example.com',
+            to: to,
+            subject: subject,
+            text: text
+        });
+        console.log('이메일 전송 성공:', info.messageId);
+        return info;
+    } catch (error) {
+        console.error('이메일 전송 실패:', error);
+        throw error;
+    }
+}</pre>
+                    </div>
+                `,
+                problem: "Nodemailer를 사용하여 이메일을 전송하는 함수를 작성하세요. (transporter는 이미 설정되어 있다고 가정)",
+                solution: "const nodemailer = require('nodemailer');\n\nasync function sendEmail(to, subject, text) {\n    const transporter = nodemailer.createTransport({\n        service: 'gmail',\n        auth: { user: 'user@gmail.com', pass: 'password' }\n    });\n    \n    await transporter.sendMail({\n        from: 'user@gmail.com',\n        to: to,\n        subject: subject,\n        text: text\n    });\n}",
+                test: (code) => {
+                    try {
+                        return code.includes('nodemailer') && 
+                               code.includes('sendMail') &&
+                               code.includes('transporter');
+                    } catch (e) {
+                        return false;
+                    }
+                }
+            },
+            {
+                title: "작업 스케줄링",
+                content: `
+                    <h3>node-cron이란?</h3>
+                    <p>node-cron은 <strong>크론 표현식을 사용하여 작업을 스케줄링</strong>하는 라이브러리입니다. 
+                    특정 시간에 반복적으로 실행되는 작업을 만들 수 있습니다.</p>
+                    
+                    <h3>기본 사용법</h3>
+                    <div class="code-example">
+                        <pre>// npm install node-cron
+
+const cron = require('node-cron');
+
+// 매분마다 실행
+cron.schedule('* * * * *', () => {
+    console.log('매분 실행');
+});
+
+// 매일 자정에 실행
+cron.schedule('0 0 * * *', () => {
+    console.log('매일 자정 실행');
+});
+
+// 매주 월요일 오전 9시에 실행
+cron.schedule('0 9 * * 1', () => {
+    console.log('매주 월요일 오전 9시 실행');
+});
+
+// 크론 표현식 형식
+// * * * * * *
+// | | | | | |
+// | | | | | 요일 (0-7, 0과 7은 일요일)
+// | | | | 월 (1-12)
+// | | | 일 (1-31)
+// | | 시 (0-23)
+// | 분 (0-59)
+// 초 (0-59, 선택사항)</pre>
+                    </div>
+                    
+                    <h3>실전 활용 예제</h3>
+                    <div class="code-example">
+                        <pre>// 데이터베이스 백업 (매일 새벽 2시)
+cron.schedule('0 2 * * *', async () => {
+    console.log('데이터베이스 백업 시작...');
+    // 백업 로직
+});
+
+// 정기적인 데이터 정리 (매주 일요일 자정)
+cron.schedule('0 0 * * 0', async () => {
+    console.log('데이터 정리 시작...');
+    // 정리 로직
+});
+
+// 주기적인 알림 발송 (매일 오전 9시)
+cron.schedule('0 9 * * *', async () => {
+    console.log('일일 알림 발송...');
+    // 알림 발송 로직
+});</pre>
+                    </div>
+                `,
+                problem: "node-cron을 사용하여 매일 오전 10시에 '일일 리포트 생성'을 출력하는 스케줄을 작성하세요.",
+                solution: "const cron = require('node-cron');\n\ncron.schedule('0 10 * * *', () => {\n    console.log('일일 리포트 생성');\n});",
+                test: (code) => {
+                    try {
+                        return code.includes('node-cron') || code.includes('cron') && 
+                               code.includes('schedule') &&
+                               code.includes('0 10');
                     } catch (e) {
                         return false;
                     }

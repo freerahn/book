@@ -717,6 +717,34 @@
                     <h2>안드로이드 개발 기초</h2>
                     <p>Kotlin으로 안드로이드 앱 만들기</p>
                 </div>
+                
+                <div class="chapter-box" onclick="showLesson(27)">
+                    <div class="chapter-icon">📝</div>
+                    <div class="chapter-number">27</div>
+                    <h2>문자열 처리 심화</h2>
+                    <p>문자열 메서드와 템플릿 활용</p>
+                </div>
+                
+                <div class="chapter-box" onclick="showLesson(28)">
+                    <div class="chapter-icon">🔍</div>
+                    <div class="chapter-number">28</div>
+                    <h2>정규표현식</h2>
+                    <p>패턴 매칭과 문자열 검색</p>
+                </div>
+                
+                <div class="chapter-box" onclick="showLesson(29)">
+                    <div class="chapter-icon">📁</div>
+                    <div class="chapter-number">29</div>
+                    <h2>파일 입출력</h2>
+                    <p>파일 읽기, 쓰기, 관리</p>
+                </div>
+                
+                <div class="chapter-box" onclick="showLesson(30)">
+                    <div class="chapter-icon">📦</div>
+                    <div class="chapter-number">30</div>
+                    <h2>JSON 처리</h2>
+                    <p>JSON 데이터 파싱과 생성</p>
+                </div>
             </div>
         </div>
 
@@ -3244,6 +3272,253 @@ recyclerView.layoutManager = LinearLayoutManager(this)</pre>
                         return code.includes("setOnClickListener") &&
                                code.includes("findViewById") &&
                                code.includes("textView.text");
+                    } catch (e) {
+                        return false;
+                    }
+                }
+            },
+            {
+                title: "문자열 처리 심화",
+                content: `
+                    <h3>Kotlin 문자열 메서드</h3>
+                    <p>Kotlin은 <strong>풍부한 문자열 처리 기능</strong>을 제공합니다. 
+                    문자열 조작, 검색, 변환 등을 쉽게 수행할 수 있습니다.</p>
+                    
+                    <h3>기본 문자열 메서드</h3>
+                    <div class="code-example">
+                        <pre>val text = "Hello Kotlin"
+
+// 길이
+println(text.length)  // 12
+
+// 대소문자 변환
+println(text.uppercase())  // "HELLO KOTLIN"
+println(text.lowercase())  // "hello kotlin"
+
+// 부분 문자열
+println(text.substring(0, 5))  // "Hello"
+println(text.substring(6))    // "Kotlin"
+
+// 문자열 분리
+val words = "apple,banana,orange".split(",")
+println(words)  // [apple, banana, orange]
+
+// 문자열 치환
+println(text.replace("Kotlin", "World"))  // "Hello World"
+
+// 공백 제거
+println("  hello  ".trim())  // "hello"</pre>
+                    </div>
+                    
+                    <h3>문자열 검색</h3>
+                    <div class="code-example">
+                        <pre>val text = "Hello Kotlin World"
+
+// 포함 여부 확인
+println(text.contains("Kotlin"))  // true
+println(text.startsWith("Hello"))  // true
+println(text.endsWith("World"))    // true
+
+// 인덱스 찾기
+println(text.indexOf("Kotlin"))  // 6
+println(text.lastIndexOf("l"))    // 15</pre>
+                    </div>
+                    
+                    <h3>문자열 템플릿</h3>
+                    <div class="code-example">
+                        <pre>val name = "홍길동"
+val age = 30
+
+// 문자열 템플릿
+val message = "이름: \$name, 나이: \$age"
+println(message)  // "이름: 홍길동, 나이: 30"
+
+// 표현식 사용
+val result = "합계: \${10 + 20}"
+println(result)  // "합계: 30"
+
+// 여러 줄 문자열
+val multiLine = """
+    첫 번째 줄
+    두 번째 줄
+    세 번째 줄
+""".trimIndent()
+println(multiLine)</pre>
+                    </div>
+                `,
+                problem: "문자열 'Hello Kotlin'에서 'Kotlin'을 'World'로 치환하고, 결과를 대문자로 변환하세요.",
+                solution: "val text = \"Hello Kotlin\"\nval result = text.replace(\"Kotlin\", \"World\").uppercase()\nprintln(result)",
+                test: (code) => {
+                    try {
+                        return code.includes('replace') && 
+                               code.includes('uppercase') &&
+                               code.includes('Kotlin');
+                    } catch (e) {
+                        return false;
+                    }
+                }
+            },
+            {
+                title: "정규표현식",
+                content: `
+                    <h3>Kotlin 정규표현식</h3>
+                    <p>Kotlin은 <code>Regex</code> 클래스를 사용하여 <strong>정규표현식 패턴 매칭</strong>을 수행합니다.</p>
+                    
+                    <h3>기본 사용법</h3>
+                    <div class="code-example">
+                        <pre>// 정규표현식 생성
+val pattern = Regex("\\\\d+")  // 하나 이상의 숫자
+
+// 매칭 확인
+println(pattern.matches("123"))  // true
+println(pattern.matches("abc"))  // false
+
+// 찾기
+val text = "abc123def456"
+val matches = pattern.findAll(text)
+matches.forEach { 
+    println(it.value)  // "123", "456"
+}</pre>
+                    </div>
+                    
+                    <h3>문자열 메서드와 함께 사용</h3>
+                    <div class="code-example">
+                        <pre>val text = "Hello 123 World 456"
+
+// replace()와 함께
+val result = text.replace(Regex("\\\\d+"), "NUM")
+println(result)  // "Hello NUM World NUM"
+
+// split()과 함께
+val parts = text.split(Regex("\\\\s+"))
+println(parts)  // [Hello, 123, World, 456]</pre>
+                    </div>
+                `,
+                problem: "정규표현식을 사용하여 문자열에서 숫자를 모두 찾아 출력하세요.",
+                solution: "val text = \"abc123def456\"\nval pattern = Regex(\"\\\\d+\")\npattern.findAll(text).forEach { println(it.value) }",
+                test: (code) => {
+                    try {
+                        return code.includes('Regex') && 
+                               code.includes('findAll') &&
+                               code.includes('\\d');
+                    } catch (e) {
+                        return false;
+                    }
+                }
+            },
+            {
+                title: "파일 입출력",
+                content: `
+                    <h3>Kotlin 파일 처리</h3>
+                    <p>Kotlin은 <code>java.io</code> 패키지를 사용하여 <strong>파일 읽기와 쓰기</strong>를 수행합니다.</p>
+                    
+                    <h3>파일 읽기</h3>
+                    <div class="code-example">
+                        <pre>import java.io.File
+
+// 전체 파일 읽기
+val file = File("data.txt")
+val content = file.readText()
+println(content)
+
+// 줄 단위로 읽기
+file.readLines().forEach { line ->
+    println(line)
+}
+
+// useLines() - 메모리 효율적
+file.useLines { lines ->
+    lines.forEach { println(it) }
+}</pre>
+                    </div>
+                    
+                    <h3>파일 쓰기</h3>
+                    <div class="code-example">
+                        <pre>import java.io.File
+
+val file = File("output.txt")
+
+// 전체 내용 쓰기
+file.writeText("Hello Kotlin")
+
+// 추가하기
+file.appendText("\\nNew line")
+
+// 여러 줄 쓰기
+file.writeText(listOf("Line 1", "Line 2", "Line 3").joinToString("\\n"))</pre>
+                    </div>
+                `,
+                problem: "파일 'test.txt'에 'Hello Kotlin'을 쓰고, 다시 읽어서 출력하세요.",
+                solution: "import java.io.File\n\nval file = File(\"test.txt\")\nfile.writeText(\"Hello Kotlin\")\nval content = file.readText()\nprintln(content)",
+                test: (code) => {
+                    try {
+                        return code.includes('File') && 
+                               code.includes('writeText') &&
+                               code.includes('readText');
+                    } catch (e) {
+                        return false;
+                    }
+                }
+            },
+            {
+                title: "JSON 처리",
+                content: `
+                    <h3>Kotlin JSON 처리</h3>
+                    <p>Kotlin에서는 <code>kotlinx.serialization</code> 라이브러리를 사용하여 <strong>JSON 데이터를 처리</strong>합니다.</p>
+                    
+                    <h3>기본 사용법</h3>
+                    <div class="code-example">
+                        <pre>import kotlinx.serialization.Serializable
+import kotlinx.serialization.encodeToString
+import kotlinx.serialization.decodeFromString
+import kotlinx.serialization.json.Json
+
+// 데이터 클래스에 @Serializable 추가
+@Serializable
+data class User(
+    val name: String,
+    val age: Int,
+    val email: String
+)
+
+// 객체를 JSON 문자열로 변환
+val user = User("홍길동", 30, "hong@example.com")
+val json = Json.encodeToString(user)
+println(json)  // {"name":"홍길동","age":30,"email":"hong@example.com"}
+
+// JSON 문자열을 객체로 변환
+val jsonString = """{"name":"홍길동","age":30,"email":"hong@example.com"}"""
+val user2 = Json.decodeFromString&lt;User&gt;(jsonString)
+println(user2.name)  // "홍길동"</pre>
+                    </div>
+                    
+                    <h3>리스트 처리</h3>
+                    <div class="code-example">
+                        <pre>@Serializable
+data class User(val name: String, val age: Int)
+
+val users = listOf(
+    User("홍길동", 30),
+    User("김철수", 25)
+)
+
+// 리스트를 JSON으로
+val json = Json.encodeToString(users)
+println(json)
+
+// JSON을 리스트로
+val jsonString = """[{"name":"홍길동","age":30},{"name":"김철수","age":25}]"""
+val users2 = Json.decodeFromString&lt;List&lt;User&gt;&gt;(jsonString)
+println(users2.size)  // 2</pre>
+                    </div>
+                `,
+                problem: "User 데이터 클래스를 만들고, JSON 문자열을 파싱하여 name을 출력하세요.",
+                solution: "import kotlinx.serialization.Serializable\nimport kotlinx.serialization.decodeFromString\nimport kotlinx.serialization.json.Json\n\n@Serializable\ndata class User(val name: String, val age: Int)\n\nval json = \"\"\"{\"name\":\"홍길동\",\"age\":30}\"\"\"\nval user = Json.decodeFromString&lt;User&gt;(json)\nprintln(user.name)",
+                test: (code) => {
+                    try {
+                        return code.includes('@Serializable') && 
+                               code.includes('decodeFromString') &&
+                               code.includes('data class');
                     } catch (e) {
                         return false;
                     }

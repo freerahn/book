@@ -745,6 +745,41 @@
                     <h2>디자인 패턴</h2>
                     <p>객체지향 디자인 패턴 구현</p>
                 </div>
+                
+                <div class="chapter-box" onclick="showLesson(31)">
+                    <div class="chapter-icon">🔍</div>
+                    <div class="chapter-number">31</div>
+                    <h2>정규표현식 (re 모듈)</h2>
+                    <p>패턴 매칭과 문자열 검색/치환</p>
+                </div>
+                
+                <div class="chapter-box" onclick="showLesson(32)">
+                    <div class="chapter-icon">📅</div>
+                    <div class="chapter-number">32</div>
+                    <h2>날짜와 시간 처리 (datetime)</h2>
+                    <p>날짜/시간 계산과 포맷팅</p>
+                </div>
+                
+                <div class="chapter-box" onclick="showLesson(33)">
+                    <div class="chapter-icon">📦</div>
+                    <div class="chapter-number">33</div>
+                    <h2>JSON 처리</h2>
+                    <p>JSON 데이터 읽기, 쓰기, 파싱</p>
+                </div>
+                
+                <div class="chapter-box" onclick="showLesson(34)">
+                    <div class="chapter-icon">🕷️</div>
+                    <div class="chapter-number">34</div>
+                    <h2>웹 스크래핑 기초</h2>
+                    <p>requests와 BeautifulSoup 활용</p>
+                </div>
+                
+                <div class="chapter-box" onclick="showLesson(35)">
+                    <div class="chapter-icon">🐍</div>
+                    <div class="chapter-number">35</div>
+                    <h2>가상환경 (venv)</h2>
+                    <p>프로젝트별 패키지 관리</p>
+                </div>
             </div>
         </div>
 
@@ -3458,6 +3493,575 @@ processor.process_payment(5000)  # PayPal로 5000원 결제</pre>
                         return code.includes("class Singleton") &&
                                code.includes("__new__") &&
                                code.includes("_instance");
+                    } catch (e) {
+                        return false;
+                    }
+                }
+            },
+            {
+                title: "정규표현식 (re 모듈)",
+                content: `
+                    <h3>정규표현식이란?</h3>
+                    <p>정규표현식(Regular Expression)은 <strong>문자열의 패턴을 표현하는 강력한 도구</strong>입니다. 
+                    Python의 <code>re</code> 모듈을 사용하여 문자열 검색, 추출, 치환 등을 수행할 수 있습니다.</p>
+                    
+                    <h3>re 모듈 기본 사용법</h3>
+                    <div class="code-example">
+                        <pre>import re
+
+# 패턴 컴파일
+pattern = re.compile(r'\\d+')  # 하나 이상의 숫자
+
+# match(): 문자열의 시작부터 매칭
+result = pattern.match('123abc')
+print(result.group())  # '123'
+
+# search(): 문자열 전체에서 첫 번째 매칭 찾기
+result = pattern.search('abc123def')
+print(result.group())  # '123'
+
+# findall(): 모든 매칭 찾기
+results = pattern.findall('abc123def456')
+print(results)  # ['123', '456']
+
+# finditer(): 매칭 객체 반복자
+for match in pattern.finditer('abc123def456'):
+    print(match.group(), match.start(), match.end())
+# 123 3 6
+# 456 9 12</pre>
+                    </div>
+                    
+                    <h3>주요 메타 문자</h3>
+                    <div style="overflow-x: auto; margin: 20px 0;">
+                        <table style="width: 100%; border-collapse: collapse; border: 1px solid #ddd; background: white;">
+                            <thead>
+                                <tr style="background: #667eea; color: white;">
+                                    <th style="padding: 12px; border: 1px solid #ddd; text-align: left;">패턴</th>
+                                    <th style="padding: 12px; border: 1px solid #ddd; text-align: left;">의미</th>
+                                    <th style="padding: 12px; border: 1px solid #ddd; text-align: left;">예시</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td style="padding: 10px; border: 1px solid #ddd;"><code>.</code></td>
+                                    <td style="padding: 10px; border: 1px solid #ddd;">임의의 문자 하나</td>
+                                    <td style="padding: 10px; border: 1px solid #ddd;"><code>r'a.c'</code> → "abc", "a1c"</td>
+                                </tr>
+                                <tr style="background: #f9f9f9;">
+                                    <td style="padding: 10px; border: 1px solid #ddd;"><code>^</code></td>
+                                    <td style="padding: 10px; border: 1px solid #ddd;">문자열의 시작</td>
+                                    <td style="padding: 10px; border: 1px solid #ddd;"><code>r'^abc'</code> → "abc"로 시작</td>
+                                </tr>
+                                <tr>
+                                    <td style="padding: 10px; border: 1px solid #ddd;"><code>$</code></td>
+                                    <td style="padding: 10px; border: 1px solid #ddd;">문자열의 끝</td>
+                                    <td style="padding: 10px; border: 1px solid #ddd;"><code>r'abc$'</code> → "abc"로 끝</td>
+                                </tr>
+                                <tr style="background: #f9f9f9;">
+                                    <td style="padding: 10px; border: 1px solid #ddd;"><code>\\d</code></td>
+                                    <td style="padding: 10px; border: 1px solid #ddd;">숫자 (0-9)</td>
+                                    <td style="padding: 10px; border: 1px solid #ddd;"><code>r'\\d+'</code> → 하나 이상의 숫자</td>
+                                </tr>
+                                <tr>
+                                    <td style="padding: 10px; border: 1px solid #ddd;"><code>\\w</code></td>
+                                    <td style="padding: 10px; border: 1px solid #ddd;">단어 문자 (영문, 숫자, _)</td>
+                                    <td style="padding: 10px; border: 1px solid #ddd;"><code>r'\\w+'</code> → 단어</td>
+                                </tr>
+                                <tr style="background: #f9f9f9;">
+                                    <td style="padding: 10px; border: 1px solid #ddd;"><code>\\s</code></td>
+                                    <td style="padding: 10px; border: 1px solid #ddd;">공백 문자</td>
+                                    <td style="padding: 10px; border: 1px solid #ddd;"><code>r'\\s+'</code> → 하나 이상의 공백</td>
+                                </tr>
+                                <tr>
+                                    <td style="padding: 10px; border: 1px solid #ddd;"><code>[abc]</code></td>
+                                    <td style="padding: 10px; border: 1px solid #ddd;">a, b, c 중 하나</td>
+                                    <td style="padding: 10px; border: 1px solid #ddd;"><code>r'[abc]'</code> → "a", "b", "c"</td>
+                                </tr>
+                                <tr style="background: #f9f9f9;">
+                                    <td style="padding: 10px; border: 1px solid #ddd;"><code>{n}</code></td>
+                                    <td style="padding: 10px; border: 1px solid #ddd;">정확히 n개</td>
+                                    <td style="padding: 10px; border: 1px solid #ddd;"><code>r'a{3}'</code> → "aaa"</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    
+                    <h3>sub() - 문자열 치환</h3>
+                    <div class="code-example">
+                        <pre>import re
+
+# 기본 치환
+text = "Hello 123 World 456"
+result = re.sub(r'\\d+', 'NUM', text)
+print(result)  # "Hello NUM World NUM"
+
+# 함수를 사용한 치환
+def double_number(match):
+    num = int(match.group())
+    return str(num * 2)
+
+text = "숫자 5와 10"
+result = re.sub(r'\\d+', double_number, text)
+print(result)  # "숫자 10와 20"</pre>
+                    </div>
+                    
+                    <h3>실전 활용 예제</h3>
+                    <h4>1. 이메일 검증</h4>
+                    <div class="code-example">
+                        <pre>import re
+
+def validate_email(email):
+    pattern = r'^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$'
+    return bool(re.match(pattern, email))
+
+print(validate_email('user@example.com'))  # True
+print(validate_email('invalid.email'))      # False</pre>
+                    </div>
+                    
+                    <h4>2. 전화번호 추출</h4>
+                    <div class="code-example">
+                        <pre>import re
+
+text = "연락처: 010-1234-5678 또는 02-9876-5432"
+pattern = r'\\d{2,3}-\\d{4}-\\d{4}'
+phone_numbers = re.findall(pattern, text)
+print(phone_numbers)  # ['010-1234-5678', '02-9876-5432']</pre>
+                    </div>
+                `,
+                problem: "정규표현식을 사용하여 문자열에서 이메일 주소를 찾는 함수를 작성하세요.",
+                solution: "import re\n\ndef find_emails(text):\n    pattern = r'[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}'\n    return re.findall(pattern, text)\n\nemails = find_emails('Contact: user@example.com or admin@test.co.kr')\nprint(emails)",
+                test: (code) => {
+                    try {
+                        return code.includes('import re') && 
+                               code.includes('findall') &&
+                               code.includes('@');
+                    } catch (e) {
+                        return false;
+                    }
+                }
+            },
+            {
+                title: "날짜와 시간 처리 (datetime)",
+                content: `
+                    <h3>datetime 모듈이란?</h3>
+                    <p>Python의 <code>datetime</code> 모듈은 <strong>날짜와 시간을 다루는 강력한 도구</strong>입니다. 
+                    날짜 생성, 계산, 포맷팅, 파싱 등을 수행할 수 있습니다.</p>
+                    
+                    <h3>기본 사용법</h3>
+                    <div class="code-example">
+                        <pre>from datetime import datetime, date, time, timedelta
+
+# 현재 날짜와 시간
+now = datetime.now()
+print(now)  # 2024-01-15 14:30:45.123456
+
+# 특정 날짜/시간 생성
+dt = datetime(2024, 1, 15, 14, 30, 0)
+print(dt)  # 2024-01-15 14:30:00
+
+# 날짜만
+d = date(2024, 1, 15)
+print(d)  # 2024-01-15
+
+# 시간만
+t = time(14, 30, 0)
+print(t)  # 14:30:00</pre>
+                    </div>
+                    
+                    <h3>날짜/시간 속성 접근</h3>
+                    <div class="code-example">
+                        <pre>from datetime import datetime
+
+dt = datetime(2024, 1, 15, 14, 30, 45)
+
+print(dt.year)    # 2024
+print(dt.month)    # 1
+print(dt.day)      # 15
+print(dt.hour)    # 14
+print(dt.minute)  # 30
+print(dt.second)  # 45
+print(dt.weekday())  # 0 (월요일, 0=월요일, 6=일요일)</pre>
+                    </div>
+                    
+                    <h3>날짜 계산 (timedelta)</h3>
+                    <div class="code-example">
+                        <pre>from datetime import datetime, timedelta
+
+now = datetime.now()
+
+# 7일 후
+future = now + timedelta(days=7)
+print(future)
+
+# 3일 전
+past = now - timedelta(days=3)
+print(past)
+
+# 2시간 30분 후
+later = now + timedelta(hours=2, minutes=30)
+print(later)
+
+# 두 날짜의 차이
+date1 = datetime(2024, 1, 1)
+date2 = datetime(2024, 1, 15)
+diff = date2 - date1
+print(diff.days)  # 14</pre>
+                    </div>
+                    
+                    <h3>날짜 포맷팅</h3>
+                    <div class="code-example">
+                        <pre>from datetime import datetime
+
+dt = datetime(2024, 1, 15, 14, 30, 0)
+
+# strftime(): 날짜를 문자열로 변환
+formatted = dt.strftime('%Y-%m-%d %H:%M:%S')
+print(formatted)  # "2024-01-15 14:30:00"
+
+formatted2 = dt.strftime('%Y년 %m월 %d일')
+print(formatted2)  # "2024년 01월 15일"
+
+# 주요 포맷 코드
+# %Y: 4자리 연도
+# %m: 월 (01-12)
+# %d: 일 (01-31)
+# %H: 시간 (00-23)
+# %M: 분 (00-59)
+# %S: 초 (00-59)
+# %A: 요일 이름
+# %B: 월 이름</pre>
+                    </div>
+                    
+                    <h3>문자열을 날짜로 파싱</h3>
+                    <div class="code-example">
+                        <pre>from datetime import datetime
+
+# strptime(): 문자열을 날짜로 변환
+date_string = "2024-01-15 14:30:00"
+dt = datetime.strptime(date_string, '%Y-%m-%d %H:%M:%S')
+print(dt)  # 2024-01-15 14:30:00
+
+# 다양한 형식 파싱
+date_string2 = "2024년 1월 15일"
+dt2 = datetime.strptime(date_string2, '%Y년 %m월 %d일')
+print(dt2)  # 2024-01-15 00:00:00</pre>
+                    </div>
+                    
+                    <h3>실전 활용 예제</h3>
+                    <h4>1. 나이 계산</h4>
+                    <div class="code-example">
+                        <pre>from datetime import date
+
+def calculate_age(birth_date):
+    today = date.today()
+    age = today.year - birth_date.year
+    # 생일이 아직 안 지났으면 1살 빼기
+    if (today.month, today.day) < (birth_date.month, birth_date.day):
+        age -= 1
+    return age
+
+birth = date(1990, 5, 15)
+age = calculate_age(birth)
+print(f"나이: {age}세")</pre>
+                    </div>
+                    
+                    <h4>2. 주말 여부 확인</h4>
+                    <div class="code-example">
+                        <pre>from datetime import datetime
+
+def is_weekend(dt):
+    return dt.weekday() >= 5  # 5=토요일, 6=일요일
+
+today = datetime.now()
+if is_weekend(today):
+    print("주말입니다!")
+else:
+    print("평일입니다.")</pre>
+                    </div>
+                `,
+                problem: "현재 날짜에서 30일 후의 날짜를 계산하고, 'YYYY-MM-DD' 형식으로 출력하세요.",
+                solution: "from datetime import datetime, timedelta\n\nnow = datetime.now()\nfuture = now + timedelta(days=30)\nprint(future.strftime('%Y-%m-%d'))",
+                test: (code) => {
+                    try {
+                        return code.includes('datetime') && 
+                               code.includes('timedelta') &&
+                               (code.includes('days=30') || code.includes('days = 30'));
+                    } catch (e) {
+                        return false;
+                    }
+                }
+            },
+            {
+                title: "JSON 처리",
+                content: `
+                    <h3>JSON이란?</h3>
+                    <p>JSON(JavaScript Object Notation)은 <strong>데이터를 교환하기 위한 경량의 텍스트 형식</strong>입니다. 
+                    Python의 <code>json</code> 모듈을 사용하여 JSON 데이터를 읽고 쓸 수 있습니다.</p>
+                    
+                    <h3>JSON 인코딩 (Python 객체 → JSON 문자열)</h3>
+                    <div class="code-example">
+                        <pre>import json
+
+# Python 딕셔너리를 JSON 문자열로 변환
+data = {
+    "name": "John",
+    "age": 30,
+    "city": "Seoul",
+    "hobbies": ["reading", "coding"]
+}
+
+json_string = json.dumps(data)
+print(json_string)
+# {"name": "John", "age": 30, "city": "Seoul", "hobbies": ["reading", "coding"]}
+
+# 들여쓰기 포함 (가독성 향상)
+json_pretty = json.dumps(data, indent=2, ensure_ascii=False)
+print(json_pretty)
+# {
+#   "name": "John",
+#   "age": 30,
+#   "city": "Seoul",
+#   "hobbies": [
+#     "reading",
+#     "coding"
+#   ]
+# }</pre>
+                    </div>
+                    
+                    <h3>JSON 디코딩 (JSON 문자열 → Python 객체)</h3>
+                    <div class="code-example">
+                        <pre>import json
+
+json_string = '{"name": "John", "age": 30, "city": "Seoul"}'
+
+# JSON 문자열을 Python 딕셔너리로 변환
+data = json.loads(json_string)
+print(data)  # {'name': 'John', 'age': 30, 'city': 'Seoul'}
+print(data['name'])  # John</pre>
+                    </div>
+                    
+                    <h3>JSON 파일 읽기/쓰기</h3>
+                    <div class="code-example">
+                        <pre>import json
+
+# JSON 파일 쓰기
+data = {
+    "users": [
+        {"name": "John", "age": 30},
+        {"name": "Jane", "age": 25}
+    ]
+}
+
+with open('data.json', 'w', encoding='utf-8') as f:
+    json.dump(data, f, indent=2, ensure_ascii=False)
+
+# JSON 파일 읽기
+with open('data.json', 'r', encoding='utf-8') as f:
+    loaded_data = json.load(f)
+
+print(loaded_data)
+# {'users': [{'name': 'John', 'age': 30}, {'name': 'Jane', 'age': 25}]}</pre>
+                    </div>
+                    
+                    <h3>실전 활용 예제</h3>
+                    <h4>1. API 응답 처리</h4>
+                    <div class="code-example">
+                        <pre>import json
+
+# API 응답 시뮬레이션
+api_response = '''
+{
+    "status": "success",
+    "data": {
+        "users": [
+            {"id": 1, "name": "John"},
+            {"id": 2, "name": "Jane"}
+        ]
+    }
+}
+'''
+
+response = json.loads(api_response)
+if response['status'] == 'success':
+    users = response['data']['users']
+    for user in users:
+        print(f"ID: {user['id']}, Name: {user['name']}")</pre>
+                    </div>
+                    
+                    <h4>2. 설정 파일 관리</h4>
+                    <div class="code-example">
+                        <pre>import json
+
+# 설정 저장
+config = {
+    "database": {
+        "host": "localhost",
+        "port": 5432,
+        "name": "mydb"
+    },
+    "api_key": "your-api-key-here"
+}
+
+with open('config.json', 'w') as f:
+    json.dump(config, f, indent=2)
+
+# 설정 불러오기
+with open('config.json', 'r') as f:
+    loaded_config = json.load(f)
+
+print(loaded_config['database']['host'])  # localhost</pre>
+                    </div>
+                `,
+                problem: "JSON 문자열 '{\"name\": \"Python\", \"version\": \"3.9\"}'을 파싱하여 name과 version을 출력하세요.",
+                solution: "import json\n\njson_string = '{\"name\": \"Python\", \"version\": \"3.9\"}'\ndata = json.loads(json_string)\nprint(f\"Name: {data['name']}, Version: {data['version']}\")",
+                test: (code) => {
+                    try {
+                        return code.includes('import json') && 
+                               code.includes('json.loads') &&
+                               code.includes('name');
+                    } catch (e) {
+                        return false;
+                    }
+                }
+            },
+            {
+                title: "웹 스크래핑 기초",
+                content: `
+                    <h3>웹 스크래핑이란?</h3>
+                    <p>웹 스크래핑(Web Scraping)은 <strong>웹사이트에서 데이터를 자동으로 추출하는 기술</strong>입니다. 
+                    Python에서는 <code>requests</code>와 <code>BeautifulSoup</code> 라이브러리를 주로 사용합니다.</p>
+                    
+                    <h3>requests - HTTP 요청</h3>
+                    <div class="code-example">
+                        <pre>import requests
+
+# GET 요청
+response = requests.get('https://example.com')
+print(response.status_code)  # 200
+print(response.text)  # HTML 내용
+
+# POST 요청
+data = {'key': 'value'}
+response = requests.post('https://example.com/api', json=data)
+
+# 헤더 추가
+headers = {'User-Agent': 'Mozilla/5.0'}
+response = requests.get('https://example.com', headers=headers)</pre>
+                    </div>
+                    
+                    <h3>BeautifulSoup - HTML 파싱</h3>
+                    <div class="code-example">
+                        <pre>from bs4 import BeautifulSoup
+import requests
+
+# 웹페이지 가져오기
+url = 'https://example.com'
+response = requests.get(url)
+html = response.text
+
+# HTML 파싱
+soup = BeautifulSoup(html, 'html.parser')
+
+# 태그 찾기
+title = soup.find('title')
+print(title.text)  # 페이지 제목
+
+# 모든 링크 찾기
+links = soup.find_all('a')
+for link in links:
+    print(link.get('href'))</pre>
+                    </div>
+                    
+                    <h3>실전 활용 예제</h3>
+                    <h4>1. 뉴스 헤드라인 추출</h4>
+                    <div class="code-example">
+                        <pre>from bs4 import BeautifulSoup
+import requests
+
+def get_news_headlines(url):
+    response = requests.get(url)
+    soup = BeautifulSoup(response.text, 'html.parser')
+    
+    # 헤드라인 찾기 (예시)
+    headlines = soup.find_all('h2', class_='headline')
+    return [h.text.strip() for h in headlines]
+
+# 사용
+# headlines = get_news_headlines('https://news.example.com')
+# for headline in headlines:
+#     print(headline)</pre>
+                    </div>
+                    
+                    <h3>주의사항</h3>
+                    <ul style="margin-left: 20px; margin-top: 10px;">
+                        <li><strong>robots.txt 확인:</strong> 웹사이트의 스크래핑 정책 확인</li>
+                        <li><strong>요청 간격:</strong> 서버 부하를 줄이기 위해 시간 간격 두기</li>
+                        <li><strong>User-Agent 설정:</strong> 정상적인 브라우저처럼 보이기</li>
+                        <li><strong>법적 고려:</strong> 저작권과 이용약관 확인</li>
+                    </ul>
+                `,
+                problem: "requests와 BeautifulSoup을 사용하여 웹페이지의 title 태그 내용을 가져오는 함수를 작성하세요.",
+                solution: "from bs4 import BeautifulSoup\nimport requests\n\ndef get_title(url):\n    response = requests.get(url)\n    soup = BeautifulSoup(response.text, 'html.parser')\n    return soup.find('title').text\n\ntitle = get_title('https://example.com')\nprint(title)",
+                test: (code) => {
+                    try {
+                        return code.includes('requests') && 
+                               code.includes('BeautifulSoup') &&
+                               code.includes('find');
+                    } catch (e) {
+                        return false;
+                    }
+                }
+            },
+            {
+                title: "가상환경 (venv)",
+                content: `
+                    <h3>가상환경이란?</h3>
+                    <p>가상환경(Virtual Environment)은 <strong>프로젝트별로 독립적인 Python 환경을 만드는 도구</strong>입니다. 
+                    각 프로젝트마다 필요한 패키지를 분리하여 관리할 수 있습니다.</p>
+                    
+                    <h3>가상환경 생성</h3>
+                    <div class="code-example">
+                        <pre># 가상환경 생성
+python -m venv myenv
+
+# Windows에서 활성화
+myenv\\Scripts\\activate
+
+# Linux/Mac에서 활성화
+source myenv/bin/activate
+
+# 활성화되면 프롬프트에 (myenv) 표시</pre>
+                    </div>
+                    
+                    <h3>패키지 관리</h3>
+                    <div class="code-example">
+                        <pre># 패키지 설치
+pip install requests
+
+# requirements.txt 생성
+pip freeze > requirements.txt
+
+# requirements.txt로 설치
+pip install -r requirements.txt
+
+# 가상환경 비활성화
+deactivate</pre>
+                    </div>
+                    
+                    <h3>가상환경의 장점</h3>
+                    <ul style="margin-left: 20px; margin-top: 10px;">
+                        <li><strong>패키지 격리:</strong> 프로젝트별로 다른 버전 사용 가능</li>
+                        <li><strong>의존성 관리:</strong> requirements.txt로 재현 가능한 환경</li>
+                        <li><strong>충돌 방지:</strong> 전역 패키지와 충돌 없음</li>
+                    </ul>
+                `,
+                problem: "가상환경을 생성하고 활성화한 후, requests 패키지를 설치하는 명령어를 순서대로 작성하세요.",
+                solution: "# 가상환경 생성\npython -m venv myenv\n\n# Windows에서 활성화\nmyenv\\Scripts\\activate\n\n# 패키지 설치\npip install requests",
+                test: (code) => {
+                    try {
+                        return code.includes('venv') && 
+                               code.includes('activate') &&
+                               code.includes('pip install');
                     } catch (e) {
                         return false;
                     }
