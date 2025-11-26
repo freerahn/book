@@ -215,47 +215,68 @@
 
             body {
                 padding-top: 60px;
-                padding-bottom: 80px;
+                padding-bottom: 60px;
             }
 
-            /* 모바일 하단 광고 */
+            /* 모바일 하단 광고 컨테이너 */
             .mobile-bottom-ad {
-                display: flex;
+                display: block;
                 position: fixed;
                 bottom: 0;
                 left: 0;
                 right: 0;
                 width: 100%;
-                height: 80px;
-                background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-                box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.2);
+                height: 60px;
                 z-index: 1500;
+                overflow: hidden;
+            }
+
+            .mobile-bottom-ad-slider {
+                display: flex;
+                width: 200%;
+                height: 100%;
+                transition: transform 0.5s ease-in-out;
+            }
+
+            .mobile-bottom-ad-slide {
+                width: 50%;
+                height: 100%;
+                display: flex;
                 align-items: center;
                 justify-content: center;
                 padding: 0 20px;
                 cursor: pointer;
+                box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.2);
                 transition: all 0.3s ease;
             }
 
-            .mobile-bottom-ad:hover {
+            .mobile-bottom-ad-slide:hover {
                 transform: translateY(-2px);
                 box-shadow: 0 -6px 25px rgba(0, 0, 0, 0.3);
+            }
+
+            .mobile-bottom-ad-slide.ad1 {
+                background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            }
+
+            .mobile-bottom-ad-slide.ad2 {
+                background: linear-gradient(135deg, #ff6b6b 0%, #ee5a6f 100%);
             }
 
             .mobile-bottom-ad-content {
                 display: flex;
                 align-items: center;
                 justify-content: center;
-                gap: 12px;
+                gap: 10px;
                 color: white;
-                font-size: 14px;
+                font-size: 13px;
                 font-weight: 600;
                 text-align: center;
                 line-height: 1.4;
             }
 
             .mobile-bottom-ad-icon {
-                font-size: 24px;
+                font-size: 20px;
                 filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.2));
             }
 
@@ -6060,12 +6081,41 @@ Sitemap: https://example.com/sitemap.xml
     </script>
 
     <!-- 모바일 하단 광고 -->
-    <div class="mobile-bottom-ad" onclick="window.open('https://www.malgnsoft.com', '_blank')">
-        <div class="mobile-bottom-ad-content">
-            <span class="mobile-bottom-ad-icon">💊</span>
-            <span class="mobile-bottom-ad-text">치료는 의사에게, LMS는 맑은소프트</span>
+    <div class="mobile-bottom-ad">
+        <div class="mobile-bottom-ad-slider" id="adSlider">
+            <div class="mobile-bottom-ad-slide ad1" onclick="window.open('https://www.malgnsoft.com', '_blank')">
+                <div class="mobile-bottom-ad-content">
+                    <span class="mobile-bottom-ad-icon">💊</span>
+                    <span class="mobile-bottom-ad-text">치료는 의사에게, LMS는 맑은소프트</span>
+                </div>
+            </div>
+            <div class="mobile-bottom-ad-slide ad2" onclick="window.open('https://www.wecandeo.com', '_blank')">
+                <div class="mobile-bottom-ad-content">
+                    <span class="mobile-bottom-ad-icon">🎬</span>
+                    <span class="mobile-bottom-ad-text">스트리밍의 모든 것! 위캔디오</span>
+                </div>
+            </div>
         </div>
     </div>
+
+    <script>
+        // 모바일 하단 광고 슬라이딩
+        (function() {
+            if (window.innerWidth <= 768) {
+                let currentSlide = 0;
+                const slider = document.getElementById('adSlider');
+                const totalSlides = 2;
+
+                function slideNext() {
+                    currentSlide = (currentSlide + 1) % totalSlides;
+                    slider.style.transform = `translateX(-${currentSlide * 50}%)`;
+                }
+
+                // 5초마다 슬라이드 전환
+                setInterval(slideNext, 5000);
+            }
+        })();
+    </script>
 </body>
 </html>
 
