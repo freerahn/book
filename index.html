@@ -172,6 +172,11 @@
             margin-top: 10px;
         }
 
+        /* 모바일 하단 광고 */
+        .mobile-bottom-ad {
+            display: none;
+        }
+
         /* 반응형 디자인 */
         @media (max-width: 768px) {
             .course-grid {
@@ -185,6 +190,56 @@
             
             .main-screen p {
                 font-size: 1.1em;
+            }
+
+            /* 모바일 하단 광고 표시 */
+            .mobile-bottom-ad {
+                display: flex;
+                position: fixed;
+                bottom: 0;
+                left: 0;
+                right: 0;
+                width: 100%;
+                height: 80px;
+                background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+                box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.2);
+                z-index: 1500;
+                align-items: center;
+                justify-content: center;
+                padding: 0 20px;
+                cursor: pointer;
+                transition: all 0.3s ease;
+            }
+
+            .mobile-bottom-ad:hover {
+                transform: translateY(-2px);
+                box-shadow: 0 -6px 25px rgba(0, 0, 0, 0.3);
+            }
+
+            .mobile-bottom-ad-content {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                gap: 12px;
+                color: white;
+                font-size: 14px;
+                font-weight: 600;
+                text-align: center;
+                line-height: 1.4;
+            }
+
+            .mobile-bottom-ad-icon {
+                font-size: 24px;
+                filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.2));
+            }
+
+            .mobile-bottom-ad-text {
+                text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+            }
+
+            /* body에 하단 여백 추가하여 광고가 콘텐츠를 가리지 않도록 */
+            body {
+                padding-bottom: 80px;
             }
         }
     </style>
@@ -258,6 +313,14 @@
                     <div class="course-tag">16개 장</div>
                 </a>
             </div>
+        </div>
+    </div>
+
+    <!-- 모바일 하단 광고 -->
+    <div class="mobile-bottom-ad" onclick="window.open('https://www.malgnsoft.com', '_blank')">
+        <div class="mobile-bottom-ad-content">
+            <span class="mobile-bottom-ad-icon">💊</span>
+            <span class="mobile-bottom-ad-text">치료는 의사에게, LMS는 맑은소프트</span>
         </div>
     </div>
 </body>
