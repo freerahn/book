@@ -76,6 +76,11 @@
             transform: scale(1.05);
         }
 
+        /* 모바일 하단 광고 기본 숨김 (데스크톱) */
+        .mobile-bottom-ad {
+            display: none;
+        }
+
         /* 모바일에서는 배너 숨김 */
         @media (max-width: 1400px) {
             body {
@@ -256,7 +261,7 @@
             }
 
             .mobile-bottom-ad-slide.ad1 {
-                background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+                background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
             }
 
             .mobile-bottom-ad-slide.ad2 {
@@ -283,11 +288,6 @@
             .mobile-bottom-ad-text {
                 text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
             }
-        }
-
-        /* 모바일 하단 광고 기본 숨김 (데스크톱) */
-        .mobile-bottom-ad {
-            display: none;
         }
 
         /* 메인 화면 스타일 */
@@ -6111,8 +6111,8 @@ Sitemap: https://example.com/sitemap.xml
                     slider.style.transform = `translateX(-${currentSlide * 50}%)`;
                 }
 
-                // 5초마다 슬라이드 전환
-                setInterval(slideNext, 5000);
+                // 3초마다 슬라이드 전환
+                setInterval(slideNext, 3000);
             }
         })();
     </script>
